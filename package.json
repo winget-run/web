@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "build": "preact build",
-    "serve": "sirv build --port 3000 --cors --single",
+    "serve": "sirv build --port 3000 --cors --single --host 0.0.0.0",
     "dev": "preact watch",
     "lint": "eslint src/**/*.{js,jsx,ts,tsx}",
     "test": "jest ./tests"
