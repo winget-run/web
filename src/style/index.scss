@@ -1,0 +1,149 @@
+@import "./variables";
+
+$breakpoints: (
+  "sm": (
+    min-width: 576px
+  ),
+  "md": (
+    min-width: 768px
+  ),
+  "lg": (
+    min-width: 992px
+  ),
+  "xl": (
+    min-width: 1200px
+  ),
+  "xxl": (
+    min-width: 1380px
+  )
+) !default;
+
+$breakpoints-down: (
+  "xs": (
+    max-width: 575.98px
+  ),
+  "sm": (
+    max-width: 767.98px
+  ),
+  "md": (
+    max-width: 991.98px
+  ),
+  "lg": (
+    max-width: 1199.98px
+  ),
+  "xl": (
+    max-width: 1379.98px
+  )
+) !default;
+
+$breakpoint-values: (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12) !default;
+
+@mixin media-breakpoint-up($breakpoint) {
+  @if map-has-key($breakpoints, $breakpoint) {
+    @media #{inspect(map-get($breakpoints, $breakpoint))} {
+      @content;
+    }
+  } @else {
+    @warn "Unfortunately, no value could be retrieved from `#{$breakpoint}`. "
+        + "Available breakpoints are: #{map-keys($breakpoints)}.";
+  }
+}
+
+@mixin media-breakpoint-down($breakpoint) {
+  @if map-has-key($breakpoints-down, $breakpoint) {
+    @media #{inspect(map-get($breakpoints-down, $breakpoint))} {
+      @content;
+    }
+  } @else {
+    @warn "Unfortunately, no value could be retrieved from `#{$breakpoint}`. "
+        + "Available breakpoints are: #{map-keys($breakpoints)}.";
+  }
+}
+
+*,
+::after,
+::before {
+  box-sizing: border-box;
+}
+
+.container {
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+
+  &--1920 {
+    max-width: 1920px !important;
+  }
+
+  @include media-breakpoint-up(sm) {
+    max-width: 540px;
+  }
+  @include media-breakpoint-up(md) {
+    max-width: 720px;
+  }
+  @include media-breakpoint-up(lg) {
+    max-width: 960px;
+  }
+  @include media-breakpoint-up(xl) {
+    max-width: 1140px;
+  }
+  @include media-breakpoint-up(xxl) {
+    max-width: 1440px;
+  }
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: -15px;
+  margin-right: -15px;
+}
+
+[class*="col-"] {
+  position: relative;
+  padding: 0 15px;
+  max-width: 100%;
+  flex: 0 0 100%;
+}
+
+// Col Default Sizes
+@each $breakpoint-value in $breakpoint-values {
+  .col-#{$breakpoint-value} {
+    position: relative;
+    padding: 0 15px;
+    max-width: (100% / 12) * $breakpoint-value;
+    flex: 0 0 ((100% / 12) * $breakpoint-value);
+  }
+}
+
+// Col breakpoint sizes
+@each $breakpoint in map-keys($breakpoints) {
+  @each $breakpoint-value in $breakpoint-values {
+    @include media-breakpoint-up($breakpoint) {
+      .col-#{$breakpoint}-#{$breakpoint-value} {
+        position: relative;
+        padding: 0 15px;
+        max-width: (100% / 12) * $breakpoint-value;
+        flex: 0 0 ((100% / 12) * $breakpoint-value);
+      }
+    }
+  }
+}
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  background: $background;
+  font-family: "Segoe UI", "Helvetica", "Roboto", arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#app {
+  height: 100%;
+}

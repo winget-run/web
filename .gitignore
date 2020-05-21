@@ -1,0 +1,10 @@
+node_modules
+/build
+/*.log
+coverage
+.env
+telepresence.log
+yarn-error.log
+secret.yaml
+*.pem
+*.pub
