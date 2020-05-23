@@ -4,15 +4,20 @@ import { Container, Row, Col } from "styled-bootstrap-grid";
 import Header from "../components/Header";
 import DownloadBar from "../components/DownloadBar";
 import { useState } from "react";
+import getPackages, { IPackage } from "../api/getPackages";
+import useSWR from "swr";
+import { IResponse } from "../api/getPackages";
 
-export default function Home() {
+export default function Home(props) {
+  const initialData = props.data;
+  const { data } = useSWR("home", getPackages, { initialData });
   const [packages, setPackages] = useState([]);
 
-  const handleAddPackage = (add: boolean, title: string) => {
+  const handleAddPackage = (add: boolean, data: IPackage) => {
     if (add) {
-      setPackages([...packages, title]);
+      setPackages([...packages, data]);
     } else {
-      setPackages(packages.filter((x) => x !== title));
+      setPackages(packages.filter((x) => x !== data));
     }
   };
 
@@ -20,48 +25,35 @@ export default function Home() {
     <div className="container">
       <Head>
         <title>winget.run | Finding winget packages made simple.</title>
-        <link rel="icon" href="/favicon.ico" />
       </Head>
       <header>
-        <Header showSearch title="winget.run" />
+        <Header showSearch title="winget.run" totalPackages={data.total} />
       </header>
       <main>
         <Container>
           <Row>
-            <Col md={6} lg={4} xl={3}>
-              <Card
-                title="arduino"
-                org="test"
-                description="test"
-                id="test.test"
-                selected={packages.find((e) => e === "arduino")}
-                addFn={handleAddPackage}
-              />
-            </Col>
-            <Col md={6} lg={4} xl={3}>
-              <Card
-                title="github"
-                org="test"
-                description="test"
-                id="test.test"
-                selected={packages.find((e) => e === "github")}
-                addFn={handleAddPackage}
-              />
-            </Col>
-            <Col md={6} lg={4} xl={3}>
-              <Card
-                title="test"
-                org="test"
-                description="test"
-                id="test.test"
-                selected={packages.find((e) => e === "test")}
-                addFn={handleAddPackage}
-              />
-            </Col>
+            {(data as IResponse).packages.map((e) => (
+              <Col md={6} lg={4} xl={3}>
+                <Card
+                  package={e}
+                  title={e.Name}
+                  org={e.Publisher}
+                  description={e.Description}
+                  id={e.Id}
+                  selected={packages.find((x) => x === e)}
+                  addFn={handleAddPackage}
+                />
+              </Col>
+            ))}
           </Row>
         </Container>
         <DownloadBar packages={packages} />
       </main>
     </div>
   );
+}
+
+export async function getServerSideProps() {
+  const data = await getPackages();
+  return { props: { data } };
 }

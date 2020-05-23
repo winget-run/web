@@ -1,10 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, Dispatch, SetStateAction } from "react";
 import styled from "styled-components";
 import Link from "next/link";
+import fetch from "isomorphic-unfetch";
 
 import useDebounce from "../utils/hooks/useDebounce";
 import { CardTitle, CardOrg, CardDesc } from "./Card";
 import AutocompleteResult from "./AutocompleteResult";
+import { IPackage } from "../api/getPackages";
 
 const SearchContainer = styled.div`
   position: relative;
@@ -14,6 +16,7 @@ const SearchContainer = styled.div`
 const StyledInput = styled.input`
   width: 100%;
   padding: 10px 28px;
+  margin: 47px 0 0;
   border: none;
   border-radius: 100px;
   font-weight: bold;
@@ -39,21 +42,37 @@ const ResultsContainer = styled.div`
   box-shadow: 0 3px 15px rgba(0, 0, 0, 0.5);
 `;
 
-const Search = () => {
+const NoResultsText = styled.h4`
+  color: ${(x: any) => x.theme.darkGrey};
+  text-align: center;
+  font-size: 24px;
+  margin: 15px 0;
+`;
+
+const Search = ({ totalPackages }: { totalPackages: number }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [isSearching, setIsSearching] = useState(false);
   const debouncedSearchTerm = useDebounce(searchTerm, 400);
+  const [results, setResults]: [
+    IPackage[],
+    Dispatch<SetStateAction<any[]>>
+  ] = useState([]);
 
   useEffect(() => {
     if (debouncedSearchTerm) {
       setIsSearching(true);
-      // autoCompleteApi(debouncedSearchTerm).then(results => {
-      //   setIsSearching(false);
-      //   setResults(results);
-      // });
+      fetch(
+        `https://api.winget.run/api/v1/autocomplete?query=${debouncedSearchTerm}`
+      )
+        .then((e) => e.json())
+        .then((e) => {
+          setIsSearching(false);
+          setResults(e.packages);
+          console.log(e.packages);
+        });
       console.log(debouncedSearchTerm);
     } else {
-      // setResults([]);
+      setResults([]);
     }
   }, [debouncedSearchTerm]);
 
@@ -62,24 +81,30 @@ const Search = () => {
       <StyledInput
         aria-label="Search packages"
         type="text"
-        placeholder="Search packages..."
+        placeholder={`Search ${totalPackages} packages...`}
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
       />
-      {debouncedSearchTerm && (
+      {debouncedSearchTerm && results.length > 0 && (
         <ResultsContainer aria-live="polite" aria-modal="true">
-          <AutocompleteResult
-            id="testorg.testapp"
-            title="Test title"
-            org="Test org"
-            desc="This is a <span>test</span> description"
-          />
-          <AutocompleteResult
-            id="testorg.testapp"
-            title="Test title"
-            org="Test org"
-            desc="This is a <span>test</span> description"
-          />
+          {results.map((e) => (
+            <AutocompleteResult
+              id={e.Id}
+              title={e.Name}
+              org={e.Publisher}
+              desc={e.Description?.replace(
+                new RegExp(debouncedSearchTerm, "gi"),
+                "<span>$&</span>"
+              )}
+            />
+          ))}
+        </ResultsContainer>
+      )}
+      {debouncedSearchTerm && results.length === 0 && (
+        <ResultsContainer aria-live="polite" aria-modal="true">
+          <NoResultsText>
+            No results found for "{debouncedSearchTerm}"
+          </NoResultsText>
         </ResultsContainer>
       )}
     </SearchContainer>

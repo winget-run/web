@@ -44,6 +44,7 @@ export default class MyDocument extends Document {
               }
             `}
           </style>
+          <link rel="icon" href="/favicon.ico" />
           <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
           <meta name="theme-color" content="#327080" />
           <meta

@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { media } from "styled-bootstrap-grid";
 
 import generateClipboard from "../utils/generateClipboard";
+import { IPackage } from "../api/getPackages";
 
 const StyledContainer = styled.div<{ selected: boolean }>`
   border-radius: 8px;
@@ -34,8 +35,8 @@ const Add = styled.button<{ selected: boolean }>`
   background: transparent;
   border: none;
   position: absolute;
-  right: 0;
-  top: 0;
+  right: 5px;
+  top: 5px;
   cursor: pointer;
   &::before,
   &::after {
@@ -113,12 +114,13 @@ export const CardDesc = styled.p`
 `;
 
 interface IProps {
+  package: IPackage;
   title: string;
   org: string;
   description: string;
   id: string;
   selected?: boolean;
-  addFn: (add: boolean, title: string) => void;
+  addFn: (add: boolean, data: IPackage) => void;
 }
 
 const Card = (props: IProps) => {
@@ -127,7 +129,7 @@ const Card = (props: IProps) => {
   return (
     <StyledContainer selected={props.selected}>
       <Add
-        onClick={() => props.addFn(!props.selected, props.title)}
+        onClick={() => props.addFn(!props.selected, props.package)}
         selected={props.selected}
         aria-label="Add to multi-download"
       />

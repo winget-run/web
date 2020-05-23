@@ -45,7 +45,7 @@ const SearchContainer = styled.div`
 
   h1 {
     font-size: 71px;
-    margin: 0 0 47px;
+    margin: 0;
     line-height: 1;
     text-align: center;
   }
@@ -58,6 +58,7 @@ const Title = styled.h1`
 interface IProps {
   title: string;
   showSearch?: boolean;
+  totalPackages?: number;
 }
 
 const Header = (props: IProps) => {
@@ -81,7 +82,9 @@ const Header = (props: IProps) => {
           <Row>
             <SearchContainer>
               <h1>{props.title}</h1>
-              {props.showSearch && <Search />}
+              {props.showSearch && (
+                <Search totalPackages={props.totalPackages} />
+              )}
             </SearchContainer>
           </Row>
         </Container>

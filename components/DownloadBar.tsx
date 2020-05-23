@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import generateDownload, { fileType } from "../utils/generateDownload";
 import generateClipboard from "../utils/generateClipboard";
+import { IPackage } from "../api/getPackages";
 
 const Container = styled.div<{ visible: boolean }>`
   position: fixed;
@@ -26,11 +27,16 @@ const Contents = styled.div`
   display: flex;
   max-width: 744px;
   width: 100%;
-  padding: 0 15px;
   margin: 0 auto;
 
   > div {
-    flex: 1 0 auto;
+    padding: 0 15px;
+    &:first-child {
+      flex: 0 1 auto;
+    }
+    &:last-child {
+      flex: 1 0 auto;
+    }
   }
 
   h3 {
@@ -58,7 +64,7 @@ const Contents = styled.div`
 `;
 
 interface IProps {
-  packages: string[];
+  packages: IPackage[];
 }
 
 const DownloadBar = ({ packages }: IProps) => {
@@ -73,7 +79,7 @@ const DownloadBar = ({ packages }: IProps) => {
           <h3>
             {packages.length} package{packages.length > 1 && "s"} selected
           </h3>
-          <h4>{packages.join(", ")}</h4>
+          <h4>{packages.map((e) => e.Name).join(", ")}</h4>
         </div>
         <div>
           <h5>
@@ -83,14 +89,19 @@ const DownloadBar = ({ packages }: IProps) => {
               aria-label="Copy script for Powershell"
               src={require("./icons/copy.svg")}
               alt=""
-              onClick={() => generateClipboard(packages)}
+              onClick={() => generateClipboard(packages.map((e) => e.Id))}
             />
             <img
               role="download"
               aria-label="Download script for Powershell"
               src={require("./icons/download.svg")}
               alt=""
-              onClick={() => generateDownload(fileType.powershell, packages)}
+              onClick={() =>
+                generateDownload(
+                  fileType.powershell,
+                  packages.map((e) => e.Id)
+                )
+              }
             />
           </h5>
           <h5>
@@ -100,14 +111,19 @@ const DownloadBar = ({ packages }: IProps) => {
               aria-label="Copy script for CMD"
               src={require("./icons/copy.svg")}
               alt=""
-              onClick={() => generateClipboard(packages)}
+              onClick={() => generateClipboard(packages.map((e) => e.Id))}
             />
             <img
               role="download"
               aria-label="Download script for CMD"
               src={require("./icons/download.svg")}
               alt=""
-              onClick={() => generateDownload(fileType.bat, packages)}
+              onClick={() =>
+                generateDownload(
+                  fileType.bat,
+                  packages.map((e) => e.Id)
+                )
+              }
             />
           </h5>
           <h5>
@@ -117,14 +133,19 @@ const DownloadBar = ({ packages }: IProps) => {
               aria-label="Copy script for Bash"
               src={require("./icons/copy.svg")}
               alt=""
-              onClick={() => generateClipboard(packages)}
+              onClick={() => generateClipboard(packages.map((e) => e.Id))}
             />
             <img
               role="download"
               aria-label="Download script for Bash"
               src={require("./icons/download.svg")}
               alt=""
-              onClick={() => generateDownload(fileType.bash, packages)}
+              onClick={() =>
+                generateDownload(
+                  fileType.bash,
+                  packages.map((e) => e.Id)
+                )
+              }
             />
           </h5>
         </div>
