@@ -1,6 +1,7 @@
 import fetch from "isomorphic-unfetch";
 
 export interface IPackage {
+  // eslint-disable-next-line @typescript-eslint/ban-types
   _id: object;
   uuid: string;
   __v: number;
