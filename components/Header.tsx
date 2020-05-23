@@ -1,5 +1,7 @@
 import styled from "styled-components";
 import { Container, Row, Col } from "styled-bootstrap-grid";
+import Link from "next/link";
+
 import Search from "./Search";
 
 const TopBar = styled.div`
@@ -10,12 +12,29 @@ const TopBar = styled.div`
   height: 50px;
   padding: 0;
   background: ${(x: any) => x.theme.accentDark};
+
+  h1 {
+    font-size: 24px;
+    line-height: 1.8;
+  }
 `;
 
 const SearchBar = styled.div`
-  margin-top: 50px;
-  background: ${(x: any) => x.theme.accent};
+  margin: 50px 0 60px;
+  background: url("/header_tess.svg") center no-repeat;
   padding: 85px 0;
+  position: relative;
+  &::before {
+    content: "";
+    z-index: -1;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: url("/background.svg") ${(x: any) => x.theme.accent} 3px 1px
+      fixed;
+  }
 `;
 
 const SearchContainer = styled.div`
@@ -36,14 +55,23 @@ const Title = styled.h1`
   margin: 0;
 `;
 
-const Header = () => {
+interface IProps {
+  title: string;
+  showSearch?: boolean;
+}
+
+const Header = (props: IProps) => {
   return (
     <>
       <TopBar>
         <Container>
           <Row>
             <Col col={6}>
-              <Title>winget.run</Title>
+              <Link href="/" as="/">
+                <a>
+                  <Title>winget.run</Title>
+                </a>
+              </Link>
             </Col>
           </Row>
         </Container>
@@ -52,8 +80,8 @@ const Header = () => {
         <Container>
           <Row>
             <SearchContainer>
-              <h1>winget.run</h1>
-              <Search />
+              <h1>{props.title}</h1>
+              {props.showSearch && <Search />}
             </SearchContainer>
           </Row>
         </Container>

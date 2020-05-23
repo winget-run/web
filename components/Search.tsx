@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
+import Link from "next/link";
 
 import useDebounce from "../utils/hooks/useDebounce";
-import Link from "next/link";
 import { CardTitle, CardOrg, CardDesc } from "./Card";
+import AutocompleteResult from "./AutocompleteResult";
 
 const SearchContainer = styled.div`
   position: relative;
@@ -12,14 +13,19 @@ const SearchContainer = styled.div`
 
 const StyledInput = styled.input`
   width: 100%;
-  padding: 12px 20px;
+  padding: 10px 28px;
   border: none;
   border-radius: 100px;
   font-weight: bold;
   font-size: 16px;
   color: ${(x: any) => x.theme.darkGrey};
+  border: 2px solid transparent;
   &::placeholder {
     color: ${(x: any) => x.theme.textFade};
+  }
+  &:focus {
+    outline: none;
+    border-color: ${(x: any) => x.theme.accentLight};
   }
 `;
 
@@ -31,34 +37,6 @@ const ResultsContainer = styled.div`
   margin-top: 10px;
   border-radius: 8px;
   box-shadow: 0 3px 15px rgba(0, 0, 0, 0.5);
-`;
-
-const Title = styled(CardTitle)`
-  display: inline;
-  color: ${(x: any) => x.theme.darkGrey};
-  margin-right: 8px;
-`;
-
-const Org = styled(CardOrg)`
-  display: inline;
-  color: ${(x: any) => x.theme.accent};
-  transform: translateY(7px);
-`;
-
-const Desc = styled(CardDesc)`
-  color: ${(x: any) => x.theme.darkGrey};
-  span {
-    font-weight: bold;
-    background: #ffffa2;
-  }
-`;
-
-const Result = styled.div`
-  &:not(:last-child) {
-    border-bottom: 1px solid ${(x: any) => x.theme.lightGrey};
-    padding-bottom: 10px;
-    margin-bottom: 15px;
-  }
 `;
 
 const Search = () => {
@@ -88,44 +66,22 @@ const Search = () => {
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
       />
-      <ResultsContainer>
-        <Result>
-          <span>
-            {/* <Link href="/pkg/[org]/[pkg]" as={`/pkg/${links[0]}/${links[1]}`}> */}
-            <a>
-              <Title>Git Extensions</Title>
-            </a>
-            {/* </Link> */}
-            {/* <Link href="/pkg/[org]" as={`/pkg/${links[0]}`}> */}
-            <a>
-              <Org>Git Extensions Team</Org>
-            </a>
-            {/* </Link> */}
-          </span>
-          <Desc>
-            Git Extensions is a graphical user interface for Git that allows you
-            to control Git without using the commandline
-          </Desc>
-        </Result>
-        <Result>
-          <span>
-            {/* <Link href="/pkg/[org]/[pkg]" as={`/pkg/${links[0]}/${links[1]}`}> */}
-            <a>
-              <Title>Git Extensions</Title>
-            </a>
-            {/* </Link> */}
-            {/* <Link href="/pkg/[org]" as={`/pkg/${links[0]}`}> */}
-            <a>
-              <Org>Git Extensions Team</Org>
-            </a>
-            {/* </Link> */}
-          </span>
-          <Desc>
-            <span>Git</span> Extensions is a graphical user interface for Git
-            that allows you to control Git without using the commandline
-          </Desc>
-        </Result>
-      </ResultsContainer>
+      {debouncedSearchTerm && (
+        <ResultsContainer aria-live="polite" aria-modal="true">
+          <AutocompleteResult
+            id="testorg.testapp"
+            title="Test title"
+            org="Test org"
+            desc="This is a <span>test</span> description"
+          />
+          <AutocompleteResult
+            id="testorg.testapp"
+            title="Test title"
+            org="Test org"
+            desc="This is a <span>test</span> description"
+          />
+        </ResultsContainer>
+      )}
     </SearchContainer>
   );
 };
