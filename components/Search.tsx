@@ -1,12 +1,11 @@
 import { useState, useEffect, Dispatch, SetStateAction } from "react";
 import { styled } from "../utils/theme";
 import Link from "next/link";
-import fetch from "isomorphic-unfetch";
 
 import useDebounce from "../utils/hooks/useDebounce";
 import { CardTitle, CardOrg, CardDesc } from "./Card";
 import AutocompleteResult from "./AutocompleteResult";
-import { IPackage } from "../api/getPackages";
+import getPackages, { IPackage } from "../api/getPackages";
 
 const SearchContainer = styled.div`
   position: relative;
@@ -61,14 +60,10 @@ const Search = ({ totalPackages }: { totalPackages: number }) => {
   useEffect(() => {
     if (debouncedSearchTerm) {
       setIsSearching(true);
-      fetch(
-        `https://api.winget.run/api/v1/autocomplete?query=${debouncedSearchTerm}`
-      )
-        .then((e) => e.json())
-        .then((e) => {
-          setResults(e.packages);
-          setIsSearching(false);
-        });
+      getPackages(`autocomplete?query=${debouncedSearchTerm}`).then((e) => {
+        setResults(e.packages);
+        setIsSearching(false);
+      });
     } else {
       setResults([]);
     }
