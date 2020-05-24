@@ -1,16 +1,7 @@
 import fetch from "isomorphic-unfetch";
 
-export interface IPackage {
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  _id: object;
-  uuid: string;
-  __v: number;
-
-  createdAt: Date;
-  updatedAt: Date;
-
+export interface IPackageInfo {
   Description?: string;
-  Id: string;
   Name: string;
   AppMoniker?: string;
   Version: string;
@@ -61,11 +52,21 @@ export interface IPackage {
   ];
 }
 
+export interface IPackage {
+  Id: string;
+  latest: IPackageInfo;
+  versions: string[];
+}
+
 export interface IResponse {
   packages: IPackage[];
   total: number;
 }
 
-export default async function getPackages(): Promise<IResponse> {
-  return fetch(`https://api.winget.run/api/v1/`).then((e) => e.json());
+export interface IResponseSingle {
+  package: IPackage;
+}
+
+export default async function getPackages(route = ""): Promise<IResponse> {
+  return fetch(`https://api.winget.run/v1/${route}`).then((e) => e.json());
 }

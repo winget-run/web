@@ -1,13 +1,17 @@
+//TODO: fix this fucking abortion
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+//@ts-nocheck
 import Link from "next/link";
-import styled from "styled-components";
+import { styled } from "../utils/theme";
 import { media } from "styled-bootstrap-grid";
 
 import generateClipboard from "../utils/generateClipboard";
 import { IPackage } from "../api/getPackages";
+import { useState } from "react";
 
-const StyledContainer = styled.div<{ selected: boolean }>`
+export const CardContainer = styled.div<{ selected?: boolean }>`
   border-radius: 8px;
-  background: ${(x: any) => x.theme.grey};
+  background: ${(x) => x.theme.grey};
   width: 100%;
   height: calc(100% - 15px);
   padding: 15px 15px 54px;
@@ -17,15 +21,15 @@ const StyledContainer = styled.div<{ selected: boolean }>`
   border: 2px solid transparent;
   transition: border-color 200ms ease;
 
-  ${media.md`
-    height: calc(100% - 30px);
-    margin-bottom: 30px;
-  `}
-
   ${(x) =>
     x.selected &&
     `
   border-color: ${x.theme.accent};
+  `}
+
+  ${media.md`
+    height: calc(100% - 30px);
+    margin-bottom: 30px;
   `}
 `;
 
@@ -42,7 +46,7 @@ const Add = styled.button<{ selected: boolean }>`
   &::after {
     content: "";
     position: absolute;
-    background: ${(x: any) => x.theme.text};
+    background: ${(x) => x.theme.text};
     border-radius: 20px;
     left: 50%;
     top: 50%;
@@ -64,7 +68,7 @@ const Add = styled.button<{ selected: boolean }>`
     outline: none;
     &::before,
     &::after {
-      background: ${(x: any) => x.theme.accentLight};
+      background: ${(x) => x.theme.accentLight};
     }
   }
 `;
@@ -76,13 +80,13 @@ const Copy = styled.button`
   font-size: 14px;
   background: transparent;
   border: none;
-  color: ${(x: any) => x.theme.text};
+  color: ${(x) => x.theme.text};
   cursor: pointer;
   line-height: 19px;
 
   &:focus {
     outline: none;
-    color: ${(x: any) => x.theme.accentLight};
+    color: ${(x) => x.theme.accentLight};
   }
 
   img {
@@ -92,25 +96,32 @@ const Copy = styled.button`
 `;
 
 export const CardTitle = styled.h2`
-  display: inline;
-  color: ${(x: any) => x.theme.text};
+  display: block;
+  color: ${(x) => x.theme.text};
   font-size: 20px;
   margin: 0;
   padding-right: 30px;
+  max-width: calc(100% - 30px);
+  word-break: break-word;
 `;
 
 export const CardOrg = styled.h3`
   display: inline;
-  color: ${(x: any) => x.theme.accentLight};
+  color: ${(x) => x.theme.accentLight};
   font-size: 14px;
   margin: 2px 0 0;
 `;
 
 export const CardDesc = styled.p`
-  color: ${(x: any) => x.theme.textFade};
+  color: ${(x) => x.theme.textFade};
   font-size: 16px;
   line-height: 20px;
   margin: 10px 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  overflow: hidden;
 `;
 
 interface IProps {
@@ -125,12 +136,16 @@ interface IProps {
 
 const Card = (props: IProps) => {
   const links = props.id.split(".");
+  const [selected, setSelected] = useState(props.selected);
 
   return (
-    <StyledContainer selected={props.selected}>
+    <CardContainer selected={selected}>
       <Add
-        onClick={() => props.addFn(!props.selected, props.package)}
-        selected={props.selected}
+        onClick={() => {
+          setSelected(!selected);
+          props.addFn(!selected, props.package);
+        }}
+        selected={selected}
         aria-label="Add to multi-download"
       />
       <Link href="/pkg/[org]/[pkg]" as={`/pkg/${links[0]}/${links[1]}`}>
@@ -138,7 +153,6 @@ const Card = (props: IProps) => {
           <CardTitle>{props.title}</CardTitle>
         </a>
       </Link>
-      <br />
       <Link href="/pkg/[org]" as={`/pkg/${links[0]}`}>
         <a>
           <CardOrg>{props.org}</CardOrg>
@@ -149,7 +163,7 @@ const Card = (props: IProps) => {
         <img src={require("./icons/copy.svg")} alt="" />
         Copy command
       </Copy>
-    </StyledContainer>
+    </CardContainer>
   );
 };
 

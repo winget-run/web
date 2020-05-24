@@ -48,17 +48,6 @@ export default class MyDocument extends Document {
           <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
           <meta name="theme-color" content="#327080" />
           <meta
-            name="description"
-            content="Searching, discovering and installing winget packages made effortless without any third-party programs"
-          />
-          <meta name="twitter:card" content="summary_large_image" />
-          <meta name="twitter:site" content="@wingetdotrun" />
-          <meta name="twitter:title" content="winget.run" />
-          <meta
-            name="twitter:description"
-            content="Searching, discovering and installing winget packages made effortless without any third-party programs"
-          />
-          <meta
             name="twitter:image"
             content="https://winget.run/twitter_card.jpg"
           />

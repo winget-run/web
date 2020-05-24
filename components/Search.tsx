@@ -1,5 +1,5 @@
 import { useState, useEffect, Dispatch, SetStateAction } from "react";
-import styled from "styled-components";
+import { styled } from "../utils/theme";
 import Link from "next/link";
 import fetch from "isomorphic-unfetch";
 
@@ -21,14 +21,14 @@ const StyledInput = styled.input`
   border-radius: 100px;
   font-weight: bold;
   font-size: 16px;
-  color: ${(x: any) => x.theme.darkGrey};
+  color: ${(x) => x.theme.darkGrey};
   border: 2px solid transparent;
   &::placeholder {
-    color: ${(x: any) => x.theme.textFade};
+    color: ${(x) => x.theme.textFade};
   }
   &:focus {
     outline: none;
-    border-color: ${(x: any) => x.theme.accentLight};
+    border-color: ${(x) => x.theme.accentLight};
   }
 `;
 
@@ -36,14 +36,14 @@ const ResultsContainer = styled.div`
   position: absolute;
   width: 100%;
   padding: 15px 20px;
-  background: ${(x: any) => x.theme.text};
+  background: ${(x) => x.theme.text};
   margin-top: 10px;
   border-radius: 8px;
   box-shadow: 0 3px 15px rgba(0, 0, 0, 0.5);
 `;
 
 const NoResultsText = styled.h4`
-  color: ${(x: any) => x.theme.darkGrey};
+  color: ${(x) => x.theme.darkGrey};
   text-align: center;
   font-size: 24px;
   margin: 15px 0;
@@ -66,11 +66,9 @@ const Search = ({ totalPackages }: { totalPackages: number }) => {
       )
         .then((e) => e.json())
         .then((e) => {
-          setIsSearching(false);
           setResults(e.packages);
-          console.log(e.packages);
+          setIsSearching(false);
         });
-      console.log(debouncedSearchTerm);
     } else {
       setResults([]);
     }
@@ -90,9 +88,9 @@ const Search = ({ totalPackages }: { totalPackages: number }) => {
           {results.map((e) => (
             <AutocompleteResult
               id={e.Id}
-              title={e.Name}
-              org={e.Publisher}
-              desc={e.Description?.replace(
+              title={e.latest.Name}
+              org={e.latest.Publisher}
+              desc={e.latest.Description?.replace(
                 new RegExp(debouncedSearchTerm, "gi"),
                 "<span>$&</span>"
               )}
@@ -100,7 +98,7 @@ const Search = ({ totalPackages }: { totalPackages: number }) => {
           ))}
         </ResultsContainer>
       )}
-      {debouncedSearchTerm && results.length === 0 && (
+      {debouncedSearchTerm && !isSearching && results.length === 0 && (
         <ResultsContainer aria-live="polite" aria-modal="true">
           <NoResultsText>
             No results found for "{debouncedSearchTerm}"

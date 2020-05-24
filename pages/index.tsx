@@ -3,51 +3,88 @@ import Card from "../components/Card";
 import { Container, Row, Col } from "styled-bootstrap-grid";
 import Header from "../components/Header";
 import DownloadBar from "../components/DownloadBar";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import getPackages, { IPackage } from "../api/getPackages";
-import useSWR from "swr";
-import { IResponse } from "../api/getPackages";
+import useSWR, { useSWRPages } from "swr";
+import LoadMore from "../components/LoadMore";
 
 export default function Home(props) {
-  const initialData = props.data;
-  const { data } = useSWR("home", getPackages, { initialData });
-  const [packages, setPackages] = useState([]);
+  const [selectedPackages, setSelectedPackages] = useState([]);
 
   const handleAddPackage = (add: boolean, data: IPackage) => {
     if (add) {
-      setPackages([...packages, data]);
+      setSelectedPackages((prev) => [...prev, data]);
     } else {
-      setPackages(packages.filter((x) => x !== data));
+      setSelectedPackages((prev) => prev.filter((x) => x !== data));
     }
   };
+
+  const { pages, isLoadingMore, loadMore, pageSWRs, pageCount } = useSWRPages(
+    "allPackages",
+    ({ offset, withSWR }) => {
+      let initialData = null;
+
+      if (!offset) {
+        initialData = props.data;
+      }
+
+      const { data } = withSWR(
+        // eslint-disable-next-line react-hooks/rules-of-hooks
+        useSWR(`?page=${offset || 0}`, getPackages, { initialData })
+      );
+
+      if (!data) return null;
+
+      const { packages }: { packages: IPackage[] } = data;
+
+      return packages.map((e) => (
+        <Col key={e.Id} md={6} lg={4} xl={3}>
+          <Card
+            package={e}
+            title={e.latest.Name}
+            org={e.latest.Publisher}
+            description={e.latest.Description}
+            id={e.Id}
+            selected={selectedPackages.find((x) => x.Id === e.Id)}
+            addFn={handleAddPackage}
+          />
+        </Col>
+      ));
+    },
+    () => pageCount,
+    // deps of the page component
+    []
+  );
 
   return (
     <div className="container">
       <Head>
         <title>winget.run | Finding winget packages made simple.</title>
+        <meta
+          name="description"
+          content="Searching, discovering and installing winget packages made effortless without any third-party programs"
+        />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@wingetdotrun" />
+        <meta name="twitter:title" content="winget.run" />
+        <meta
+          name="twitter:description"
+          content="Searching, discovering and installing winget packages made effortless without any third-party programs"
+        />
       </Head>
       <header>
-        <Header showSearch title="winget.run" totalPackages={data.total} />
+        <Header
+          showSearch
+          title="winget.run"
+          totalPackages={pageSWRs[0]?.data.total}
+        />
       </header>
       <main>
         <Container>
-          <Row>
-            {(data as IResponse).packages.map((e) => (
-              <Col md={6} lg={4} xl={3}>
-                <Card
-                  package={e}
-                  title={e.Name}
-                  org={e.Publisher}
-                  description={e.Description}
-                  id={e.Id}
-                  selected={packages.find((x) => x === e)}
-                  addFn={handleAddPackage}
-                />
-              </Col>
-            ))}
-          </Row>
+          <Row>{pages}</Row>
+          <LoadMore onClick={loadMore} />
         </Container>
-        <DownloadBar packages={packages} />
+        <DownloadBar packages={selectedPackages} />
       </main>
     </div>
   );

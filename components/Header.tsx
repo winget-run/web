@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import { Container, Row, Col } from "styled-bootstrap-grid";
+import { styled } from "../utils/theme";
+import { Container, Row, Col, media } from "styled-bootstrap-grid";
 import Link from "next/link";
 
 import Search from "./Search";
@@ -11,15 +11,10 @@ const TopBar = styled.div`
   z-index: 50;
   height: 50px;
   padding: 0;
-  background: ${(x: any) => x.theme.accentDark};
-
-  h1 {
-    font-size: 24px;
-    line-height: 1.8;
-  }
+  background: ${(x) => x.theme.accentDark};
 `;
 
-const SearchBar = styled.div`
+export const SearchBar = styled.div`
   margin: 50px 0 60px;
   background: url("/header_tess.svg") center no-repeat;
   padding: 85px 0;
@@ -32,8 +27,7 @@ const SearchBar = styled.div`
     height: 100%;
     top: 0;
     left: 0;
-    background: url("/background.svg") ${(x: any) => x.theme.accent} 3px 1px
-      fixed;
+    background: url("/background.svg") ${(x) => x.theme.accent} 3px 1px fixed;
   }
 `;
 
@@ -52,13 +46,36 @@ const SearchContainer = styled.div`
 `;
 
 const Title = styled.h1`
-  margin: 0;
+  margin: 0 50px 0 0;
+  display: inline-block;
+  height: 50px;
+  font-size: 24px;
+  line-height: 1.8;
+`;
+
+const NavLink = styled.h2`
+  margin: 0 20px 0 0;
+  display: none;
+  height: 50px;
+  font-size: 16px;
+  font-weight: normal;
+  height: auto;
+  opacity: 0.8;
+  &:hover {
+    opacity: 1;
+  }
+
+  ${media.md`
+    display: inline-block;
+  `}
 `;
 
 interface IProps {
-  title: string;
+  title?: string;
   showSearch?: boolean;
   totalPackages?: number;
+  customBar?: boolean;
+  children?: React.ReactChild | React.ReactChild[];
 }
 
 const Header = (props: IProps) => {
@@ -66,29 +83,44 @@ const Header = (props: IProps) => {
     <>
       <TopBar>
         <Container>
-          <Row>
-            <Col col={6}>
+          <Row justifyContent="between" alignItems="center">
+            <Col col="auto">
               <Link href="/" as="/">
                 <a>
                   <Title>winget.run</Title>
                 </a>
               </Link>
+
+              <NavLink>
+                <a href="https://docs.microsoft.com/en-us/windows/package-manager/">
+                  Documentation
+                </a>
+              </NavLink>
+            </Col>
+            <Col col="auto">
+              <a href="https://github.com/winget-run">
+                <img src={require("./icons/github.svg")} alt="View on GitHub" />
+              </a>
             </Col>
           </Row>
         </Container>
       </TopBar>
-      <SearchBar>
-        <Container>
-          <Row>
-            <SearchContainer>
-              <h1>{props.title}</h1>
-              {props.showSearch && (
-                <Search totalPackages={props.totalPackages} />
-              )}
-            </SearchContainer>
-          </Row>
-        </Container>
-      </SearchBar>
+      {props.customBar ? (
+        props.children
+      ) : (
+        <SearchBar>
+          <Container>
+            <Row>
+              <SearchContainer>
+                <h1>{props.title}</h1>
+                {props.showSearch && (
+                  <Search totalPackages={props.totalPackages} />
+                )}
+              </SearchContainer>
+            </Row>
+          </Container>
+        </SearchBar>
+      )}
     </>
   );
 };

@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import { styled } from "../utils/theme";
 import generateDownload, { fileType } from "../utils/generateDownload";
 import generateClipboard from "../utils/generateClipboard";
 import { IPackage } from "../api/getPackages";
@@ -10,7 +10,7 @@ const Container = styled.div<{ visible: boolean }>`
   left: 0;
   width: 100%;
   padding: 30px 0;
-  background-color: ${(x: any) => x.theme.accentDark};
+  background-color: ${(x) => x.theme.accentDark};
   box-shadow: 0 0 0 rgba(0, 0, 0, 0.3);
   transform: translateY(100%);
   transition: transform 350ms ease, box-shadow 350ms ease;
@@ -42,6 +42,14 @@ const Contents = styled.div`
   h3 {
     font-size: 24px;
     margin: 0 0 10px;
+  }
+
+  h4 {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    text-overflow: ellipsis;
+    overflow: hidden;
   }
 
   h4,
@@ -77,9 +85,9 @@ const DownloadBar = ({ packages }: IProps) => {
       <Contents>
         <div>
           <h3>
-            {packages.length} package{packages.length > 1 && "s"} selected
+            {packages.length} package{packages.length !== 1 && "s"} selected
           </h3>
-          <h4>{packages.map((e) => e.Name).join(", ")}</h4>
+          <h4>{packages.map((e) => e.latest.Name).join(", ")}</h4>
         </div>
         <div>
           <h5>

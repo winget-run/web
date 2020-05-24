@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import { styled } from "../utils/theme";
 import Head from "next/head";
 
 const Background = styled.div`

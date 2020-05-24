@@ -1,23 +1,23 @@
-import styled from "styled-components";
+import { styled } from "../utils/theme";
 import Link from "next/link";
 
 import { CardTitle, CardOrg, CardDesc } from "./Card";
 
 const Title = styled(CardTitle)`
   display: inline;
-  color: ${(x: any) => x.theme.darkGrey};
+  color: ${(x) => x.theme.darkGrey};
   margin-right: 8px;
   padding-right: 0;
 `;
 
 const Org = styled(CardOrg)`
   display: inline;
-  color: ${(x: any) => x.theme.accent};
+  color: ${(x) => x.theme.accent};
   transform: translateY(7px);
 `;
 
 const Desc = styled(CardDesc)`
-  color: ${(x: any) => x.theme.darkGrey};
+  color: ${(x) => x.theme.darkGrey};
   span {
     font-weight: bold;
     background: #ffffa2;
@@ -26,7 +26,7 @@ const Desc = styled(CardDesc)`
 
 const Result = styled.div`
   &:not(:last-child) {
-    border-bottom: 1px solid ${(x: any) => x.theme.lightGrey};
+    border-bottom: 1px solid ${(x) => x.theme.lightGrey};
     padding-bottom: 10px;
     margin-bottom: 15px;
   }
