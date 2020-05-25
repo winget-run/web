@@ -12,6 +12,10 @@ const TopBar = styled.div`
   height: 50px;
   padding: 0;
   background: ${(x) => x.theme.accentDark};
+
+  img {
+    margin-left: 15px;
+  }
 `;
 
 export const SearchBar = styled.div`
@@ -98,6 +102,12 @@ const Header = (props: IProps) => {
               </NavLink>
             </Col>
             <Col col="auto">
+              <a href="https://ko-fi.com/wingetdotrun">
+                <img
+                  src={require("./icons/kofi.svg")}
+                  alt="Support us on Ko-Fi!"
+                />
+              </a>
               <a href="https://github.com/winget-run">
                 <img src={require("./icons/github.svg")} alt="View on GitHub" />
               </a>

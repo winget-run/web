@@ -7,7 +7,8 @@ import { media } from "styled-bootstrap-grid";
 
 import generateClipboard from "../utils/generateClipboard";
 import { IPackage } from "../api/getPackages";
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { Downloads } from "./StateWrapper";
 
 export const CardContainer = styled.div<{ selected?: boolean }>`
   border-radius: 8px;
@@ -130,22 +131,20 @@ interface IProps {
   org: string;
   description: string;
   id: string;
-  selected?: boolean;
-  addFn: (add: boolean, data: IPackage) => void;
 }
 
 const Card = (props: IProps) => {
   const links = props.id.split(".");
-  const [selected, setSelected] = useState(props.selected);
-
+  const { packages, addPackage, removePackage } = useContext(Downloads);
   return (
-    <CardContainer selected={selected}>
+    <CardContainer selected={!!packages.find((e) => e.Id === props.package.Id)}>
       <Add
         onClick={() => {
-          setSelected(!selected);
-          props.addFn(!selected, props.package);
+          !!packages.find((e) => e.Id === props.package.Id)
+            ? removePackage(props.package)
+            : addPackage(props.package);
         }}
-        selected={selected}
+        selected={!!packages.find((e) => e.Id === props.package.Id)}
         aria-label="Add to multi-download"
       />
       <Link href="/pkg/[org]/[pkg]" as={`/pkg/${links[0]}/${links[1]}`}>

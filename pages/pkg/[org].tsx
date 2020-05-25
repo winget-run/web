@@ -8,32 +8,33 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 import DownloadBar from "../../components/DownloadBar";
 import Error from "../_error";
+import LoadMore from "../../components/LoadMore";
 
 export default function Org(props) {
   const router = useRouter();
   const { org } = router.query;
 
-  const [selectedPackages, setSelectedPackages] = useState([]);
-
-  const handleAddPackage = (add: boolean, data: IPackage) => {
-    if (add) {
-      setSelectedPackages((prev) => [...prev, data]);
-    } else {
-      setSelectedPackages((prev) => prev.filter((x) => x !== data));
-    }
-  };
-
-  const { pages, isLoadingMore, loadMore, pageSWRs, pageCount } = useSWRPages(
-    org as string,
+  const {
+    pages,
+    isLoadingMore,
+    isReachingEnd,
+    loadMore,
+    pageSWRs,
+    pageCount,
+  } = useSWRPages(
+    "allPackages",
     ({ offset, withSWR }) => {
       let initialData = null;
 
       if (!offset) {
         initialData = props.data;
       }
+
       const { data } = withSWR(
         // eslint-disable-next-line react-hooks/rules-of-hooks
-        useSWR(`${org}?page=${offset || 0}`, getPackages, { initialData })
+        useSWR(`${org}?page=${offset || 0}`, getPackages, {
+          initialData,
+        })
       );
 
       if (!data) return null;
@@ -48,13 +49,11 @@ export default function Org(props) {
             org={e.latest.Publisher}
             description={e.latest.Description}
             id={e.Id}
-            selected={selectedPackages.find((x) => x.Id === e.Id)}
-            addFn={handleAddPackage}
           />
         </Col>
       ));
     },
-    () => pageCount,
+    ({ data }) => (data?.total > pageCount * 12 ? pageCount : null),
     // deps of the page component
     []
   );
@@ -66,25 +65,38 @@ export default function Org(props) {
   return (
     <div className="container">
       <Head>
-        {/* TODO: add meta tags */}
-        <title>winget.run | Finding winget packages made simple.</title>
-        <link rel="icon" href="/favicon.ico" />
+        <title>
+          Packages by {props.data.packages[0].latest.Publisher} | winget.run
+        </title>
+        <meta
+          name="description"
+          content={`View packages by ${props.data.packages[0].latest.Publisher} on winget.run`}
+        />
+        <meta
+          name="twitter:title"
+          content={`${props.data.packages[0].latest.Publisher} on winget.run`}
+        />
+        <meta
+          name="twitter:description"
+          content={`View packages by ${props.data.packages[0].latest.Publisher} on winget.run`}
+        />
       </Head>
       <header>
-        <Header title={pageSWRs[0]?.data.packages[0].Publisher || org} />
+        <Header title={props.data.packages[0].latest.Publisher} />
       </header>
       <main>
         <Container>
           <Row>{pages}</Row>
         </Container>
-        <DownloadBar packages={selectedPackages} />
+        {!isReachingEnd && <LoadMore onClick={loadMore} />}
+        <DownloadBar />
       </main>
     </div>
   );
 }
 
 export async function getServerSideProps({ params }) {
-  const data = await getPackages(params.org);
+  const data = await getPackages(`${params.org}`);
 
   return { props: { data } };
 }

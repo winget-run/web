@@ -9,17 +9,14 @@ import useSWR, { useSWRPages } from "swr";
 import LoadMore from "../components/LoadMore";
 
 export default function Home(props) {
-  const [selectedPackages, setSelectedPackages] = useState([]);
-
-  const handleAddPackage = (add: boolean, data: IPackage) => {
-    if (add) {
-      setSelectedPackages((prev) => [...prev, data]);
-    } else {
-      setSelectedPackages((prev) => prev.filter((x) => x !== data));
-    }
-  };
-
-  const { pages, isLoadingMore, loadMore, pageSWRs, pageCount } = useSWRPages(
+  const {
+    pages,
+    isLoadingMore,
+    isReachingEnd,
+    loadMore,
+    pageSWRs,
+    pageCount,
+  } = useSWRPages(
     "allPackages",
     ({ offset, withSWR }) => {
       let initialData = null;
@@ -30,7 +27,9 @@ export default function Home(props) {
 
       const { data } = withSWR(
         // eslint-disable-next-line react-hooks/rules-of-hooks
-        useSWR(`?page=${offset || 0}`, getPackages, { initialData })
+        useSWR(`search?name=&page=${offset || 0}&limit=24`, getPackages, {
+          initialData,
+        })
       );
 
       if (!data) return null;
@@ -45,13 +44,11 @@ export default function Home(props) {
             org={e.latest.Publisher}
             description={e.latest.Description}
             id={e.Id}
-            selected={selectedPackages.find((x) => x.Id === e.Id)}
-            addFn={handleAddPackage}
           />
         </Col>
       ));
     },
-    () => pageCount,
+    ({ data }) => (data?.total > pageCount * 24 ? pageCount : null),
     // deps of the page component
     []
   );
@@ -82,15 +79,15 @@ export default function Home(props) {
       <main>
         <Container>
           <Row>{pages}</Row>
-          <LoadMore onClick={loadMore} />
+          {!isReachingEnd && <LoadMore onClick={loadMore} />}
         </Container>
-        <DownloadBar packages={selectedPackages} />
+        <DownloadBar />
       </main>
     </div>
   );
 }
 
 export async function getServerSideProps() {
-  const data = await getPackages();
+  const data = await getPackages(`search?name=&page=0&limit=24`);
   return { props: { data } };
 }

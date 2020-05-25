@@ -2,6 +2,8 @@ import { styled } from "../utils/theme";
 import generateDownload, { fileType } from "../utils/generateDownload";
 import generateClipboard from "../utils/generateClipboard";
 import { IPackage } from "../api/getPackages";
+import { useContext } from "react";
+import { Downloads } from "./StateWrapper";
 
 const Container = styled.div<{ visible: boolean }>`
   position: fixed;
@@ -75,7 +77,9 @@ interface IProps {
   packages: IPackage[];
 }
 
-const DownloadBar = ({ packages }: IProps) => {
+const DownloadBar = () => {
+  const { packages } = useContext(Downloads);
+
   return (
     <Container
       visible={packages.length > 0}

@@ -272,6 +272,7 @@ export default function Pkg(props) {
             </Col>
           </CustomRow>
         </Container>
+        <DownloadBar />
       </main>
     </div>
   );
