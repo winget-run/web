@@ -34,7 +34,7 @@ export const CardContainer = styled.div<{ selected?: boolean }>`
   `}
 `;
 
-const Add = styled.button<{ selected: boolean }>`
+export const Add = styled.button<{ selected: boolean }>`
   width: 50px;
   height: 50px;
   background: transparent;

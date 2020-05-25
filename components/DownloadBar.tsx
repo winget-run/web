@@ -52,6 +52,19 @@ const Contents = styled.div`
     -webkit-box-orient: vertical;
     text-overflow: ellipsis;
     overflow: hidden;
+
+    span {
+      cursor: pointer;
+      transition: text-decoration 150ms ease;
+      &:hover {
+        text-decoration: line-through;
+      }
+      &:not(:last-child)::after {
+        text-decoration: none !important;
+        cursor: initial;
+        content: ", ";
+      }
+    }
   }
 
   h4,
@@ -78,7 +91,7 @@ interface IProps {
 }
 
 const DownloadBar = () => {
-  const { packages } = useContext(Downloads);
+  const { packages, removePackage } = useContext(Downloads);
 
   return (
     <Container
@@ -91,7 +104,11 @@ const DownloadBar = () => {
           <h3>
             {packages.length} package{packages.length !== 1 && "s"} selected
           </h3>
-          <h4>{packages.map((e) => e.latest.Name).join(", ")}</h4>
+          <h4>
+            {packages.map((e) => (
+              <span onClick={() => removePackage(e)}>{e.latest.Name}</span>
+            ))}
+          </h4>
         </div>
         <div>
           <h5>

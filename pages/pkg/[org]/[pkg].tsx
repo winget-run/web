@@ -1,5 +1,5 @@
 import Head from "next/head";
-import Card, { CardContainer } from "../../../components/Card";
+import Card, { CardContainer, Add } from "../../../components/Card";
 import { Container, Row, Col, media } from "styled-bootstrap-grid";
 import useSWR, { useSWRPages } from "swr";
 import getPackages, {
@@ -7,13 +7,14 @@ import getPackages, {
   IPackage,
   IResponseSingle,
 } from "../../../api/getPackages";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useRouter } from "next/router";
 import DownloadBar from "../../../components/DownloadBar";
 import Error from "../../_error";
 import { styled } from "../../../utils/theme";
 import Header, { SearchBar } from "../../../components/Header";
 import generateClipboard from "../../../utils/generateClipboard";
+import { Downloads } from "../../../components/StateWrapper";
 
 const TopBar = styled(SearchBar)`
   padding: 91px 0 !important;
@@ -92,6 +93,18 @@ const VersionsCard = styled(CardContainer)`
   height: auto !important;
 `;
 
+const AddCard = styled(VersionsCard)`
+  ${SectionHeader} {
+    margin: 0;
+    font-weight: 500;
+    font-size: 20px;
+  }
+  ${Add} {
+    top: 50%;
+    transform: translateY(-50%);
+  }
+`;
+
 const Version = styled.p`
   font-weight: 500;
   font-size: 16px;
@@ -156,11 +169,14 @@ export default function Pkg(props) {
   const { org, pkg } = router.query;
   const initialData = props.data;
   const { data } = useSWR(`${org}/${pkg}`, getPackages, { initialData });
+  const { packages, addPackage, removePackage } = useContext(Downloads);
   if ((data as IResponseSingle).package === null) {
     return <Error statusCode={404} />;
   }
 
   const p = data.package as IPackage;
+
+  const inDownloads = packages.find((e) => e.Id === p.Id);
 
   return (
     <div className="container">
@@ -211,6 +227,18 @@ export default function Pkg(props) {
         <Container>
           <CustomRow>
             <Col col={12} lg={4} xl={3}>
+              <AddCard>
+                <SectionHeader>
+                  {inDownloads ? "Remove from list" : "Add to list"}
+                </SectionHeader>
+                <Add
+                  onClick={() => {
+                    inDownloads ? removePackage(p) : addPackage(p);
+                  }}
+                  selected={inDownloads}
+                  aria-label="Add to multi-download"
+                />
+              </AddCard>
               <VersionsCard>
                 <SectionHeader>Versions</SectionHeader>
                 {p.versions.map((e) => (

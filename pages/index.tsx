@@ -3,56 +3,9 @@ import Card from "../components/Card";
 import { Container, Row, Col } from "styled-bootstrap-grid";
 import Header from "../components/Header";
 import DownloadBar from "../components/DownloadBar";
-import { useState, useEffect } from "react";
-import getPackages, { IPackage } from "../api/getPackages";
-import useSWR, { useSWRPages } from "swr";
-import LoadMore from "../components/LoadMore";
+import getPackages, { IResponse } from "../api/getPackages";
 
-export default function Home(props) {
-  const {
-    pages,
-    isLoadingMore,
-    isReachingEnd,
-    loadMore,
-    pageSWRs,
-    pageCount,
-  } = useSWRPages(
-    "allPackages",
-    ({ offset, withSWR }) => {
-      let initialData = null;
-
-      if (!offset) {
-        initialData = props.data;
-      }
-
-      const { data } = withSWR(
-        // eslint-disable-next-line react-hooks/rules-of-hooks
-        useSWR(`search?name=&page=${offset || 0}&limit=24`, getPackages, {
-          initialData,
-        })
-      );
-
-      if (!data) return null;
-
-      const { packages }: { packages: IPackage[] } = data;
-
-      return packages.map((e) => (
-        <Col key={e.Id} md={6} lg={4} xl={3}>
-          <Card
-            package={e}
-            title={e.latest.Name}
-            org={e.latest.Publisher}
-            description={e.latest.Description}
-            id={e.Id}
-          />
-        </Col>
-      ));
-    },
-    ({ data }) => (data?.total > pageCount * 24 ? pageCount : null),
-    // deps of the page component
-    []
-  );
-
+export default function Home({ data }: { data: IResponse }) {
   return (
     <div className="container">
       <Head>
@@ -70,16 +23,23 @@ export default function Home(props) {
         />
       </Head>
       <header>
-        <Header
-          showSearch
-          title="winget.run"
-          totalPackages={pageSWRs[0]?.data.total}
-        />
+        <Header showSearch title="winget.run" totalPackages={data.total} />
       </header>
       <main>
         <Container>
-          <Row>{pages}</Row>
-          {!isReachingEnd && <LoadMore onClick={loadMore} />}
+          <Row>
+            {data.packages.map((e) => (
+              <Col key={e.Id} md={6} lg={4} xl={3}>
+                <Card
+                  package={e}
+                  title={e.latest.Name}
+                  org={e.latest.Publisher}
+                  description={e.latest.Description}
+                  id={e.Id}
+                />
+              </Col>
+            ))}
+          </Row>
         </Container>
         <DownloadBar />
       </main>
@@ -88,6 +48,8 @@ export default function Home(props) {
 }
 
 export async function getServerSideProps() {
-  const data = await getPackages(`search?name=&page=0&limit=24`);
+  const data = await getPackages(
+    `search?name=&limit=24&sort=updatedAt&order=-1`
+  );
   return { props: { data } };
 }
