@@ -4,6 +4,7 @@ import generateClipboard from "../utils/generateClipboard";
 import { IPackage } from "../api/getPackages";
 import { useContext } from "react";
 import { Downloads } from "./StateWrapper";
+import { toast } from "react-toastify";
 
 const Container = styled.div<{ visible: boolean }>`
   position: fixed;
@@ -44,6 +45,7 @@ const Contents = styled.div`
   h3 {
     font-size: 24px;
     margin: 0 0 10px;
+    user-select: none;
   }
 
   h4 {
@@ -52,6 +54,7 @@ const Contents = styled.div`
     -webkit-box-orient: vertical;
     text-overflow: ellipsis;
     overflow: hidden;
+    user-select: none;
 
     span {
       cursor: pointer;
@@ -76,6 +79,7 @@ const Contents = styled.div`
 
   h5 {
     text-align: right;
+    user-select: none;
 
     img {
       cursor: pointer;
@@ -85,10 +89,6 @@ const Contents = styled.div`
     }
   }
 `;
-
-interface IProps {
-  packages: IPackage[];
-}
 
 const DownloadBar = () => {
   const { packages, removePackage } = useContext(Downloads);
@@ -118,7 +118,10 @@ const DownloadBar = () => {
               aria-label="Copy script for Powershell"
               src={require("./icons/copy.svg")}
               alt=""
-              onClick={() => generateClipboard(packages.map((e) => e.Id))}
+              onClick={() => {
+                generateClipboard(packages.map((e) => e.Id));
+                toast.dark(`Copied packages to clipboard!`);
+              }}
             />
             <img
               role="download"
@@ -140,7 +143,10 @@ const DownloadBar = () => {
               aria-label="Copy script for CMD"
               src={require("./icons/copy.svg")}
               alt=""
-              onClick={() => generateClipboard(packages.map((e) => e.Id))}
+              onClick={() => {
+                generateClipboard(packages.map((e) => e.Id));
+                toast.dark(`Copied packages to clipboard!`);
+              }}
             />
             <img
               role="download"
@@ -162,7 +168,10 @@ const DownloadBar = () => {
               aria-label="Copy script for Bash"
               src={require("./icons/copy.svg")}
               alt=""
-              onClick={() => generateClipboard(packages.map((e) => e.Id))}
+              onClick={() => {
+                generateClipboard(packages.map((e) => e.Id));
+                toast.dark(`Copied packages to clipboard!`);
+              }}
             />
             <img
               role="download"

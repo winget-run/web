@@ -5,6 +5,9 @@ import { GridThemeProvider } from "styled-bootstrap-grid";
 import { theme } from "../utils/theme";
 import StateWrapper from "../components/StateWrapper";
 
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 const gridTheme = {
   breakpoints: {
     xxl: 1400,
@@ -24,6 +27,7 @@ export default class MyApp extends App {
           <GridThemeProvider gridTheme={gridTheme}>
             <>
               <Component {...pageProps} />
+              <ToastContainer autoClose={2000} hideProgressBar />
             </>
           </GridThemeProvider>
         </ThemeProvider>

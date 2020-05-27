@@ -15,6 +15,7 @@ import { styled } from "../../../utils/theme";
 import Header, { SearchBar } from "../../../components/Header";
 import generateClipboard from "../../../utils/generateClipboard";
 import { Downloads } from "../../../components/StateWrapper";
+import { toast } from "react-toastify";
 
 const TopBar = styled(SearchBar)`
   padding: 91px 0 !important;
@@ -248,7 +249,12 @@ export default function Pkg(props) {
                       <img
                         role="button"
                         tabIndex={0}
-                        onClick={() => generateClipboard([p.Id], [e])}
+                        onClick={() => {
+                          generateClipboard([p.Id], [e]);
+                          toast.dark(
+                            `Copied ${p.latest.Name}@${e} to clipboard!`
+                          );
+                        }}
                         src={require("../../../components/icons/copy.svg")}
                         alt=""
                         aria-label={`Copy command for version ${e}`}
@@ -266,7 +272,10 @@ export default function Pkg(props) {
                   <img
                     role="button"
                     tabIndex={0}
-                    onClick={() => generateClipboard([p.Id])}
+                    onClick={() => {
+                      generateClipboard([p.Id]);
+                      toast.dark(`Copied ${p.latest.Name} to clipboard!`);
+                    }}
                     src={require("../../../components/icons/copy.svg")}
                     alt=""
                     aria-label="Copy command"

@@ -6,6 +6,18 @@ import useDebounce from "../utils/hooks/useDebounce";
 import { CardTitle, CardOrg, CardDesc } from "./Card";
 import AutocompleteResult from "./AutocompleteResult";
 import getPackages, { IPackage } from "../api/getPackages";
+import { keyframes } from "styled-components";
+
+const resultsAnimation = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
 
 const SearchContainer = styled.div`
   position: relative;
@@ -39,6 +51,7 @@ const ResultsContainer = styled.div`
   margin-top: 10px;
   border-radius: 8px;
   box-shadow: 0 3px 15px rgba(0, 0, 0, 0.5);
+  animation: ${resultsAnimation} 100ms ease forwards;
 `;
 
 const NoResultsText = styled.h4`
@@ -78,28 +91,31 @@ const Search = ({ totalPackages }: { totalPackages: number }) => {
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
       />
-      {debouncedSearchTerm && results.length > 0 && (
+      {debouncedSearchTerm && !isSearching && (
         <ResultsContainer aria-live="polite" aria-modal="true">
-          {results.map((e) => (
-            <AutocompleteResult
-              id={e.Id}
-              title={e.latest.Name}
-              org={e.latest.Publisher}
-              desc={e.latest.Description?.replace(
-                new RegExp(debouncedSearchTerm, "gi"),
-                "<span>$&</span>"
-              )}
-            />
-          ))}
+          {results.length > 0 &&
+            results.map((e) => (
+              <AutocompleteResult
+                id={e.Id}
+                title={e.latest.Name}
+                org={e.latest.Publisher}
+                desc={e.latest.Description?.replace(
+                  new RegExp(debouncedSearchTerm, "gi"),
+                  "<span>$&</span>"
+                )}
+              />
+            ))}
+          {results.length === 0 && !isSearching && (
+            <NoResultsText>
+              No results found for "{debouncedSearchTerm}"
+            </NoResultsText>
+          )}
         </ResultsContainer>
       )}
-      {debouncedSearchTerm && !isSearching && results.length === 0 && (
+      {/* {debouncedSearchTerm && !isSearching && results.length === 0 && (
         <ResultsContainer aria-live="polite" aria-modal="true">
-          <NoResultsText>
-            No results found for "{debouncedSearchTerm}"
-          </NoResultsText>
         </ResultsContainer>
-      )}
+      )} */}
     </SearchContainer>
   );
 };
