@@ -42,10 +42,15 @@ const SearchContainer = styled.div`
   width: 100%;
 
   h1 {
-    font-size: 71px;
+    font-size: 42px;
     margin: 0;
     line-height: 1;
     text-align: center;
+    word-break: break-word;
+
+    ${media.md`
+      font-size: 71px;
+    `}
   }
 `;
 

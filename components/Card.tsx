@@ -9,6 +9,8 @@ import generateClipboard from "../utils/generateClipboard";
 import { IPackage } from "../api/getPackages";
 import { useState, useContext } from "react";
 import { Downloads } from "./StateWrapper";
+import Tooltip from "./Tooltip";
+import { toast } from "react-toastify";
 
 export const CardContainer = styled.div<{ selected?: boolean }>`
   border-radius: 8px;
@@ -158,7 +160,12 @@ const Card = (props: IProps) => {
         </a>
       </Link>
       <CardDesc>{props.description}</CardDesc>
-      <Copy onClick={() => generateClipboard([props.id])}>
+      <Copy
+        onClick={() => {
+          generateClipboard([props.id]);
+          toast.dark(`Copied ${props.title} to clipboard!`);
+        }}
+      >
         <img src={require("./icons/copy.svg")} alt="" />
         Copy command
       </Copy>
