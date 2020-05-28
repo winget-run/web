@@ -35,9 +35,12 @@ const sitemapXML = (data) => {
 
 class Sitemap extends React.Component {
   static async getInitialProps({ res }) {
-    const data = await fetch("https://api.winget.run/v1/list").then((e) =>
-      e.json()
-    );
+    let URL = "api.winget.run";
+    if (process.env.K8S_ENV === "dev") {
+      URL = "dev-api.winget.run";
+    }
+
+    const data = await fetch(`https://${URL}/v1/list`).then((e) => e.json());
 
     res.setHeader("Content-Type", "text/xml");
     res.write(sitemapXML(data.list));
