@@ -1,4 +1,7 @@
 import fetch from "isomorphic-unfetch";
+import getConfig from "next/config";
+
+const { serverRuntimeConfig } = getConfig();
 
 export interface IPackageInfo {
   Description?: string;
@@ -67,6 +70,11 @@ export interface IResponseSingle {
   package: IPackage;
 }
 
+let URL = "api.winget.run";
+if (serverRuntimeConfig.K8S_ENV === "dev") {
+  URL = "dev-api.winget.run";
+}
+
 export default async function getPackages(route = ""): Promise<IResponse> {
-  return fetch(`https://api.winget.run/v1/${route}`).then((e) => e.json());
+  return fetch(`https://${URL}/v1/${route}`).then((e) => e.json());
 }
