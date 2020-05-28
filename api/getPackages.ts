@@ -1,4 +1,7 @@
 import fetch from "isomorphic-unfetch";
+import getConfig from "next/config";
+
+const { serverRuntimeConfig } = getConfig();
 
 export interface IPackageInfo {
   Description?: string;
@@ -68,7 +71,7 @@ export interface IResponseSingle {
 }
 
 let URL = "api.winget.run";
-if (process.env.K8S_ENV === "dev") {
+if (serverRuntimeConfig.K8S_ENV === "dev") {
   URL = "dev-api.winget.run";
 }
 

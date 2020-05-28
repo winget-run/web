@@ -1,7 +1,10 @@
 import React from "react";
+import getConfig from "next/config";
+
+const { serverRuntimeConfig } = getConfig();
 
 let mrRoboto = "User-agent: *\nAllow: /";
-if (process.env.K8S_ENV === "dev") {
+if (serverRuntimeConfig.K8S_ENV === "dev") {
   mrRoboto = "User-agent: *\nDisallow: /";
 }
 

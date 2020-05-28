@@ -1,12 +1,22 @@
 import React from "react";
 import fetch from "isomorphic-unfetch";
+import getConfig from "next/config";
+
+const { serverRuntimeConfig } = getConfig();
 
 const sitemapXML = (data) => {
+  let URL = "winget.run";
+  if (serverRuntimeConfig.K8S_ENV === "dev") {
+    URL = "dev-web.winget.run";
+  }
+
+  console.log(URL);
+
   const packages = data.map((e) => {
     const [org, ...pkg] = e.Id.split(".");
     return `
     <url>
-    <loc>https://winget.run/pkg/${org}/${pkg}</loc>
+    <loc>https://${URL}/pkg/${org}/${pkg}</loc>
     <lastmod>${e.updatedAt}</lastmod>
     <priority>0.80</priority>
     </url>`;
@@ -17,7 +27,7 @@ const sitemapXML = (data) => {
   const orgs = orgsArray.map((e) => {
     return `
     <url>
-    <loc>https://winget.run/pkg/${e}</loc>
+    <loc>https://${URL}/pkg/${e}</loc>
     <priority>0.50</priority>
     </url>`;
   });
@@ -25,7 +35,7 @@ const sitemapXML = (data) => {
   return `<?xml version="1.0" encoding="UTF-8"?>
     <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
       <url>
-        <loc>https://winget.run/</loc>
+        <loc>https://${URL}/</loc>
         <priority>1.00</priority>
       </url>
       ${packages.join("")}
@@ -36,10 +46,9 @@ const sitemapXML = (data) => {
 class Sitemap extends React.Component {
   static async getInitialProps({ res }) {
     let URL = "api.winget.run";
-    if (process.env.K8S_ENV === "dev") {
+    if (serverRuntimeConfig.K8S_ENV === "dev") {
       URL = "dev-api.winget.run";
     }
-
     const data = await fetch(`https://${URL}/v1/list`).then((e) => e.json());
 
     res.setHeader("Content-Type", "text/xml");
