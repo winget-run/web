@@ -136,7 +136,7 @@ interface IProps {
 }
 
 const Card = (props: IProps) => {
-  const links = props.id.split(".");
+  const [org, ...pkg] = props.id.split(".");
   const { packages, addPackage, removePackage } = useContext(Downloads);
   return (
     <CardContainer selected={!!packages.find((e) => e.Id === props.package.Id)}>
@@ -149,12 +149,12 @@ const Card = (props: IProps) => {
         selected={!!packages.find((e) => e.Id === props.package.Id)}
         aria-label="Add to multi-download"
       />
-      <Link href="/pkg/[org]/[pkg]" as={`/pkg/${links[0]}/${links[1]}`}>
+      <Link href="/pkg/[org]/[pkg]" as={`/pkg/${org}/${pkg.join(".")}`}>
         <a>
           <CardTitle>{props.title}</CardTitle>
         </a>
       </Link>
-      <Link href="/pkg/[org]" as={`/pkg/${links[0]}`}>
+      <Link href="/pkg/[org]" as={`/pkg/${org}`}>
         <a>
           <CardOrg>{props.org}</CardOrg>
         </a>

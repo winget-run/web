@@ -3,7 +3,8 @@ import getConfig from "next/config";
 
 const { serverRuntimeConfig } = getConfig();
 
-let mrRoboto = "User-agent: *\nAllow: /";
+let mrRoboto =
+  "User-agent: *\nAllow: /\n\nSitemap: https://winget.run/sitemap.xml";
 if (serverRuntimeConfig.K8S_ENV === "dev") {
   mrRoboto = "User-agent: *\nDisallow: /";
 }
