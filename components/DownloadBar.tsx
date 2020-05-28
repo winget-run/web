@@ -104,11 +104,13 @@ const DownloadBar = () => {
           <h3>
             {packages.length} package{packages.length !== 1 && "s"} selected
           </h3>
-          <h4>
-            {packages.map((e) => (
-              <span onClick={() => removePackage(e)}>{e.latest.Name}</span>
-            ))}
-          </h4>
+          {packages.length > 0 && (
+            <h4>
+              {packages.map((e) => (
+                <span onClick={() => removePackage(e)}>{e.latest.Name}</span>
+              ))}
+            </h4>
+          )}
         </div>
         <div>
           <h5>
@@ -124,7 +126,7 @@ const DownloadBar = () => {
               }}
             />
             <img
-              role="download"
+              role="button"
               aria-label="Download script for Powershell"
               src={require("./icons/download.svg")}
               alt=""
@@ -149,7 +151,7 @@ const DownloadBar = () => {
               }}
             />
             <img
-              role="download"
+              role="button"
               aria-label="Download script for CMD"
               src={require("./icons/download.svg")}
               alt=""
@@ -174,7 +176,7 @@ const DownloadBar = () => {
               }}
             />
             <img
-              role="download"
+              role="button"
               aria-label="Download script for Bash"
               src={require("./icons/download.svg")}
               alt=""

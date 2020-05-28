@@ -35,3 +35,9 @@ spec:
           initialDelaySeconds: 5
           periodSeconds: 5
           successThreshold: 1
+        env:
+        - name: K8S_ENV
+          valueFrom:
+            configMapKeyRef:
+              key: K8S_ENV
+              name: {{ .Release.Name }}
