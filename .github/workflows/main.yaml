@@ -1,6 +1,6 @@
 # Note: were not currently using branches/envs properly, we will if this project takes off
 
-name: CI/CD
+name: ci-cd
 
 on:
   pull_request:
