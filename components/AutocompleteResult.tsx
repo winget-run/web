@@ -40,16 +40,16 @@ interface IProps {
 }
 
 const AutocompleteResult = (props: IProps) => {
-  const links = props.id.split(".");
+  const [org, ...pkg] = props.id.split(".");
   return (
     <Result>
       <span>
-        <Link href="/pkg/[org]/[pkg]" as={`/pkg/${links[0]}/${links[1]}`}>
+        <Link href="/pkg/[org]/[pkg]" as={`/pkg/${org}/${pkg.join(".")}`}>
           <a>
             <Title>{props.title}</Title>
           </a>
         </Link>
-        <Link href="/pkg/[org]" as={`/pkg/${links[0]}`}>
+        <Link href="/pkg/[org]" as={`/pkg/${org}`}>
           <a>
             <Org>{props.org}</Org>
           </a>

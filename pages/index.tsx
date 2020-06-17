@@ -2,10 +2,24 @@ import Head from "next/head";
 import Card from "../components/Card";
 import { Container, Row, Col } from "styled-bootstrap-grid";
 import Header from "../components/Header";
-import DownloadBar from "../components/DownloadBar";
+import DownloadModal from "../components/DownloadModal";
 import getPackages, { IResponse } from "../api/getPackages";
+import { useState } from "react";
+import LoadMore from "../components/LoadMore";
 
 export default function Home({ data }: { data: IResponse }) {
+  const [packages, setPackages] = useState(data.packages);
+  const [page, setPage] = useState(0);
+
+  const loadMore = () => {
+    getPackages(
+      `search?name=&limit=24&sort=updatedAt&order=-1&page=${page + 1}`
+    ).then((e: IResponse) => {
+      setPackages((prev) => [...prev, ...e.packages]);
+      setPage((prev) => ++prev);
+    });
+  };
+
   return (
     <div className="container">
       <Head>
@@ -28,7 +42,7 @@ export default function Home({ data }: { data: IResponse }) {
       <main>
         <Container>
           <Row>
-            {data.packages.map((e) => (
+            {packages.map((e) => (
               <Col key={e.Id} md={6} lg={4} xl={3}>
                 <Card
                   package={e}
@@ -41,15 +55,20 @@ export default function Home({ data }: { data: IResponse }) {
             ))}
           </Row>
         </Container>
-        <DownloadBar />
+        {packages.length < data.total && <LoadMore onClick={loadMore} />}
+        <DownloadModal />
       </main>
     </div>
   );
 }
 
 export async function getServerSideProps() {
-  const data = await getPackages(
-    `search?name=&limit=24&sort=updatedAt&order=-1`
-  );
-  return { props: { data } };
+  try {
+    const data = await getPackages(
+      `search?name=&limit=24&sort=updatedAt&order=-1`
+    );
+    return { props: { data } };
+  } catch (error) {
+    return { props: { data: { packages: [], total: 0 } } };
+  }
 }

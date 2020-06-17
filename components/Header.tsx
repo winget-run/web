@@ -35,11 +35,16 @@ export const SearchBar = styled.div`
   }
 `;
 
-const SearchContainer = styled.div`
-  max-width: 630px;
+const SearchContainer = (styled.div as any)`
   padding: 0 15px;
   margin: 0 auto;
   width: 100%;
+
+  ${(x) =>
+    x.fullWidth &&
+    `
+    max-width: 630px;
+  `}
 
   h1 {
     font-size: 42px;
@@ -126,7 +131,7 @@ const Header = (props: IProps) => {
         <SearchBar>
           <Container>
             <Row>
-              <SearchContainer>
+              <SearchContainer fullWidth={props.showSearch}>
                 <h1>{props.title}</h1>
                 {props.showSearch && (
                   <Search totalPackages={props.totalPackages} />

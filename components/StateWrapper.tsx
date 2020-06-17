@@ -10,6 +10,8 @@ export function downloadsReducer(state: IPackage[], action) {
       return [...state, action.payload];
     case "remove":
       return state.filter((e) => e.Id !== action.payload.Id);
+    case "clear":
+      return [];
     default:
       throw new Error();
   }
@@ -25,8 +27,14 @@ const StateWrapper = ({ children }) => {
     dispatch({ type: "remove", payload: item });
   };
 
+  const clearPackages = () => {
+    dispatch({ type: "clear" });
+  };
+
   return (
-    <Downloads.Provider value={{ packages: state, addPackage, removePackage }}>
+    <Downloads.Provider
+      value={{ packages: state, addPackage, removePackage, clearPackages }}
+    >
       {children}
     </Downloads.Provider>
   );

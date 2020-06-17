@@ -51,7 +51,8 @@ const ResultsContainer = styled.div`
   margin-top: 10px;
   border-radius: 8px;
   box-shadow: 0 3px 15px rgba(0, 0, 0, 0.5);
-  animation: ${resultsAnimation} 100ms ease forwards;
+  animation: ${resultsAnimation} 150ms cubic-bezier(0.26, 1.29, 0.7, 1.18)
+    forwards;
 `;
 
 const NoResultsText = styled.h4`
@@ -96,6 +97,7 @@ const Search = ({ totalPackages }: { totalPackages: number }) => {
           {results.length > 0 &&
             results.map((e) => (
               <AutocompleteResult
+                key={`autocomplete-${e.Id}`}
                 id={e.Id}
                 title={e.latest.Name}
                 org={e.latest.Publisher}
