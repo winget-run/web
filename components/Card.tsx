@@ -1,16 +1,12 @@
-//TODO: fix this fucking abortion
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-//@ts-nocheck
+import { useState, useContext } from "react";
+import { toast } from "react-toastify";
 import Link from "next/link";
-import { styled } from "../utils/theme";
 import { media } from "styled-bootstrap-grid";
 
-import generateClipboard from "../utils/generateClipboard";
 import { IPackage } from "../api/getPackages";
-import { useState, useContext } from "react";
-import { Downloads } from "./StateWrapper";
-import Tooltip from "./Tooltip";
-import { toast } from "react-toastify";
+import { Downloads } from "../utils/state/Downloads";
+import { styled } from "../utils/theme";
+import generateClipboard from "../utils/clipboard";
 
 export const CardContainer = styled.div<{ selected?: boolean }>`
   border-radius: 8px;
@@ -108,6 +104,13 @@ export const CardTitle = styled.h2`
   word-break: break-word;
 `;
 
+export const CardIcon = styled.img`
+  height: 22px;
+  width: 22px;
+  margin-right: 10px;
+  transform: translateY(4px);
+`;
+
 export const CardOrg = styled.h3`
   display: inline;
   color: ${(x) => x.theme.accentLight};
@@ -127,44 +130,49 @@ export const CardDesc = styled.p`
   overflow: hidden;
 `;
 
-interface IProps {
-  package: IPackage;
-  title: string;
-  org: string;
-  description: string;
-  id: string;
-}
-
-const Card = (props: IProps) => {
-  const links = props.id.split(".");
+const Card = ({ p }: { p: IPackage }) => {
+  const links = p.Id.split(".");
   const { packages, addPackage, removePackage } = useContext(Downloads);
+  const inPackages = !!packages.find((e) => e.package.Id === p.Id);
   return (
-    <CardContainer selected={!!packages.find((e) => e.Id === props.package.Id)}>
+    <CardContainer selected={inPackages}>
       <Add
         onClick={() => {
-          !!packages.find((e) => e.Id === props.package.Id)
-            ? removePackage(props.package)
-            : addPackage(props.package);
+          inPackages ? removePackage(p) : addPackage(p);
         }}
-        selected={!!packages.find((e) => e.Id === props.package.Id)}
-        aria-label="Add to multi-download"
+        selected={inPackages}
+        aria-label="Add to selection"
+        title={inPackages ? "Remove from selection" : "Add to selection"}
       />
       <Link href="/pkg/[org]/[pkg]" as={`/pkg/${links[0]}/${links[1]}`}>
         <a>
-          <CardTitle>{props.title}</CardTitle>
+          <CardTitle>
+            {console.log(p)}
+            <CardIcon
+              src={
+                p.latest.IconUrl ||
+                (p.latest.Homepage
+                  ? `https://www.google.com/s2/favicons?sz=32&domain_url=${p.latest.Homepage}`
+                  : "/favicon.ico")
+              }
+              alt=""
+            />
+            {p.latest.Name}
+          </CardTitle>
         </a>
       </Link>
       <Link href="/pkg/[org]" as={`/pkg/${links[0]}`}>
         <a>
-          <CardOrg>{props.org}</CardOrg>
+          <CardOrg>{p.latest.Publisher}</CardOrg>
         </a>
       </Link>
-      <CardDesc>{props.description}</CardDesc>
+      <CardDesc>{p.latest.Description}</CardDesc>
       <Copy
         onClick={() => {
-          generateClipboard([props.id]);
-          toast.dark(`Copied ${props.title} to clipboard!`);
+          generateClipboard([{ package: p, version: p.versions[0] }]);
+          toast.dark(`Copied ${p.latest.Name} to clipboard!`);
         }}
+        title="Copy the command to your clipboard"
       >
         <img src={require("./icons/copy.svg")} alt="" />
         Copy command

@@ -1,46 +1,84 @@
-import { useState, useEffect, Dispatch, SetStateAction } from "react";
+import { useEffect, useContext } from "react";
+
 import { styled } from "../utils/theme";
-import Link from "next/link";
-
 import useDebounce from "../utils/hooks/useDebounce";
-import { CardTitle, CardOrg, CardDesc } from "./Card";
 import AutocompleteResult from "./AutocompleteResult";
-import getPackages, { IPackage } from "../api/getPackages";
-import { keyframes } from "styled-components";
+import getPackages from "../api/getPackages";
 
-const resultsAnimation = keyframes`
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-`;
+import { Search as SearchContext } from "../utils/state/Search";
 
 const SearchContainer = styled.div`
   position: relative;
   z-index: 10;
+
+  &.hide {
+    display: none;
+  }
+  &.show {
+    display: block;
+  }
 `;
 
-const StyledInput = styled.input`
+const StyledInput = styled.input<{ inNav: boolean }>`
   width: 100%;
-  padding: 10px 28px;
+  padding: 15px 28px 15px 63px;
   margin: 47px 0 0;
   border: none;
-  border-radius: 100px;
+  border-radius: 8px;
   font-weight: bold;
   font-size: 16px;
   color: ${(x) => x.theme.darkGrey};
   border: 2px solid transparent;
+
+  + svg {
+    position: absolute;
+    bottom: 15px;
+    left: 20px;
+    height: 24px;
+    width: 24px;
+  }
   &::placeholder {
     color: ${(x) => x.theme.textFade};
   }
   &:focus {
     outline: none;
-    border-color: ${(x) => x.theme.accentLight};
+    + svg {
+      g,
+      line {
+        stroke: ${(x) => x.theme.darkGrey};
+      }
+    }
   }
+
+  ${(x) =>
+    x.inNav &&
+    `
+    max-width: 466px;
+    width: 100%;
+    margin: 0;
+    padding-top: 14px;
+    padding-bottom: 14px;
+    background-color: ${x.theme.accentDark};
+    color: white;
+
+    &::placeholder {
+      color: rgba(255,255,255, 0.75);
+    }
+    &:focus {
+      + svg {
+      g,
+      line {
+        opacity: 1;
+        stroke: white;
+      }
+    }
+    }
+
+    ~${ResultsContainer} {
+      width: calc(100% + 105px)
+    }
+    
+  `}
 `;
 
 const ResultsContainer = styled.div`
@@ -48,11 +86,20 @@ const ResultsContainer = styled.div`
   width: 100%;
   padding: 15px 20px;
   background: ${(x) => x.theme.text};
-  margin-top: 10px;
+  margin-top: 5px;
   border-radius: 8px;
   box-shadow: 0 3px 15px rgba(0, 0, 0, 0.5);
-  animation: ${resultsAnimation} 150ms cubic-bezier(0.26, 1.29, 0.7, 1.18)
-    forwards;
+  opacity: 0;
+  transform: translateY(-10px);
+  pointer-events: none;
+  transition: 150ms ease;
+
+  &[aria-modal="true"] {
+    pointer-events: all;
+    opacity: 1;
+    transform: translateY(0);
+    transition: 150ms cubic-bezier(0.26, 1.29, 0.7, 1.18);
+  }
 `;
 
 const NoResultsText = styled.h4`
@@ -62,40 +109,87 @@ const NoResultsText = styled.h4`
   margin: 15px 0;
 `;
 
-const Search = ({ totalPackages }: { totalPackages: number }) => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [isSearching, setIsSearching] = useState(false);
-  const debouncedSearchTerm = useDebounce(searchTerm, 400);
-  const [results, setResults]: [
-    IPackage[],
-    Dispatch<SetStateAction<any[]>>
-  ] = useState([]);
+interface IProps {
+  totalPackages?: number;
+  inNav?: boolean;
+  hidden?: boolean;
+  resultsHidden?: boolean;
+}
+
+const Search = ({ totalPackages, inNav, hidden, resultsHidden }: IProps) => {
+  const {
+    search,
+    updateSearch,
+    updateResults,
+    updateClearResults,
+    updateClear,
+  } = useContext(SearchContext);
+
+  // const [isSearching, setIsSearching] = useState(false);
+  const debouncedSearchTerm = useDebounce(search?.filters?.query ?? "", 400);
 
   useEffect(() => {
     if (debouncedSearchTerm) {
-      setIsSearching(true);
+      // setIsSearching(true);
+      // updateClearResults();
       getPackages(`autocomplete?query=${debouncedSearchTerm}`).then((e) => {
-        setResults(e.packages);
-        setIsSearching(false);
+        updateResults(e);
+        // setIsSearching(false);
       });
     } else {
-      setResults([]);
+      updateClearResults();
     }
   }, [debouncedSearchTerm]);
 
   return (
-    <SearchContainer>
+    <SearchContainer className={hidden ?? false ? "hide" : "show"}>
       <StyledInput
         aria-label="Search packages"
         type="text"
-        placeholder={`Search ${totalPackages} packages...`}
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
+        placeholder={
+          inNav ? "Search packages" : `Search ${totalPackages} packages...`
+        }
+        value={search?.filters?.query ?? ""}
+        onChange={(e) => updateSearch({ query: e.target.value })}
+        inNav={inNav}
       />
-      {debouncedSearchTerm && !isSearching && (
-        <ResultsContainer aria-live="polite" aria-modal="true">
-          {results.length > 0 &&
-            results.map((e) => (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="26.621"
+        height="26.621"
+        viewBox="0 0 26.621 26.621"
+        aria-hidden
+      >
+        <g opacity={inNav ? 0.75 : 1}>
+          <g
+            fill="none"
+            stroke={inNav ? "#fff" : "#aaa"}
+            strokeLinecap="round"
+            strokeWidth="3"
+          >
+            <circle cx="11" cy="11" r="11" stroke="none" />
+            <circle cx="11" cy="11" r="9.5" fill="none" />
+          </g>
+          <line
+            x2="6"
+            y2="6"
+            transform="translate(18.5 18.5)"
+            fill="none"
+            stroke={inNav ? "#fff" : "#aaa"}
+            strokeLinecap="round"
+            strokeWidth="3"
+          />
+        </g>
+      </svg>
+      {(!resultsHidden ?? true) && (
+        <ResultsContainer
+          aria-live="polite"
+          aria-modal={!!(debouncedSearchTerm && search?.results != null)}
+        >
+          {search?.results != null &&
+            search?.filters?.query != "" &&
+            search?.results?.packages?.length > 0 &&
+            search?.results?.packages?.map((e) => (
               <AutocompleteResult
                 key={`autocomplete-${e.Id}`}
                 id={e.Id}
@@ -105,13 +199,21 @@ const Search = ({ totalPackages }: { totalPackages: number }) => {
                   new RegExp(debouncedSearchTerm, "gi"),
                   "<span>$&</span>"
                 )}
+                url={e.latest.Homepage}
+                iconUrl={e.latest.IconUrl}
               />
             ))}
-          {results.length === 0 && !isSearching && (
-            <NoResultsText>
-              No results found for "{debouncedSearchTerm}"
-            </NoResultsText>
-          )}
+          {search?.results != null &&
+            search?.results?.packages?.length === 0 &&
+            // !isSearching &&
+            debouncedSearchTerm !== "" && (
+              <NoResultsText>
+                No results found for "{debouncedSearchTerm}"
+              </NoResultsText>
+            )}
+          {/* <Link href="/" as={`/?q=${debouncedSearchTerm}`} shallow>
+              Test
+            </Link> */}
         </ResultsContainer>
       )}
       {/* {debouncedSearchTerm && !isSearching && results.length === 0 && (
