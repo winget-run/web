@@ -3,7 +3,7 @@ import React, { createContext, useReducer } from "react";
 import { ThemeProvider } from "styled-components";
 import { GridThemeProvider } from "styled-bootstrap-grid";
 import { theme } from "../utils/theme";
-import StateWrapper from "../components/StateWrapper";
+import StateWrapper from "../utils/state";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";

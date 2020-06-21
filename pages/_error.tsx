@@ -32,7 +32,9 @@ function Error({ statusCode }) {
         <Container>
           <h1>
             {statusCode
-              ? `An error ${statusCode} occurred on server`
+              ? statusCode === 404
+                ? `404 | We can't seem to find this page or package`
+                : `An error ${statusCode} occurred on server`
               : "An error occurred on client"}
           </h1>
         </Container>

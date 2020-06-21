@@ -1,7 +1,7 @@
 import Head from "next/head";
-import Card, { CardContainer, Add } from "../../../components/Card";
+import { CardContainer, Add } from "../../../components/Card";
 import { Container, Row, Col, media } from "styled-bootstrap-grid";
-import useSWR, { useSWRPages } from "swr";
+import useSWR from "swr";
 import getPackages, {
   IResponse,
   IPackage,
@@ -9,13 +9,14 @@ import getPackages, {
 } from "../../../api/getPackages";
 import { useState, useContext } from "react";
 import { useRouter } from "next/router";
-import DownloadBar from "../../../components/DownloadBar";
+import DownloadModal from "../../../components/DownloadModal";
 import Error from "../../_error";
 import { styled } from "../../../utils/theme";
 import Header, { SearchBar } from "../../../components/Header";
-import generateClipboard from "../../../utils/generateClipboard";
-import { Downloads } from "../../../components/StateWrapper";
+import generateClipboard from "../../../utils/clipboard";
+import { Downloads } from "../../../utils/state/Downloads";
 import { toast } from "react-toastify";
+import Link from "next/link";
 
 const TopBar = styled(SearchBar)`
   padding: 91px 0 !important;
@@ -101,8 +102,8 @@ const AddCard = styled(VersionsCard)`
     font-size: 20px;
   }
   ${Add} {
-    top: 50%;
-    transform: translateY(-50%);
+    top: 50% !important;
+    transform: translateY(-50%) !important;
   }
 `;
 
@@ -171,28 +172,32 @@ export default function Pkg(props) {
   const initialData = props.data;
   const { data } = useSWR(`${org}/${pkg}`, getPackages, { initialData });
   const { packages, addPackage, removePackage } = useContext(Downloads);
-  if ((data as IResponseSingle).package === null) {
+
+  if ((data as IResponseSingle).package == null) {
     return <Error statusCode={404} />;
   }
 
   const p = data.package as IPackage;
 
-  const inDownloads = packages.find((e) => e.Id === p.Id);
+  const inDownloads = packages.find((e) => e.package.Id === p.Id);
 
   return (
     <div className="container">
       <Head>
-        <title>{p.latest.Name} | winget.run</title>
+        <title>Download and install {p.latest.Name} with winget</title>
         <meta
           name="description"
-          content={`View package details about ${p.latest.Name} on winget.run`}
+          content={
+            p.latest.Description ||
+            `Download and install ${p.latest.Name} and other packages with winget`
+          }
         />
         <meta name="twitter:title" content={`${p.latest.Name} on winget.run`} />
         <meta
           name="twitter:description"
           content={
             p.latest.Description ||
-            `View package details about ${p.latest.Name} on winget.run`
+            `Download and install ${p.latest.Name} and other packages with winget`
           }
         />
       </Head>
@@ -206,9 +211,13 @@ export default function Pkg(props) {
                     {p.latest.Name}
                     <span>v{p.latest.Version}</span>
                   </h1>
-                  <h2>{p.latest.Publisher}</h2>
+                  <Link href="/pkg/[org]" as={`/pkg/${org}`}>
+                    <a>
+                      <h2>{p.latest.Publisher}</h2>
+                    </a>
+                  </Link>
                   {p.latest.Homepage && (
-                    <a href={p.latest.Homepage}>
+                    <a href={p.latest.Homepage} target="_blank">
                       <h3>
                         Visit website
                         <img
@@ -250,7 +259,7 @@ export default function Pkg(props) {
                         role="button"
                         tabIndex={0}
                         onClick={() => {
-                          generateClipboard([p.Id], [e]);
+                          generateClipboard([{ package: p, version: e }]);
                           toast.dark(
                             `Copied ${p.latest.Name}@${e} to clipboard!`
                           );
@@ -273,7 +282,9 @@ export default function Pkg(props) {
                     role="button"
                     tabIndex={0}
                     onClick={() => {
-                      generateClipboard([p.Id]);
+                      generateClipboard([
+                        { package: p, version: p.versions[0] },
+                      ]);
                       toast.dark(`Copied ${p.latest.Name} to clipboard!`);
                     }}
                     src={require("../../../components/icons/copy.svg")}
@@ -309,7 +320,7 @@ export default function Pkg(props) {
             </Col>
           </CustomRow>
         </Container>
-        <DownloadBar />
+        <DownloadModal />
       </main>
     </div>
   );

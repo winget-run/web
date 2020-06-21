@@ -47,11 +47,22 @@ class Sitemap extends React.Component {
     if (serverRuntimeConfig.K8S_ENV === "dev") {
       URL = "dev-api.winget.run";
     }
-    const data = await fetch(`https://${URL}/v1/list`).then((e) => e.json());
 
-    res.setHeader("Content-Type", "text/xml");
-    res.write(sitemapXML(data.list));
-    res.end();
+    try {
+      const data = await fetch(`https://${URL}/v1/list`).then((e) => e.json());
+      res.setHeader("Content-Type", "text/xml");
+      res.write(sitemapXML(data.list));
+      res.end();
+    } catch (error) {
+      res.write(`<?xml version="1.0" encoding="UTF-8"?>
+      <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+        <url>
+          <loc>https://${URL}/</loc>
+          <priority>1.00</priority>
+        </url>
+      </urlset>`);
+      res.end();
+    }
   }
 }
 

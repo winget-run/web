@@ -1,4 +1,7 @@
-export default function download(filename: string, text: string) {
+import { IDownload } from "./state/Downloads";
+import generateCommand from "./generateCommand";
+
+const download = (filename: string, text: string) => {
   const element = document.createElement("a");
   element.setAttribute(
     "href",
@@ -12,4 +15,16 @@ export default function download(filename: string, text: string) {
   element.click();
 
   document.body.removeChild(element);
-}
+};
+
+const generateDownload = (packages: IDownload[]) => {
+  const names = packages.map((e) => {
+    const [_, ...name] = e.package.Id.split(".");
+    return name.join("-");
+  });
+  const fileName = `winget-${names.join("_")}.ps1`;
+
+  download(fileName, generateCommand(packages));
+};
+
+export default generateDownload;

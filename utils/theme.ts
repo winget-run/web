@@ -2,6 +2,7 @@ import baseStyled, { ThemedStyledInterface } from "styled-components";
 
 export const theme = {
   accent: "#327080",
+  accentDarker: "#094555",
   accentDark: "#195261",
   accentLight: "#64B0C4",
   text: "#fff",

@@ -10,6 +10,7 @@ const Button = styled.button`
   font-weight: bold;
   font-size: 20px;
   cursor: pointer;
+  overflow: visible;
 
   &::before {
     content: "";
@@ -22,7 +23,7 @@ const Button = styled.button`
     right: -12px;
     top: 50%;
     transform: translateY(-50%) translateY(1px);
-    transition: width 250ms cubic-bezier(0.68, 0, 0.41, 1.71);
+    transition: width 250ms ease;
   }
 
   &:focus {
@@ -34,6 +35,7 @@ const Button = styled.button`
 
   &:hover::before {
     width: calc(100% + 32px);
+    transition: width 250ms cubic-bezier(0.26, 1.29, 0.7, 1.18);
   }
 
   img {
