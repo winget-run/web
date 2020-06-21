@@ -11,11 +11,6 @@ import { useRouter } from "next/router";
 export default function Home({ data }: { data: IResponse }) {
   const [packages, setPackages] = useState(data.packages);
   const [page, setPage] = useState(0);
-  const router = useRouter();
-
-  useEffect(() => {
-    console.log(router.query);
-  }, []);
 
   const loadMore = () => {
     getPackages(

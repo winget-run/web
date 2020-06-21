@@ -1,3 +1,6 @@
+//TODO: fix this fucking abortion
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+//@ts-nocheck
 import { useState, useContext } from "react";
 import { toast } from "react-toastify";
 import Link from "next/link";
@@ -112,10 +115,10 @@ export const CardIcon = styled.img`
 `;
 
 export const CardOrg = styled.h3`
-  display: inline;
+  display: inline-block;
   color: ${(x) => x.theme.accentLight};
   font-size: 14px;
-  margin: 2px 0 0;
+  margin: 5px 0 0;
 `;
 
 export const CardDesc = styled.p`
@@ -147,7 +150,6 @@ const Card = ({ p }: { p: IPackage }) => {
       <Link href="/pkg/[org]/[pkg]" as={`/pkg/${links[0]}/${links[1]}`}>
         <a>
           <CardTitle>
-            {console.log(p)}
             <CardIcon
               src={
                 p.latest.IconUrl ||

@@ -158,8 +158,16 @@ const ScrollContainer = styled.div`
 
   span {
     display: flex;
+    position: relative;
     justify-content: space-between;
     margin: 0 0 20px;
+
+    .arrow {
+      position: absolute;
+      pointer-events: none;
+      right: 0;
+      top: 12px;
+    }
   }
 
   select {
@@ -170,6 +178,7 @@ const ScrollContainer = styled.div`
     border: none;
     appearance: none;
     margin-left: 20px;
+    padding-right: 18px;
     cursor: pointer;
     option {
       font-size: 14px;
@@ -311,19 +320,22 @@ const DownloadModal = () => {
                 </h4>
                 <select
                   value={e.version}
-                  onChange={
-                    (ev) =>
-                      changePackageVersion({
-                        ...e,
-                        version: ev.currentTarget.value,
-                      })
-                    //console.log(ev.currentTarget.value)
+                  onChange={(ev) =>
+                    changePackageVersion({
+                      ...e,
+                      version: ev.currentTarget.value,
+                    })
                   }
                 >
                   {e.package.versions.map((v) => (
                     <option key={e.package.Id + v}>{v}</option>
                   ))}
                 </select>
+                <img
+                  className="arrow"
+                  src={require("./icons/chevron-down.svg")}
+                  alt=""
+                />
               </span>
             ))}
         </ScrollContainer>

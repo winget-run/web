@@ -91,7 +91,7 @@ const NavLink = styled.h2`
     }
   }
 
-  ${media.md`
+  ${media.lg`
     display: inline-block;
   `}
 `;
@@ -104,7 +104,10 @@ const SocialIcon = styled.img`
 
 const NavIcon = styled(SocialIcon)`
   margin-left: 0;
+  margin-right: -15px;
+  ${media.lg`
   margin-right: 30px;
+  `}
 `;
 
 interface IProps {
@@ -162,7 +165,7 @@ const Header = (props: IProps) => {
             </Links>
             <Links
               col="auto"
-              style={{ flexGrow: 1, justifyContent: "flex-end" }}
+              style={{ flex: "1 0", justifyContent: "flex-end" }}
             >
               <Search hidden={!showNavSearch} inNav />
               <a href="https://ko-fi.com/wingetdotrun">

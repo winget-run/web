@@ -15,7 +15,9 @@ const SearchContainer = styled.div`
     display: none;
   }
   &.show {
-    display: block;
+    display: flex;
+    width: 100%;
+    justify-content: flex-end;
   }
 `;
 
@@ -53,8 +55,6 @@ const StyledInput = styled.input<{ inNav: boolean }>`
   ${(x) =>
     x.inNav &&
     `
-    max-width: 466px;
-    width: 100%;
     margin: 0;
     padding-top: 14px;
     padding-bottom: 14px;
@@ -78,6 +78,16 @@ const StyledInput = styled.input<{ inNav: boolean }>`
       width: calc(100% + 105px)
     }
     
+  `}
+`;
+
+const WidthWrapper = styled.div<{ inNav: boolean }>`
+  width: 100%;
+  ${(x) =>
+    x.inNav &&
+    `
+    position: relative;
+  max-width: 466px;
   `}
 `;
 
@@ -143,83 +153,85 @@ const Search = ({ totalPackages, inNav, hidden, resultsHidden }: IProps) => {
 
   return (
     <SearchContainer className={hidden ?? false ? "hide" : "show"}>
-      <StyledInput
-        aria-label="Search packages"
-        type="text"
-        placeholder={
-          inNav ? "Search packages" : `Search ${totalPackages} packages...`
-        }
-        value={search?.filters?.query ?? ""}
-        onChange={(e) => updateSearch({ query: e.target.value })}
-        inNav={inNav}
-      />
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="26.621"
-        height="26.621"
-        viewBox="0 0 26.621 26.621"
-        aria-hidden
-      >
-        <g opacity={inNav ? 0.75 : 1}>
-          <g
-            fill="none"
-            stroke={inNav ? "#fff" : "#aaa"}
-            strokeLinecap="round"
-            strokeWidth="3"
-          >
-            <circle cx="11" cy="11" r="11" stroke="none" />
-            <circle cx="11" cy="11" r="9.5" fill="none" />
-          </g>
-          <line
-            x2="6"
-            y2="6"
-            transform="translate(18.5 18.5)"
-            fill="none"
-            stroke={inNav ? "#fff" : "#aaa"}
-            strokeLinecap="round"
-            strokeWidth="3"
-          />
-        </g>
-      </svg>
-      {(!resultsHidden ?? true) && (
-        <ResultsContainer
-          aria-live="polite"
-          aria-modal={!!(debouncedSearchTerm && search?.results != null)}
+      <WidthWrapper inNav={inNav}>
+        <StyledInput
+          aria-label="Search packages"
+          type="text"
+          placeholder={
+            inNav ? "Search packages" : `Search ${totalPackages} packages...`
+          }
+          value={search?.filters?.query ?? ""}
+          onChange={(e) => updateSearch({ query: e.target.value })}
+          inNav={inNav}
+        />
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="26.621"
+          height="26.621"
+          viewBox="0 0 26.621 26.621"
+          aria-hidden
         >
-          {search?.results != null &&
-            search?.filters?.query != "" &&
-            search?.results?.packages?.length > 0 &&
-            search?.results?.packages?.map((e) => (
-              <AutocompleteResult
-                key={`autocomplete-${e.Id}`}
-                id={e.Id}
-                title={e.latest.Name}
-                org={e.latest.Publisher}
-                desc={e.latest.Description?.replace(
-                  new RegExp(debouncedSearchTerm, "gi"),
-                  "<span>$&</span>"
-                )}
-                url={e.latest.Homepage}
-                iconUrl={e.latest.IconUrl}
-              />
-            ))}
-          {search?.results != null &&
-            search?.results?.packages?.length === 0 &&
-            // !isSearching &&
-            debouncedSearchTerm !== "" && (
-              <NoResultsText>
-                No results found for "{debouncedSearchTerm}"
-              </NoResultsText>
-            )}
-          {/* <Link href="/" as={`/?q=${debouncedSearchTerm}`} shallow>
+          <g opacity={inNav ? 0.75 : 1}>
+            <g
+              fill="none"
+              stroke={inNav ? "#fff" : "#aaa"}
+              strokeLinecap="round"
+              strokeWidth="3"
+            >
+              <circle cx="11" cy="11" r="11" stroke="none" />
+              <circle cx="11" cy="11" r="9.5" fill="none" />
+            </g>
+            <line
+              x2="6"
+              y2="6"
+              transform="translate(18.5 18.5)"
+              fill="none"
+              stroke={inNav ? "#fff" : "#aaa"}
+              strokeLinecap="round"
+              strokeWidth="3"
+            />
+          </g>
+        </svg>
+        {(!resultsHidden ?? true) && (
+          <ResultsContainer
+            aria-live="polite"
+            aria-modal={!!(debouncedSearchTerm && search?.results != null)}
+          >
+            {search?.results != null &&
+              search?.filters?.query != "" &&
+              search?.results?.packages?.length > 0 &&
+              search?.results?.packages?.map((e) => (
+                <AutocompleteResult
+                  key={`autocomplete-${e.Id}`}
+                  id={e.Id}
+                  title={e.latest.Name}
+                  org={e.latest.Publisher}
+                  desc={e.latest.Description?.replace(
+                    new RegExp(debouncedSearchTerm, "gi"),
+                    "<span>$&</span>"
+                  )}
+                  url={e.latest.Homepage}
+                  iconUrl={e.latest.IconUrl}
+                />
+              ))}
+            {search?.results != null &&
+              search?.results?.packages?.length === 0 &&
+              // !isSearching &&
+              debouncedSearchTerm !== "" && (
+                <NoResultsText>
+                  No results found for "{debouncedSearchTerm}"
+                </NoResultsText>
+              )}
+            {/* <Link href="/" as={`/?q=${debouncedSearchTerm}`} shallow>
               Test
             </Link> */}
-        </ResultsContainer>
-      )}
-      {/* {debouncedSearchTerm && !isSearching && results.length === 0 && (
+          </ResultsContainer>
+        )}
+        {/* {debouncedSearchTerm && !isSearching && results.length === 0 && (
         <ResultsContainer aria-live="polite" aria-modal="true">
         </ResultsContainer>
       )} */}
+      </WidthWrapper>
     </SearchContainer>
   );
 };
