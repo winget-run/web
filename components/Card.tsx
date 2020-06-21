@@ -134,7 +134,7 @@ export const CardDesc = styled.p`
 `;
 
 const Card = ({ p }: { p: IPackage }) => {
-  const links = p.Id.split(".");
+  const [org, ...pkg] = p.Id.split(".");
   const { packages, addPackage, removePackage } = useContext(Downloads);
   const inPackages = !!packages.find((e) => e.package.Id === p.Id);
   return (
@@ -147,7 +147,7 @@ const Card = ({ p }: { p: IPackage }) => {
         aria-label="Add to selection"
         title={inPackages ? "Remove from selection" : "Add to selection"}
       />
-      <Link href="/pkg/[org]/[pkg]" as={`/pkg/${links[0]}/${links[1]}`}>
+      <Link href="/pkg/[org]/[pkg]" as={`/pkg/${org}/${pkg.join(".")}`}>
         <a>
           <CardTitle>
             <CardIcon
@@ -163,7 +163,7 @@ const Card = ({ p }: { p: IPackage }) => {
           </CardTitle>
         </a>
       </Link>
-      <Link href="/pkg/[org]" as={`/pkg/${links[0]}`}>
+      <Link href="/pkg/[org]" as={`/pkg/${org}`}>
         <a>
           <CardOrg>{p.latest.Publisher}</CardOrg>
         </a>

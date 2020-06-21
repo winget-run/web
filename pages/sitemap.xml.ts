@@ -14,7 +14,7 @@ const sitemapXML = (data) => {
     const [org, ...pkg] = e.Id.split(".");
     return `
     <url>
-    <loc>https://${URL}/pkg/${org}/${pkg}</loc>
+    <loc>https://${URL}/pkg/${org}/${pkg.join(".")}</loc>
     <lastmod>${e.updatedAt}</lastmod>
     <priority>0.80</priority>
     </url>`;
