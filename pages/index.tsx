@@ -4,8 +4,9 @@ import { Container, Row, Col } from "styled-bootstrap-grid";
 import Header from "../components/Header";
 import DownloadModal from "../components/DownloadModal";
 import getPackages, { IResponse } from "../api/getPackages";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import LoadMore from "../components/LoadMore";
+import { useRouter } from "next/router";
 
 export default function Home({ data }: { data: IResponse }) {
   const [packages, setPackages] = useState(data.packages);
@@ -44,13 +45,7 @@ export default function Home({ data }: { data: IResponse }) {
           <Row>
             {packages.map((e) => (
               <Col key={e.Id} md={6} lg={4} xl={3}>
-                <Card
-                  package={e}
-                  title={e.latest.Name}
-                  org={e.latest.Publisher}
-                  description={e.latest.Description}
-                  id={e.Id}
-                />
+                <Card p={e} />
               </Col>
             ))}
           </Row>

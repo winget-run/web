@@ -20,6 +20,7 @@ export interface IPackageInfo {
   Protocols?: string;
   Commands?: string;
   InstallerType?: string;
+  IconUrl?: string;
   Switches?: {
     Custom?: string;
     Silent?: string;

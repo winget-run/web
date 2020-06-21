@@ -30,7 +30,10 @@ export default function Org({ data }: { data: IResponse }) {
   return (
     <div className="container">
       <Head>
-        <title>Packages by {packages[0].latest.Publisher} | winget.run</title>
+        <title>
+          Download and install packages by {packages[0].latest.Publisher} with
+          winget
+        </title>
         <meta
           name="description"
           content={`View packages by ${packages[0].latest.Publisher} on winget.run`}
@@ -52,13 +55,7 @@ export default function Org({ data }: { data: IResponse }) {
           <Row>
             {packages.map((e) => (
               <Col key={e.Id} md={6} lg={4} xl={3}>
-                <Card
-                  package={e}
-                  title={e.latest.Name}
-                  org={e.latest.Publisher}
-                  description={e.latest.Description}
-                  id={e.Id}
-                />
+                <Card p={e} />
               </Col>
             ))}
           </Row>

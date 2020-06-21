@@ -1,7 +1,7 @@
 import Head from "next/head";
-import Card, { CardContainer, Add } from "../../../components/Card";
+import { CardContainer, Add } from "../../../components/Card";
 import { Container, Row, Col, media } from "styled-bootstrap-grid";
-import useSWR, { useSWRPages } from "swr";
+import useSWR from "swr";
 import getPackages, {
   IResponse,
   IPackage,
@@ -13,8 +13,8 @@ import DownloadModal from "../../../components/DownloadModal";
 import Error from "../../_error";
 import { styled } from "../../../utils/theme";
 import Header, { SearchBar } from "../../../components/Header";
-import generateClipboard from "../../../utils/generateClipboard";
-import { Downloads } from "../../../components/StateWrapper";
+import generateClipboard from "../../../utils/clipboard";
+import { Downloads } from "../../../utils/state/Downloads";
 import { toast } from "react-toastify";
 import Link from "next/link";
 
@@ -102,8 +102,8 @@ const AddCard = styled(VersionsCard)`
     font-size: 20px;
   }
   ${Add} {
-    top: 50%;
-    transform: translateY(-50%);
+    top: 50% !important;
+    transform: translateY(-50%) !important;
   }
 `;
 
@@ -179,7 +179,7 @@ export default function Pkg(props) {
 
   const p = data.package as IPackage;
 
-  const inDownloads = packages.find((e) => e.Id === p.Id);
+  const inDownloads = packages.find((e) => e.package.Id === p.Id);
 
   return (
     <div className="container">
@@ -217,7 +217,7 @@ export default function Pkg(props) {
                     </a>
                   </Link>
                   {p.latest.Homepage && (
-                    <a href={p.latest.Homepage}>
+                    <a href={p.latest.Homepage} target="_blank">
                       <h3>
                         Visit website
                         <img
@@ -259,7 +259,7 @@ export default function Pkg(props) {
                         role="button"
                         tabIndex={0}
                         onClick={() => {
-                          generateClipboard([p.Id], [e]);
+                          generateClipboard([{ package: p, version: e }]);
                           toast.dark(
                             `Copied ${p.latest.Name}@${e} to clipboard!`
                           );
@@ -282,7 +282,9 @@ export default function Pkg(props) {
                     role="button"
                     tabIndex={0}
                     onClick={() => {
-                      generateClipboard([p.Id]);
+                      generateClipboard([
+                        { package: p, version: p.versions[0] },
+                      ]);
                       toast.dark(`Copied ${p.latest.Name} to clipboard!`);
                     }}
                     src={require("../../../components/icons/copy.svg")}

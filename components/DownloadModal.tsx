@@ -1,11 +1,13 @@
-import { styled } from "../utils/theme";
-import generateDownload, { fileType } from "../utils/generateDownload";
-import generateClipboard from "../utils/generateClipboard";
-import { IPackage } from "../api/getPackages";
 import { useContext, useState, useEffect } from "react";
-import { Downloads } from "./StateWrapper";
 import { toast } from "react-toastify";
 import { media } from "styled-bootstrap-grid";
+
+import { styled } from "../utils/theme";
+import { IPackage } from "../api/getPackages";
+import { Downloads } from "../utils/state/Downloads";
+import generateClipboard from "../utils/clipboard";
+import generateDownload from "../utils/download";
+import { CardIcon } from "./Card";
 
 const Button = (styled.button as any)`
   background-color: ${(x) => x.theme.accentDark};
@@ -22,6 +24,7 @@ const Button = (styled.button as any)`
   transform: scale(0.5);
   opacity: 0;
   z-index: 999;
+  overflow: visible;
   ${(x) =>
     x.visible &&
     `
@@ -150,15 +153,49 @@ const ScrollContainer = styled.div`
   height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
+  margin-right: -10px;
+  padding-right: 10px;
+
+  span {
+    display: flex;
+    position: relative;
+    justify-content: space-between;
+    margin: 0 0 20px;
+
+    .arrow {
+      position: absolute;
+      pointer-events: none;
+      right: 0;
+      top: 12px;
+    }
+  }
+
+  select {
+    font-size: 14px;
+    height: 30px;
+    color: rgba(255, 255, 255, 0.8);
+    background-color: transparent;
+    border: none;
+    appearance: none;
+    margin-left: 20px;
+    padding-right: 18px;
+    cursor: pointer;
+    option {
+      font-size: 14px;
+      color: black;
+    }
+  }
 
   h4 {
+    display: inline-block;
     font-size: 20px;
     font-weight: normal;
-    margin: 0 0 15px;
+    margin: 0;
     user-select: none;
     cursor: pointer;
     transition: text-decoration 150ms ease;
-    &:hover {
+    &:hover,
+    &:focus {
       text-decoration: line-through;
     }
   }
@@ -195,6 +232,9 @@ const ButtonContainer = styled.div`
 `;
 
 const CopyButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background-color: ${(x) => x.theme.accent};
   border: none;
   border-radius: 8px;
@@ -209,6 +249,10 @@ const CopyButton = styled.button`
   margin-right: 10px;
   transition: background-color 150ms ease;
 
+  img {
+    margin-right: 10px;
+  }
+
   &:hover {
     background-color: ${(x) => x.theme.accentDarker};
   }
@@ -219,7 +263,12 @@ const DownloadButton = styled(CopyButton)`
 `;
 
 const DownloadModal = () => {
-  const { packages, removePackage, clearPackages } = useContext(Downloads);
+  const {
+    packages,
+    removePackage,
+    changePackageVersion,
+    clearPackages,
+  } = useContext(Downloads);
   const [expanded, setExpanded] = useState(false);
 
   const shouldBeVisible = packages.length > 0;
@@ -232,10 +281,12 @@ const DownloadModal = () => {
 
   return (
     <>
+      {/* Modal */}
       <ModalContainer
         visible={shouldBeVisible}
         expanded={shouldBeVisible && expanded}
       >
+        {/* Modal Header */}
         <h3>
           {packages.length} package{packages.length !== 1 && "s"} selected
           <img
@@ -245,35 +296,69 @@ const DownloadModal = () => {
             onClick={clearPackages}
           />
         </h3>
+
+        {/* List of Packages */}
         <ScrollContainer>
           {shouldBeVisible &&
             packages.map((e) => (
-              <h4 key={`download-${e.Id}`} onClick={() => removePackage(e)}>
-                {e.latest.Name}
-              </h4>
+              <span>
+                <h4
+                  key={`download-${e.package.Id}`}
+                  onClick={() => removePackage(e.package)}
+                  tabIndex={0}
+                >
+                  <CardIcon
+                    src={
+                      e.package.latest.IconUrl ||
+                      (e.package.latest.Homepage
+                        ? `https://www.google.com/s2/favicons?sz=32&domain_url=${e.package.latest.Homepage}`
+                        : "/favicon.ico")
+                    }
+                    alt=""
+                  />
+                  {e.package.latest.Name}
+                </h4>
+                <select
+                  value={e.version}
+                  onChange={(ev) =>
+                    changePackageVersion({
+                      ...e,
+                      version: ev.currentTarget.value,
+                    })
+                  }
+                >
+                  {e.package.versions.map((v) => (
+                    <option key={e.package.Id + v}>{v}</option>
+                  ))}
+                </select>
+                <img
+                  className="arrow"
+                  src={require("./icons/chevron-down.svg")}
+                  alt=""
+                />
+              </span>
             ))}
         </ScrollContainer>
+
+        {/* Bottom Buttons */}
         <ButtonContainer>
           <CopyButton
             onClick={() => {
-              generateClipboard(packages.map((e) => e.Id));
+              generateClipboard(packages);
               toast.dark(`Copied packages to clipboard!`);
             }}
           >
+            <img src={require("./icons/copy.svg")} alt="" />
             Copy
           </CopyButton>
-          <DownloadButton
-            onClick={() =>
-              generateDownload(
-                fileType.powershell,
-                packages.map((e) => e.Id)
-              )
-            }
-          >
+          <DownloadButton onClick={() => generateDownload(packages)}>
+            <img src={require("./icons/download.svg")} alt="" />
             Download
           </DownloadButton>
         </ButtonContainer>
       </ModalContainer>
+
+      {/* Floating Action Button */}
       <Button
         onClick={() => setExpanded(!expanded)}
         visible={shouldBeVisible}

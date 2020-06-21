@@ -10,8 +10,6 @@ const sitemapXML = (data) => {
     URL = "dev-web.winget.run";
   }
 
-  console.log(URL);
-
   const packages = data.map((e) => {
     const [org, ...pkg] = e.Id.split(".");
     return `
