@@ -1,7 +1,7 @@
 import { IDownload } from "./state/Downloads";
 
 export default function generateCommand(packages: IDownload[]): string {
-  const commands = `${packages
+  return `${packages
     .map(
       (e) =>
         `winget install -e --id ${e.package.Id}${
@@ -9,6 +9,4 @@ export default function generateCommand(packages: IDownload[]): string {
         }`
     )
     .join("\r\n")}\r\n`;
-
-  return `powershell\r\n${commands}\r\nexit`;
 }
