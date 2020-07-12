@@ -49,11 +49,24 @@ export default class MyDocument extends Document {
             `}
           </style>
           <link rel="icon" href="/favicon.ico" />
+          <link
+            type="application/opensearchdescription+xml"
+            rel="search"
+            href={
+              process.env.NEXT_PUBLIC_K8S_ENV === "dev"
+                ? "https://dev-web.winget.run/opensearch.osdx"
+                : "https://winget.run/opensearch.osdx"
+            }
+          />
           <meta httpEquiv="Content-Type" content="text/html; charset=utf-8" />
           <meta name="theme-color" content="#327080" />
           <meta
             name="twitter:image"
-            content="https://winget.run/twitter_card.jpg"
+            content={
+              process.env.NEXT_PUBLIC_K8S_ENV === "dev"
+                ? "https://dev-web.winget.run/twitter_card.jpg"
+                : "https://winget.run/twitter_card.jpg"
+            }
           />
           <meta
             name="keywords"

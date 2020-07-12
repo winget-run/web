@@ -9,26 +9,25 @@ import LoadMore from "../components/LoadMore";
 import { useRouter } from "next/router";
 import SectionHeader from "../components/SectionHeader";
 
-export default function Home({ data }: { data: IResponse }) {
+export default function Search({ data }: { data: IResponse }) {
+  const router = useRouter();
   const [packages, setPackages] = useState(data.packages);
+  const [searchTerm, setSearchTerm] = useState(router.query.q);
   const [page, setPage] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
 
   const loadMore = () => {
-    setIsLoading(true);
-    getPackages(
-      `search?name=&limit=12&sort=updatedAt&order=-1&page=${page + 1}`
-    ).then((e: IResponse) => {
-      setPackages((prev) => [...prev, ...e.packages]);
-      setPage((prev) => ++prev);
-      setIsLoading(false);
-    });
+    getPackages(`search?name=${searchTerm}&limit=12&page=${page + 1}`).then(
+      (e: IResponse) => {
+        setPackages((prev) => [...prev, ...e.packages]);
+        setPage((prev) => ++prev);
+      }
+    );
   };
 
   return (
     <div className="container">
       <Head>
-        <title>winget.run | Finding winget packages made simple.</title>
+        <title>Search results for {searchTerm} | winget.run</title>
         <meta
           name="description"
           content="Searching, discovering and installing winget packages made effortless without any third-party programs"
@@ -49,7 +48,8 @@ export default function Home({ data }: { data: IResponse }) {
           <Row>
             <Col col={12}>
               <SectionHeader>
-                Recently added packages<span>{data.total} packages</span>
+                Search results for "{searchTerm}"
+                <span>{packages.length} results</span>
               </SectionHeader>
             </Col>
           </Row>
@@ -61,20 +61,16 @@ export default function Home({ data }: { data: IResponse }) {
             ))}
           </Row>
         </Container>
-        {packages.length < data.total && (
-          <LoadMore onClick={() => loadMore()} isLoading={isLoading} />
-        )}
+        {packages.length < data.total && <LoadMore onClick={loadMore} />}
         <DownloadModal />
       </main>
     </div>
   );
 }
 
-export async function getServerSideProps() {
+export async function getServerSideProps({ query }) {
   try {
-    const data = await getPackages(
-      `search?name=&limit=12&sort=updatedAt&order=-1`
-    );
+    const data = await getPackages(`search?name=${query.q}&limit=12`);
     return { props: { data } };
   } catch (error) {
     return { props: { data: { packages: [], total: 0 } } };
