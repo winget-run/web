@@ -51,7 +51,7 @@ export default function Org({ data }: { data: IResponse }) {
         />
       </Head>
       <header>
-        <Header title={packages[0].latest.Publisher} />
+        <Header showSearch title={packages[0].latest.Publisher} />
       </header>
       <main>
         <Container>
