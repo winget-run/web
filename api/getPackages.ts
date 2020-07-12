@@ -72,7 +72,10 @@ export interface IResponseSingle {
 }
 
 let URL = "api.winget.run";
-if (serverRuntimeConfig.K8S_ENV === "dev") {
+if (
+  serverRuntimeConfig.K8S_ENV === "dev" ||
+  process.env.NEXT_PUBLIC_K8S_ENV === "dev"
+) {
   URL = "dev-api.winget.run";
 }
 
