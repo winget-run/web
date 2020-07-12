@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "cross-env K8S_ENV=dev NEXT_PUBLIC_K8S_ENV=dev next dev",
+    "dev:prod": "next dev",
     "build": "next build",
     "serve": "next start --hostname 0.0.0.0",
     "lint": "eslint **/*.{js,jsx,ts,tsx}",
@@ -27,6 +28,7 @@
     "@typescript-eslint/eslint-plugin": "^3.0.0",
     "@typescript-eslint/parser": "^3.0.0",
     "babel-plugin-styled-components": "^1.10.7",
+    "cross-env": "^7.0.2",
     "eslint": "^6",
     "eslint-config-prettier": "^6.11.0",
     "eslint-config-react-app": "^5.2.1",
