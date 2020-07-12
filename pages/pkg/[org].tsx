@@ -15,15 +15,18 @@ export default function Org({ data }: { data: IResponse }) {
 
   const [packages, setPackages] = useState(data.packages);
   const [page, setPage] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   if (data.packages == null || data.packages.length === 0) {
     return <Error statusCode={404} />;
   }
 
   const loadMore = () => {
+    setIsLoading(true);
     getPackages(`${org}?page=${page + 1}`).then((e: IResponse) => {
       setPackages((prev) => [...prev, ...e.packages]);
       setPage((prev) => ++prev);
+      setIsLoading(false);
     });
   };
 
@@ -60,7 +63,9 @@ export default function Org({ data }: { data: IResponse }) {
             ))}
           </Row>
         </Container>
-        {packages.length < data.total && <LoadMore onClick={loadMore} />}
+        {packages.length < data.total && (
+          <LoadMore onClick={loadMore} isLoading={isLoading} />
+        )}
         <DownloadModal />
       </main>
     </div>

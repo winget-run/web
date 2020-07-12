@@ -62,9 +62,8 @@ const Button = styled.button`
   }
 `;
 
-interface IProps {
+interface IProps extends React.HTMLProps<HTMLButtonElement> {
   isLoading: boolean;
-  onClick: () => void;
 }
 
 const LoadMore = ({ isLoading, onClick }: IProps) => {
