@@ -10,6 +10,7 @@ import getPackages, {
 import { useState, useContext } from "react";
 import { useRouter } from "next/router";
 import DownloadModal from "../../../components/DownloadModal";
+import Tag from '../../../components/Tag';
 import Error from "../../_error";
 import { styled } from "../../../utils/theme";
 import Header, { SearchBar } from "../../../components/Header";
@@ -299,6 +300,14 @@ export default function Pkg(props) {
                   <SectionInfo>{p.latest.Description}</SectionInfo>
                 </section>
               )}
+              <section>
+              <SectionHeader>Tags</SectionHeader>
+                <Tag>{"Code Editor"}</Tag>
+                <Tag>{"Code Editor"}</Tag>
+                <Tag>{"Code Editor"}</Tag>
+                <Tag>{"Code Editor"}</Tag>
+                <Tag>{"Code Editor"}</Tag>
+              </section>
               {p.latest.License && (
                 <section>
                   <SectionHeader>License</SectionHeader>
