@@ -58,7 +58,6 @@ const rotate = keyframes`
 
 const Spinner = styled.div`
   display: inline-block;
-  margin-left: 6px;
   animation: ${rotate} 1s linear infinite;
 `;
 
@@ -69,7 +68,7 @@ interface IProps{
 
 const LoadMore = (props: IProps) => {
     return (
-      <Button>
+      <Button onClick = {props.onClick} >
         Load more packages {props.isLoading ? <Spinner><img src={require("./icons/spinner.svg")} alt="Loading"/></Spinner> : <img src={require("./icons/plus.svg")} alt="Load More" /> }
       </Button>
     );

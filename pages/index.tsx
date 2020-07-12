@@ -15,14 +15,14 @@ export default function Home({ data }: { data: IResponse }) {
 
   const loadMore = () => {
     setIsLoading(true);
+    console.log('yeet')
     
     getPackages(
       `search?name=&limit=24&sort=updatedAt&order=-1&page=${page + 1}`
     ).then((e: IResponse) => {
       setPackages((prev) => [...prev, ...e.packages]);
       setPage((prev) => ++prev);
-      console.log('yeet')
-
+      
       setIsLoading(false);
     });
   };
@@ -57,7 +57,7 @@ export default function Home({ data }: { data: IResponse }) {
           </Row>
         </Container>
         {packages.length < data.total && (
-          <LoadMore onClick={loadMore} isLoading={isLoading} />
+          <LoadMore onClick={() => loadMore()} isLoading={isLoading} />
         )}
         <DownloadModal />
       </main>
