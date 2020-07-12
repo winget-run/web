@@ -120,13 +120,12 @@ const NoResultsText = styled.h4`
 `;
 
 interface IProps {
-  totalPackages?: number;
   inNav?: boolean;
   hidden?: boolean;
   resultsHidden?: boolean;
 }
 
-const Search = ({ totalPackages, inNav, hidden, resultsHidden }: IProps) => {
+const Search = ({ inNav, hidden, resultsHidden }: IProps) => {
   const {
     search,
     updateSearch,
@@ -157,9 +156,7 @@ const Search = ({ totalPackages, inNav, hidden, resultsHidden }: IProps) => {
         <StyledInput
           aria-label="Search packages"
           type="text"
-          placeholder={
-            inNav ? "Search packages" : `Search ${totalPackages} packages...`
-          }
+          placeholder="Search packages"
           value={search?.filters?.query ?? ""}
           onChange={(e) => updateSearch({ query: e.target.value })}
           inNav={inNav}
