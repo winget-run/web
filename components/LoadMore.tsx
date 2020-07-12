@@ -1,4 +1,6 @@
 import { styled } from "../utils/theme";
+import React from "react";
+import { keyframes } from "styled-components";
 
 const Button = styled.button`
   display: block;
@@ -44,12 +46,33 @@ const Button = styled.button`
   }
 `;
 
-const LoadMore = (props) => {
-  return (
-    <Button {...props}>
-      Load more packages <img src={require("./icons/plus.svg")} alt="" />
-    </Button>
-  );
-};
+const rotate = keyframes`
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+`;
+
+const Spinner = styled.div`
+  display: inline-block;
+  margin-left: 6px;
+  animation: ${rotate} 1s linear infinite;
+`;
+
+interface IProps{
+  isLoading: boolean;
+  onClick: () => void;
+}
+
+const LoadMore = (props: IProps) => {
+    return (
+      <Button>
+        Load more packages {props.isLoading ? <Spinner><img src={require("./icons/spinner.svg")} alt="Loading"/></Spinner> : <img src={require("./icons/plus.svg")} alt="Load More" /> }
+      </Button>
+    );
+  };
 
 export default LoadMore;

@@ -11,13 +11,19 @@ import { useRouter } from "next/router";
 export default function Home({ data }: { data: IResponse }) {
   const [packages, setPackages] = useState(data.packages);
   const [page, setPage] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   const loadMore = () => {
+    setIsLoading(true);
+    
     getPackages(
       `search?name=&limit=24&sort=updatedAt&order=-1&page=${page + 1}`
     ).then((e: IResponse) => {
       setPackages((prev) => [...prev, ...e.packages]);
       setPage((prev) => ++prev);
+      console.log('yeet')
+
+      setIsLoading(false);
     });
   };
 
@@ -50,7 +56,9 @@ export default function Home({ data }: { data: IResponse }) {
             ))}
           </Row>
         </Container>
-        {packages.length < data.total && <LoadMore onClick={loadMore} />}
+        {packages.length < data.total && (
+          <LoadMore onClick={loadMore} isLoading={isLoading} />
+        )}
         <DownloadModal />
       </main>
     </div>
