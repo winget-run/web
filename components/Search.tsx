@@ -1,4 +1,5 @@
 import { useEffect, useContext } from "react";
+import ReactTooltip from "react-tooltip";
 
 import { styled } from "../utils/theme";
 import useDebounce from "../utils/hooks/useDebounce";
@@ -6,6 +7,7 @@ import AutocompleteResult from "./AutocompleteResult";
 import getPackages from "../api/getPackages";
 
 import { Search as SearchContext } from "../utils/state/Search";
+import {TextConstants} from "../utils/constants/textConstants";
 
 const SearchContainer = styled.div`
   position: relative;
@@ -160,6 +162,7 @@ const Search = ({ inNav, hidden, resultsHidden }: IProps) => {
           value={search?.filters?.query ?? ""}
           onChange={(e) => updateSearch({ query: e.target.value })}
           inNav={inNav}
+          data-tip= {TextConstants.SEARCH_TIP}
         />
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -188,7 +191,8 @@ const Search = ({ inNav, hidden, resultsHidden }: IProps) => {
               strokeWidth="3"
             />
           </g>
-        </svg>
+        </svg> 
+        <ReactTooltip />
         {(!resultsHidden ?? true) && (
           <ResultsContainer
             aria-live="polite"
