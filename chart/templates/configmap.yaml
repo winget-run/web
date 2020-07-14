@@ -4,3 +4,4 @@ metadata:
   name: {{ .Release.Name }}
 data:
   K8S_ENV: dev
+  NEXT_ENV_K8S_ENV: dev

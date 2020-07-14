@@ -7,7 +7,6 @@ export interface IPackageInfo {
   Description?: string;
   Name: string;
   AppMoniker?: string;
-  Version: string;
   Publisher: string;
   Channel?: string;
   Author?: string;
@@ -20,7 +19,6 @@ export interface IPackageInfo {
   Protocols?: string;
   Commands?: string;
   InstallerType?: string;
-  IconUrl?: string;
   Switches?: {
     Custom?: string;
     Silent?: string;
@@ -58,17 +56,21 @@ export interface IPackageInfo {
 
 export interface IPackage {
   Id: string;
-  latest: IPackageInfo;
-  versions: string[];
+  Latest: IPackageInfo;
+  Featured: boolean;
+  IconUrl?: string;
+  Banner?: string;
+  Versions: string[];
+  UpdatedAt: Date;
 }
 
 export interface IResponse {
-  packages: IPackage[];
-  total: number;
+  Packages: IPackage[];
+  Total: number;
 }
 
 export interface IResponseSingle {
-  package: IPackage;
+  Package: IPackage;
 }
 
 let URL = "api.winget.run";
@@ -80,5 +82,5 @@ if (
 }
 
 export default async function getPackages(route = ""): Promise<IResponse> {
-  return fetch(`https://${URL}/v1/${route}`).then((e) => e.json());
+  return fetch(`https://${URL}/v2/${route}`).then((e) => e.json());
 }

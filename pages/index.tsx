@@ -10,16 +10,16 @@ import { useRouter } from "next/router";
 import SectionHeader from "../components/SectionHeader";
 
 export default function Home({ data }: { data: IResponse }) {
-  const [packages, setPackages] = useState(data.packages);
+  const [packages, setPackages] = useState(data.Packages);
   const [page, setPage] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
 
   const loadMore = () => {
     setIsLoading(true);
     getPackages(
-      `search?name=&limit=12&sort=updatedAt&order=-1&page=${page + 1}`
+      `packages?limit=12&sort=UpdatedAt&order=-1&page=${page + 1}`
     ).then((e: IResponse) => {
-      setPackages((prev) => [...prev, ...e.packages]);
+      setPackages((prev) => [...prev, ...e.Packages]);
       setPage((prev) => ++prev);
       setIsLoading(false);
     });
@@ -49,7 +49,7 @@ export default function Home({ data }: { data: IResponse }) {
           <Row>
             <Col col={12}>
               <SectionHeader>
-                Recently added packages<span>{data.total} packages</span>
+                Recently updated packages<span>{data.Total} packages</span>
               </SectionHeader>
             </Col>
           </Row>
@@ -61,7 +61,7 @@ export default function Home({ data }: { data: IResponse }) {
             ))}
           </Row>
         </Container>
-        {packages.length < data.total && (
+        {packages.length < data.Total && (
           <LoadMore onClick={() => loadMore()} isLoading={isLoading} />
         )}
         <DownloadModal />
@@ -72,11 +72,9 @@ export default function Home({ data }: { data: IResponse }) {
 
 export async function getServerSideProps() {
   try {
-    const data = await getPackages(
-      `search?name=&limit=12&sort=updatedAt&order=-1`
-    );
+    const data = await getPackages(`packages?take=12&sort=UpdatedAt&order=-1`);
     return { props: { data } };
   } catch (error) {
-    return { props: { data: { packages: [], total: 0 } } };
+    return { props: { data: { Packages: [], Total: 0 } } };
   }
 }

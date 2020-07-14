@@ -19,7 +19,7 @@ const download = (filename: string, text: string) => {
 
 const generateDownload = (packages: IDownload[]) => {
   const names = packages.map((e) => {
-    const [_, ...name] = e.package.Id.split(".");
+    const [_, ...name] = e.Package.Id.split(".");
     return name.join("-");
   });
   const fileName = `winget-${names.join("_")}.ps1`;
