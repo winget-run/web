@@ -8,6 +8,7 @@ import { useRouter } from "next/router";
 import DownloadModal from "../../components/DownloadModal";
 import Error from "../_error";
 import LoadMore from "../../components/LoadMore";
+import SectionHeader from "../../components/SectionHeader";
 
 export default function Org({ data }: { data: IResponse }) {
   const router = useRouter();
@@ -51,10 +52,18 @@ export default function Org({ data }: { data: IResponse }) {
         />
       </Head>
       <header>
-        <Header title={packages[0].Latest.Publisher} />
+        <Header showSearch title="winget.run" />
       </header>
       <main>
         <Container>
+          <Row>
+            <Col col={12}>
+              <SectionHeader>
+                Packages by {packages[0].Latest.Publisher}
+                <span>{data.Total} packages</span>
+              </SectionHeader>
+            </Col>
+          </Row>
           <Row>
             {packages.map((e) => (
               <Col key={e.Id} md={6} lg={4} xl={3}>
