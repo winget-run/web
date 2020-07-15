@@ -3,7 +3,7 @@ import getConfig from "next/config";
 
 const { serverRuntimeConfig } = getConfig();
 
-export interface IPackageInfo {
+export interface IManifestInfo {
   Description?: string;
   Name: string;
   AppMoniker?: string;
@@ -14,7 +14,7 @@ export interface IPackageInfo {
   LicenseUrl?: string;
   MinOSVersion?: string;
   Homepage?: string;
-  Tags?: string;
+  Tags?: string[];
   FileExtensions?: string;
   Protocols?: string;
   Commands?: string;
@@ -56,10 +56,11 @@ export interface IPackageInfo {
 
 export interface IPackage {
   Id: string;
-  Latest: IPackageInfo;
+  Latest: IManifestInfo;
   Featured: boolean;
   IconUrl?: string;
   Banner?: string;
+  Logo?: string;
   Versions: string[];
   UpdatedAt: Date;
 }

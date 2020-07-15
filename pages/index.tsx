@@ -17,7 +17,7 @@ export default function Home({ data }: { data: IResponse }) {
   const loadMore = () => {
     setIsLoading(true);
     getPackages(
-      `packages?limit=12&sort=UpdatedAt&order=-1&page=${page + 1}`
+      `packages?sort=UpdatedAt&order=-1&page=${page + 1}`
     ).then((e: IResponse) => {
       setPackages((prev) => [...prev, ...e.Packages]);
       setPage((prev) => ++prev);
@@ -72,7 +72,7 @@ export default function Home({ data }: { data: IResponse }) {
 
 export async function getServerSideProps() {
   try {
-    const data = await getPackages(`packages?take=12&sort=UpdatedAt&order=-1`);
+    const data = await getPackages(`packages?&sort=UpdatedAt&order=-1`);
     return { props: { data } };
   } catch (error) {
     return { props: { data: { Packages: [], Total: 0 } } };
