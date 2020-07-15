@@ -16,13 +16,13 @@ export default function Home({ data }: { data: IResponse }) {
 
   const loadMore = () => {
     setIsLoading(true);
-    getPackages(
-      `packages?sort=UpdatedAt&order=-1&page=${page + 1}`
-    ).then((e: IResponse) => {
-      setPackages((prev) => [...prev, ...e.Packages]);
-      setPage((prev) => ++prev);
-      setIsLoading(false);
-    });
+    getPackages(`packages?sort=UpdatedAt&order=-1&page=${page + 1}`).then(
+      (e: IResponse) => {
+        setPackages((prev) => [...prev, ...e.Packages]);
+        setPage((prev) => ++prev);
+        setIsLoading(false);
+      }
+    );
   };
 
   return (
