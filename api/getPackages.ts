@@ -14,7 +14,7 @@ export interface IManifestInfo {
   LicenseUrl?: string;
   MinOSVersion?: string;
   Homepage?: string;
-  Tags?: string[];
+  Tags?: string;
   FileExtensions?: string;
   Protocols?: string;
   Commands?: string;
@@ -54,9 +54,19 @@ export interface IManifestInfo {
   ];
 }
 
+export interface IPackageInfo {
+  Name: string;
+  Publisher: string;
+  Tags: string[];
+  Description?: string;
+  Homepage?: string;
+  License?: string;
+  LicenseUrl?: string;
+}
+
 export interface IPackage {
   Id: string;
-  Latest: IManifestInfo;
+  Latest: IPackageInfo;
   Featured: boolean;
   IconUrl?: string;
   Banner?: string;

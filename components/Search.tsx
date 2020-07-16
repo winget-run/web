@@ -137,7 +137,7 @@ const Search = ({ inNav, hidden, resultsHidden }: IProps) => {
   const debouncedSearchTerm = useDebounce(search?.filters?.query ?? "", 400);
 
   useEffect(() => {
-    if (debouncedSearchTerm) {
+    if (debouncedSearchTerm && debouncedSearchTerm.length > 1) {
       getPackages(`packages?query=${debouncedSearchTerm}&take=3`).then((e) => {
         updateResults(e);
       });
