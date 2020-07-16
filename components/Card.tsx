@@ -136,7 +136,7 @@ export const CardDesc = styled.p`
 const Card = ({ p }: { p: IPackage }) => {
   const [org, ...pkg] = p.Id.split(".");
   const { packages, addPackage, removePackage } = useContext(Downloads);
-  const inPackages = !!packages.find((e) => e.package.Id === p.Id);
+  const inPackages = !!packages.find((e) => e.Package.Id === p.Id);
   return (
     <CardContainer selected={inPackages}>
       <Add
@@ -152,27 +152,27 @@ const Card = ({ p }: { p: IPackage }) => {
           <CardTitle>
             <CardIcon
               src={
-                p.latest.IconUrl ||
-                (p.latest.Homepage
-                  ? `https://www.google.com/s2/favicons?sz=32&domain_url=${p.latest.Homepage}`
+                p.IconUrl ||
+                (p.Latest.Homepage
+                  ? `https://www.google.com/s2/favicons?sz=32&domain_url=${p.Latest.Homepage}`
                   : "/favicon.ico")
               }
               alt=""
             />
-            {p.latest.Name}
+            {p.Latest.Name}
           </CardTitle>
         </a>
       </Link>
       <Link href="/pkg/[org]" as={`/pkg/${org}`}>
         <a>
-          <CardOrg>{p.latest.Publisher}</CardOrg>
+          <CardOrg>{p.Latest.Publisher}</CardOrg>
         </a>
       </Link>
-      <CardDesc>{p.latest.Description}</CardDesc>
+      <CardDesc>{p.Latest.Description}</CardDesc>
       <Copy
         onClick={() => {
-          generateClipboard([{ package: p, version: p.versions[0] }]);
-          toast.dark(`Copied ${p.latest.Name} to clipboard!`);
+          generateClipboard([{ Package: p, Version: p.Versions[0] }]);
+          toast.dark(`Copied ${p.Latest.Name} to clipboard!`);
         }}
         title="Copy the command to your clipboard"
       >

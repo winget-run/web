@@ -101,9 +101,13 @@ const AddCard = styled(VersionsCard)`
     font-weight: 500;
     font-size: 20px;
   }
-  ${Add} {
+  button {
     top: 50% !important;
     transform: translateY(-50%) !important;
+  }
+
+  &.active {
+    border: 2px solid ${(x) => x.theme.accent};
   }
 `;
 
@@ -170,34 +174,36 @@ export default function Pkg(props) {
   const router = useRouter();
   const { org, pkg } = router.query;
   const initialData = props.data;
-  const { data } = useSWR(`${org}/${pkg}`, getPackages, { initialData });
+  const { data } = useSWR(`packages/${org}/${pkg}`, getPackages, {
+    initialData,
+  });
   const { packages, addPackage, removePackage } = useContext(Downloads);
 
-  if ((data as IResponseSingle).package == null) {
+  if ((data as IResponseSingle).Package == null) {
     return <Error statusCode={404} />;
   }
 
-  const p = data.package as IPackage;
+  const p = data.Package as IPackage;
 
-  const inDownloads = packages.find((e) => e.package.Id === p.Id);
+  const inDownloads = packages.find((e) => e.Package.Id === p.Id);
 
   return (
     <div className="container">
       <Head>
-        <title>Download and install {p.latest.Name} with winget</title>
+        <title>Download and install {p.Latest.Name} with winget</title>
         <meta
           name="description"
           content={
-            p.latest.Description ||
-            `Download and install ${p.latest.Name} and other packages with winget`
+            p.Latest.Description ||
+            `Download and install ${p.Latest.Name} and other packages with winget`
           }
         />
-        <meta name="twitter:title" content={`${p.latest.Name} on winget.run`} />
+        <meta name="twitter:title" content={`${p.Latest.Name} on winget.run`} />
         <meta
           name="twitter:description"
           content={
-            p.latest.Description ||
-            `Download and install ${p.latest.Name} and other packages with winget`
+            p.Latest.Description ||
+            `Download and install ${p.Latest.Name} and other packages with winget`
           }
         />
       </Head>
@@ -208,16 +214,16 @@ export default function Pkg(props) {
               <Row>
                 <Col col={12}>
                   <h1>
-                    {p.latest.Name}
-                    <span>v{p.latest.Version}</span>
+                    {p.Latest.Name}
+                    <span>v{p.Versions[0]}</span>
                   </h1>
                   <Link href="/pkg/[org]" as={`/pkg/${org}`}>
                     <a>
-                      <h2>{p.latest.Publisher}</h2>
+                      <h2>{p.Latest.Publisher}</h2>
                     </a>
                   </Link>
-                  {p.latest.Homepage && (
-                    <a href={p.latest.Homepage} target="_blank">
+                  {p.Latest.Homepage && (
+                    <a href={p.Latest.Homepage} target="_blank">
                       <h3>
                         Visit website
                         <img
@@ -237,7 +243,7 @@ export default function Pkg(props) {
         <Container>
           <CustomRow>
             <Col col={12} lg={4} xl={3}>
-              <AddCard>
+              <AddCard className={inDownloads && "active"}>
                 <SectionHeader>
                   {inDownloads ? "Remove from list" : "Add to list"}
                 </SectionHeader>
@@ -251,17 +257,17 @@ export default function Pkg(props) {
               </AddCard>
               <VersionsCard>
                 <SectionHeader>Versions</SectionHeader>
-                {p.versions.map((e) => (
-                  <Version>
+                {p.Versions.map((e) => (
+                  <Version key={e}>
                     {e}
                     <span>
                       <img
                         role="button"
                         tabIndex={0}
                         onClick={() => {
-                          generateClipboard([{ package: p, version: e }]);
+                          generateClipboard([{ Package: p, Version: e }]);
                           toast.dark(
-                            `Copied ${p.latest.Name}@${e} to clipboard!`
+                            `Copied ${p.Latest.Name}@${e} to clipboard!`
                           );
                         }}
                         src={require("../../../components/icons/copy.svg")}
@@ -283,9 +289,9 @@ export default function Pkg(props) {
                     tabIndex={0}
                     onClick={() => {
                       generateClipboard([
-                        { package: p, version: p.versions[0] },
+                        { Package: p, Version: p.Versions[0] },
                       ]);
-                      toast.dark(`Copied ${p.latest.Name} to clipboard!`);
+                      toast.dark(`Copied ${p.Latest.Name} to clipboard!`);
                     }}
                     src={require("../../../components/icons/copy.svg")}
                     alt=""
@@ -293,26 +299,26 @@ export default function Pkg(props) {
                   />
                 </CodeBlock>
               </section>
-              {p.latest.Description && (
+              {p.Latest.Description && (
                 <section>
-                  <SectionHeader>About {p.latest.Name}</SectionHeader>
-                  <SectionInfo>{p.latest.Description}</SectionInfo>
+                  <SectionHeader>About {p.Latest.Name}</SectionHeader>
+                  <SectionInfo>{p.Latest.Description}</SectionInfo>
                 </section>
               )}
-              {p.latest.License && (
+              {p.Latest.License && (
                 <section>
                   <SectionHeader>License</SectionHeader>
                   <SectionInfo>
-                    {p.latest.LicenseUrl ? (
-                      <a href={p.latest.LicenseUrl}>
+                    {p.Latest.LicenseUrl ? (
+                      <a href={p.Latest.LicenseUrl}>
                         <img
                           src={require("../../../components/icons/link.svg")}
                           alt=""
                         />
-                        {p.latest.License}
+                        {p.Latest.License}
                       </a>
                     ) : (
-                      p.latest.License
+                      p.Latest.License
                     )}
                   </SectionInfo>
                 </section>
@@ -327,7 +333,7 @@ export default function Pkg(props) {
 }
 
 export async function getServerSideProps({ params }) {
-  const data = await getPackages(`${params.org}/${params.pkg}`);
+  const data = await getPackages(`packages/${params.org}/${params.pkg}`);
 
   return { props: { data } };
 }

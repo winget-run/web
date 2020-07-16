@@ -4,8 +4,8 @@ export default function generateCommand(packages: IDownload[]): string {
   return `${packages
     .map(
       (e) =>
-        `winget install -e --id ${e.package.Id}${
-          e.version !== e.package.versions[0] ? ` -v ${e.version}` : ""
+        `winget install -e --id ${e.Package.Id}${
+          e.Version !== e.Package.Versions[0] ? ` -v ${e.Version}` : ""
         }`
     )
     .join("\r\n")}\r\n`;

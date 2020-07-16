@@ -147,7 +147,7 @@ const Header = (props: IProps) => {
                   <NavIcon
                     src={require("./icons/nav.svg")}
                     alt="winget.run logo"
-                    title="Go home!"
+                    title="Stay home!"
                   />
                 </a>
               </Link>

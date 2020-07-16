@@ -4,8 +4,8 @@ import { IPackage } from "../../api/getPackages";
 const Downloads = createContext(null);
 
 interface IDownload {
-  package: IPackage;
-  version: string;
+  Package: IPackage;
+  Version: string;
 }
 
 //TODO: abstract into seperate file
@@ -14,17 +14,17 @@ function downloadsReducer(state: IDownload[], action) {
     case "add":
       return [
         ...state,
-        { package: action.payload, version: action.payload.versions[0] },
+        { Package: action.payload, Version: action.payload.Versions[0] },
       ];
     case "remove":
-      return state.filter((e) => e.package.Id !== action.payload.Id);
+      return state.filter((e) => e.Package.Id !== action.payload.Id);
     case "version":
       const stateClone: IDownload[] = JSON.parse(JSON.stringify(state));
 
       const verIndex = stateClone.findIndex(
-        (e) => e.package.Id === action.payload.package.Id
+        (e) => e.Package.Id === action.payload.Package.Id
       );
-      stateClone[verIndex].version = action.payload.version;
+      stateClone[verIndex].Version = action.payload.Version;
 
       return stateClone;
 

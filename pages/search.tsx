@@ -11,7 +11,7 @@ import SectionHeader from "../components/SectionHeader";
 
 export default function Search({ data }: { data: IResponse }) {
   const router = useRouter();
-  const [packages, setPackages] = useState(data.packages);
+  const [packages, setPackages] = useState(data.Packages);
   const [searchTerm, setSearchTerm] = useState(router.query.q);
   const [page, setPage] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
@@ -20,7 +20,7 @@ export default function Search({ data }: { data: IResponse }) {
     setIsLoading(true);
     getPackages(`search?name=${searchTerm}&limit=12&page=${page + 1}`).then(
       (e: IResponse) => {
-        setPackages((prev) => [...prev, ...e.packages]);
+        setPackages((prev) => [...prev, ...e.Packages]);
         setPage((prev) => ++prev);
         setIsLoading(false);
       }
@@ -64,7 +64,7 @@ export default function Search({ data }: { data: IResponse }) {
             ))}
           </Row>
         </Container>
-        {packages.length < data.total && (
+        {packages.length < data.Total && (
           <LoadMore onClick={loadMore} isLoading={isLoading} />
         )}
         <DownloadModal />
