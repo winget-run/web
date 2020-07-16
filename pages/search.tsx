@@ -9,14 +9,16 @@ import LoadMore from "../components/LoadMore";
 import { useRouter } from "next/router";
 import SectionHeader from "../components/SectionHeader";
 
-export default function Home({ data }: { data: IResponse }) {
+export default function Search({ data }: { data: IResponse }) {
+  const router = useRouter();
   const [packages, setPackages] = useState(data.Packages);
+  const [searchTerm, setSearchTerm] = useState(router.query.q);
   const [page, setPage] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
 
   const loadMore = () => {
     setIsLoading(true);
-    getPackages(`packages?sort=UpdatedAt&order=-1&page=${page + 1}`).then(
+    getPackages(`search?name=${searchTerm}&limit=12&page=${page + 1}`).then(
       (e: IResponse) => {
         setPackages((prev) => [...prev, ...e.Packages]);
         setPage((prev) => ++prev);
@@ -28,7 +30,7 @@ export default function Home({ data }: { data: IResponse }) {
   return (
     <div className="container">
       <Head>
-        <title>winget.run | Finding winget packages made simple.</title>
+        <title>Search results for {searchTerm} | winget.run</title>
         <meta
           name="description"
           content="Searching, discovering and installing winget packages made effortless without any third-party programs"
@@ -49,7 +51,8 @@ export default function Home({ data }: { data: IResponse }) {
           <Row>
             <Col col={12}>
               <SectionHeader>
-                Recently updated packages<span>{data.Total} packages</span>
+                Search results for "{searchTerm}"
+                <span>{packages.length} results</span>
               </SectionHeader>
             </Col>
           </Row>
@@ -62,7 +65,7 @@ export default function Home({ data }: { data: IResponse }) {
           </Row>
         </Container>
         {packages.length < data.Total && (
-          <LoadMore onClick={() => loadMore()} isLoading={isLoading} />
+          <LoadMore onClick={loadMore} isLoading={isLoading} />
         )}
         <DownloadModal />
       </main>
@@ -70,11 +73,11 @@ export default function Home({ data }: { data: IResponse }) {
   );
 }
 
-export async function getServerSideProps() {
+export async function getServerSideProps({ query }) {
   try {
-    const data = await getPackages(`packages?&sort=UpdatedAt&order=-1`);
+    const data = await getPackages(`search?name=${query.q}&limit=12`);
     return { props: { data } };
   } catch (error) {
-    return { props: { data: { Packages: [], Total: 0 } } };
+    return { props: { data: { packages: [], total: 0 } } };
   }
 }

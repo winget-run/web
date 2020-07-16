@@ -3,7 +3,7 @@ import { useEffect, useContext } from "react";
 import { styled } from "../utils/theme";
 import useDebounce from "../utils/hooks/useDebounce";
 import AutocompleteResult from "./AutocompleteResult";
-import getPackages from "../api/getPackages";
+import getPackages, { IPackage } from "../api/getPackages";
 
 import { Search as SearchContext } from "../utils/state/Search";
 
@@ -120,13 +120,12 @@ const NoResultsText = styled.h4`
 `;
 
 interface IProps {
-  totalPackages?: number;
   inNav?: boolean;
   hidden?: boolean;
   resultsHidden?: boolean;
 }
 
-const Search = ({ totalPackages, inNav, hidden, resultsHidden }: IProps) => {
+const Search = ({ inNav, hidden, resultsHidden }: IProps) => {
   const {
     search,
     updateSearch,
@@ -135,16 +134,12 @@ const Search = ({ totalPackages, inNav, hidden, resultsHidden }: IProps) => {
     updateClear,
   } = useContext(SearchContext);
 
-  // const [isSearching, setIsSearching] = useState(false);
   const debouncedSearchTerm = useDebounce(search?.filters?.query ?? "", 400);
 
   useEffect(() => {
-    if (debouncedSearchTerm) {
-      // setIsSearching(true);
-      // updateClearResults();
-      getPackages(`autocomplete?query=${debouncedSearchTerm}`).then((e) => {
+    if (debouncedSearchTerm && debouncedSearchTerm.length > 1) {
+      getPackages(`packages?query=${debouncedSearchTerm}&take=3`).then((e) => {
         updateResults(e);
-        // setIsSearching(false);
       });
     } else {
       updateClearResults();
@@ -157,9 +152,7 @@ const Search = ({ totalPackages, inNav, hidden, resultsHidden }: IProps) => {
         <StyledInput
           aria-label="Search packages"
           type="text"
-          placeholder={
-            inNav ? "Search packages" : `Search ${totalPackages} packages...`
-          }
+          placeholder="Search packages"
           value={search?.filters?.query ?? ""}
           onChange={(e) => updateSearch({ query: e.target.value })}
           inNav={inNav}
@@ -199,38 +192,30 @@ const Search = ({ totalPackages, inNav, hidden, resultsHidden }: IProps) => {
           >
             {search?.results != null &&
               search?.filters?.query != "" &&
-              search?.results?.packages?.length > 0 &&
-              search?.results?.packages?.map((e) => (
+              search?.results?.Packages?.length > 0 &&
+              search?.results?.Packages?.map((e: IPackage) => (
                 <AutocompleteResult
                   key={`autocomplete-${e.Id}`}
                   id={e.Id}
-                  title={e.latest.Name}
-                  org={e.latest.Publisher}
-                  desc={e.latest.Description?.replace(
+                  title={e.Latest.Name}
+                  org={e.Latest.Publisher}
+                  desc={e.Latest.Description?.replace(
                     new RegExp(debouncedSearchTerm, "gi"),
                     "<span>$&</span>"
                   )}
-                  url={e.latest.Homepage}
-                  iconUrl={e.latest.IconUrl}
+                  url={e.Latest.Homepage}
+                  iconUrl={e.IconUrl}
                 />
               ))}
             {search?.results != null &&
-              search?.results?.packages?.length === 0 &&
-              // !isSearching &&
+              search?.results?.Packages?.length === 0 &&
               debouncedSearchTerm !== "" && (
                 <NoResultsText>
                   No results found for "{debouncedSearchTerm}"
                 </NoResultsText>
               )}
-            {/* <Link href="/" as={`/?q=${debouncedSearchTerm}`} shallow>
-              Test
-            </Link> */}
           </ResultsContainer>
         )}
-        {/* {debouncedSearchTerm && !isSearching && results.length === 0 && (
-        <ResultsContainer aria-live="polite" aria-modal="true">
-        </ResultsContainer>
-      )} */}
       </WidthWrapper>
     </SearchContainer>
   );
