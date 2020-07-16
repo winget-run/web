@@ -1,8 +1,6 @@
 import { IResponse } from "../../api/getPackages";
 import { useReducer, createContext } from "react";
 
-const Search = createContext(null);
-
 enum SearchActionType {
   Search = "search",
   Results = "results",
@@ -27,6 +25,16 @@ interface ISearchState {
   filters?: ISearchFilters;
   results?: IResponse;
 }
+
+interface ISearchContext {
+  search: ISearchState;
+  updateSearch: (filters: ISearchFilters) => void;
+  updateResults: (results: IResponse) => void;
+  updateClearResults: () => void;
+  updateClear: () => void;
+}
+
+const Search: React.Context<ISearchContext> = createContext(null);
 
 const searchReducer = (state: ISearchState, action: ISearchAction) => {
   switch (action.type) {

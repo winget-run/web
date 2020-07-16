@@ -146,6 +146,12 @@ const Search = ({ inNav, hidden, resultsHidden }: IProps) => {
     }
   }, [debouncedSearchTerm]);
 
+  useEffect(() => {
+    if (search.filters.query.length < 2) {
+      updateClearResults();
+    }
+  }, [search.filters.query]);
+
   return (
     <SearchContainer className={hidden ?? false ? "hide" : "show"}>
       <WidthWrapper inNav={inNav}>
@@ -188,7 +194,13 @@ const Search = ({ inNav, hidden, resultsHidden }: IProps) => {
         {(!resultsHidden ?? true) && (
           <ResultsContainer
             aria-live="polite"
-            aria-modal={!!(debouncedSearchTerm && search?.results != null)}
+            aria-modal={
+              !!(
+                debouncedSearchTerm &&
+                search?.results != null &&
+                search?.filters?.query.length > 1
+              )
+            }
           >
             {search?.results != null &&
               search?.filters?.query != "" &&
