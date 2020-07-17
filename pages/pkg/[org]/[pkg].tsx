@@ -199,6 +199,8 @@ export default function Pkg(props) {
   const p = data.Package as IPackage;
 
   const inDownloads = packages.find((e) => e.Package.Id === p.Id);
+  const versionsAmount = 4;
+  const versionsLength = p.Versions.length;
 
   return (
     <div className="container">
@@ -270,7 +272,7 @@ export default function Pkg(props) {
               </AddCard>
               <VersionsCard>
                 <SectionHeader>Versions</SectionHeader>
-                {p.Versions.slice(0, 3).map((e) => (
+                {p.Versions.slice(0, showMoreVersions ? versionsLength : versionsAmount).map((e) => (
                   <Version key={e}>
                     {e}
                     <span>
@@ -290,38 +292,19 @@ export default function Pkg(props) {
                     </span>
                   </Version>
                 ))}
-
-                {p.Versions.length > 4 && !showMoreVersions && (
+                {
+                  
+                }
+                
+                {p.Versions.length > versionsAmount && !showMoreVersions && (
                   <ShowMoreVersions onClick={() => setShowMoreVersions(true)}>
-                    Show {p.Versions.length - 4} older versions
+                    Show {versionsLength - 4} older versions
                   </ShowMoreVersions>
                 )}
 
-                {showMoreVersions &&
-                  p.Versions.slice(4, p.Versions.length).map((e) => (
-                    <Version key={e}>
-                      {e}
-                      <span>
-                        <img
-                          role="button"
-                          tabIndex={0}
-                          onClick={() => {
-                            generateClipboard([{ Package: p, Version: e }]);
-                            toast.dark(
-                              `Copied ${p.Latest.Name}@${e} to clipboard!`
-                            );
-                          }}
-                          src={require("../../../components/icons/copy.svg")}
-                          alt=""
-                          aria-label={`Copy command for version ${e}`}
-                        />
-                      </span>
-                    </Version>
-                  ))}
-
-                {p.Versions.length > 4 && showMoreVersions && (
+                {p.Versions.length > versionsAmount && showMoreVersions && (
                   <ShowMoreVersions onClick={() => setShowMoreVersions(false)}>
-                    Hide {p.Versions.length - 4} older versions
+                    Hide {versionsLength - 4} older versions
                   </ShowMoreVersions>
                 )}
               </VersionsCard>
