@@ -119,7 +119,7 @@ const ShowMoreVersions = styled.p`
   cursor: pointer;
 
   &:hover {
-    text-decoration: underline
+    text-decoration: underline;
   }
 `;
 
