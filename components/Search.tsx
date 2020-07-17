@@ -147,10 +147,10 @@ const Search = ({ inNav, hidden, resultsHidden }: IProps) => {
   }, [debouncedSearchTerm]);
 
   useEffect(() => {
-    if (search.filters.query.length < 2) {
+    if (search?.filters?.query.length < 2) {
       updateClearResults();
     }
-  }, [search.filters.query]);
+  }, [search?.filters?.query]);
 
   return (
     <SearchContainer className={hidden ?? false ? "hide" : "show"}>
