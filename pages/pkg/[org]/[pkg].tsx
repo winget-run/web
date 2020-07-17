@@ -320,7 +320,6 @@ export default function Pkg(props) {
                     Hide {p.Versions.length - 4} older versions
                   </ShowMoreVersions>
                 )}
-                  
               </VersionsCard>
             </Col>
             <Col col={12} lg={8} xl={7}>
