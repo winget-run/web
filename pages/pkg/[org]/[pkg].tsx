@@ -306,6 +306,14 @@ export default function Pkg(props) {
                   <SectionInfo>{p.Latest.Description}</SectionInfo>
                 </section>
               )}
+              {p.Latest.Tags?.length > 0 && (
+                <section>
+                  <SectionHeader>Tags</SectionHeader>
+                  {p.Latest.Tags.map((x) => (
+                    <Tag key={x}>{x}</Tag>
+                  ))}
+                </section>
+              )}
               {p.Latest.License && (
                 <section>
                   <SectionHeader>License</SectionHeader>

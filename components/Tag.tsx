@@ -2,9 +2,8 @@ import { styled } from "../utils/theme";
 
 const Tag = styled.a`
   display: inline-block;
-  background: transparent;
-  padding: 10px;
-  background: ${(x) => x.theme.accent};
+  padding: 10px 20px;
+  background-color: ${(x) => x.theme.accent};
   transition: background-color 150ms ease;
   font-size: 18px;
   cursor: pointer;
@@ -12,10 +11,10 @@ const Tag = styled.a`
   &:last-child {
     margin-right: 0;
   }
-  border-radius: 15px;
+  border-radius: 8px;
 
   &:hover {
-    background: ${(x) => x.theme.accentDark};
+    background-color: ${(x) => x.theme.accentDark};
   }
 `;
 
