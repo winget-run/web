@@ -297,13 +297,13 @@ export default function Pkg(props) {
                 ))}
                 {}
 
-                {p.Versions.length > versionsAmount && !showMoreVersions && (
+                {versionsLength > versionsAmount && !showMoreVersions && (
                   <ShowMoreVersions onClick={() => setShowMoreVersions(true)}>
                     Show {versionsLength - 4} older versions
                   </ShowMoreVersions>
                 )}
 
-                {p.Versions.length > versionsAmount && showMoreVersions && (
+                {versionsLength > versionsAmount && showMoreVersions && (
                   <ShowMoreVersions onClick={() => setShowMoreVersions(false)}>
                     Hide {versionsLength - 4} older versions
                   </ShowMoreVersions>
