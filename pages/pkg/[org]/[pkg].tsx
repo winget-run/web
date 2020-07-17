@@ -116,7 +116,11 @@ const ShowMoreVersions = styled.p`
   font-size: 14px;
   text-align: center;
   margin: 20px 0px 0px;
-  text-decoration-line: underline;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline
+  }
 `;
 
 const Version = styled.p`
