@@ -272,7 +272,10 @@ export default function Pkg(props) {
               </AddCard>
               <VersionsCard>
                 <SectionHeader>Versions</SectionHeader>
-                {p.Versions.slice(0, showMoreVersions ? versionsLength : versionsAmount).map((e) => (
+                {p.Versions.slice(
+                  0,
+                  showMoreVersions ? versionsLength : versionsAmount
+                ).map((e) => (
                   <Version key={e}>
                     {e}
                     <span>
@@ -292,10 +295,8 @@ export default function Pkg(props) {
                     </span>
                   </Version>
                 ))}
-                {
-                  
-                }
-                
+                {}
+
                 {p.Versions.length > versionsAmount && !showMoreVersions && (
                   <ShowMoreVersions onClick={() => setShowMoreVersions(true)}>
                     Show {versionsLength - 4} older versions
