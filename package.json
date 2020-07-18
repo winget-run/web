@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "cross-env K8S_ENV=dev NEXT_PUBLIC_K8S_ENV=dev next dev",
+    "dev": "cross-env K8S_ENV=dev next dev",
     "dev:prod": "next dev",
     "build": "next build",
     "serve": "next start --hostname 0.0.0.0",

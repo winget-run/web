@@ -41,8 +41,3 @@ spec:
             configMapKeyRef:
               key: K8S_ENV
               name: {{ .Release.Name }}
-        - name: NEXT_PUBLIC_K8S_ENV
-          valueFrom:
-            configMapKeyRef:
-              key: NEXT_PUBLIC_K8S_ENV
-              name: {{ .Release.Name }}

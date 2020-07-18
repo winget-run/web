@@ -1,7 +1,17 @@
 import Document, { Head, Main, NextScript } from "next/document";
 import { ServerStyleSheet } from "styled-components";
+import getConfig from "next/config";
 
 export default class MyDocument extends Document {
+  serverRuntimeConfig: any;
+  publicRuntimeConfig: any;
+
+  constructor(props) {
+    super(props);
+    this.serverRuntimeConfig = getConfig().serverRuntimeConfig;
+    this.publicRuntimeConfig = getConfig().publicRuntimeConfig;
+  }
+
   static getInitialProps({ renderPage }) {
     const sheet = new ServerStyleSheet();
 
@@ -53,7 +63,8 @@ export default class MyDocument extends Document {
             type="application/opensearchdescription+xml"
             rel="search"
             href={
-              process.env.NEXT_PUBLIC_K8S_ENV === "dev"
+              this.serverRuntimeConfig.K8S_ENV === "dev" ||
+              this.publicRuntimeConfig.K8S_ENV === "dev"
                 ? "https://dev-web.winget.run/opensearch.osdx"
                 : "https://winget.run/opensearch.osdx"
             }
@@ -63,7 +74,8 @@ export default class MyDocument extends Document {
           <meta
             name="twitter:image"
             content={
-              process.env.NEXT_PUBLIC_K8S_ENV === "dev"
+              this.serverRuntimeConfig.K8S_ENV === "dev" ||
+              this.publicRuntimeConfig.K8S_ENV === "dev"
                 ? "https://dev-web.winget.run/twitter_card.jpg"
                 : "https://winget.run/twitter_card.jpg"
             }
