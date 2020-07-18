@@ -8,6 +8,7 @@ import { Downloads, IDownload } from "../utils/state/Downloads";
 import generateClipboard from "../utils/clipboard";
 import generateDownload from "../utils/download";
 import { CardIcon } from "./Card";
+import { getIcon } from "../utils/helperFunctions";
 
 const Button = (styled.button as any)`
   background-color: ${(x) => x.theme.accentDark};
@@ -309,10 +310,7 @@ const DownloadModal = () => {
                 >
                   <CardIcon
                     src={
-                      e.Package.IconUrl ||
-                      (e.Package.Latest.Homepage
-                        ? `https://www.google.com/s2/favicons?sz=32&domain_url=${e.Package.Latest.Homepage}`
-                        : "/favicon.ico")
+                      e.Package.IconUrl || getIcon(e.Package.Latest.Homepage)
                     }
                     alt=""
                   />

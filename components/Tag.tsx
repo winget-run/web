@@ -7,9 +7,9 @@ const Tag = styled.a`
   transition: background-color 150ms ease;
   font-size: 18px;
   cursor: pointer;
-  margin: 0px 15px 30px 0px;
+  margin: 0px 15px 15px 0px;
   &:last-child {
-    margin-right: 0;
+    margin: 0px 0px 30px;
   }
   border-radius: 8px;
 
