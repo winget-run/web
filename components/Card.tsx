@@ -10,6 +10,7 @@ import { IPackage } from "../api/getPackages";
 import { Downloads } from "../utils/state/Downloads";
 import { styled } from "../utils/theme";
 import generateClipboard from "../utils/clipboard";
+import { getIcon } from "../utils/helperFunctions";
 
 export const CardContainer = styled.div<{ selected?: boolean }>`
   border-radius: 8px;
@@ -150,15 +151,7 @@ const Card = ({ p }: { p: IPackage }) => {
       <Link href="/pkg/[org]/[pkg]" as={`/pkg/${org}/${pkg.join(".")}`}>
         <a>
           <CardTitle>
-            <CardIcon
-              src={
-                p.IconUrl ||
-                (p.Latest.Homepage
-                  ? `https://www.google.com/s2/favicons?sz=32&domain_url=${p.Latest.Homepage}`
-                  : "/favicon.ico")
-              }
-              alt=""
-            />
+            <CardIcon src={p.IconUrl || getIcon(p.Latest.Homepage)} alt="" />
             {p.Latest.Name}
           </CardTitle>
         </a>

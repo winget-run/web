@@ -5,6 +5,7 @@ import { CardTitle, CardOrg, CardDesc, CardIcon } from "./Card";
 import { useContext } from "react";
 
 import { Search as SearchContext } from "../utils/state/Search";
+import { getIcon } from "../utils/helperFunctions";
 
 const Title = styled(CardTitle)`
   display: inline;
@@ -56,15 +57,7 @@ const AutocompleteResult = (props: IProps) => {
         <Link href="/pkg/[org]/[pkg]" as={`/pkg/${org}/${pkg.join(".")}`}>
           <a onClick={() => updateClear()}>
             <Title>
-              <CardIcon
-                src={
-                  props.iconUrl ||
-                  (props.url
-                    ? `https://www.google.com/s2/favicons?sz=32&domain_url=${props.url}`
-                    : "/favicon.ico")
-                }
-                alt=""
-              />
+              <CardIcon src={props.iconUrl || getIcon(props.url)} alt="" />
               {props.title}
             </Title>
           </a>
