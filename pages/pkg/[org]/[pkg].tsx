@@ -112,6 +112,17 @@ const AddCard = styled(VersionsCard)`
   }
 `;
 
+const ShowMoreVersions = styled.p`
+  font-size: 14px;
+  text-align: center;
+  margin: 20px 0px 0px;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+
 const Version = styled.p`
   font-weight: 500;
   font-size: 16px;
@@ -179,6 +190,7 @@ export default function Pkg(props) {
     initialData,
   });
   const { packages, addPackage, removePackage } = useContext(Downloads);
+  const [showMoreVersions, setShowMoreVersions] = useState(false);
 
   if ((data as IResponseSingle).Package == null) {
     return <Error statusCode={404} />;
@@ -187,6 +199,8 @@ export default function Pkg(props) {
   const p = data.Package as IPackage;
 
   const inDownloads = packages.find((e) => e.Package.Id === p.Id);
+  const versionsAmount = 4;
+  const versionsLength = p.Versions.length;
 
   return (
     <div className="container">
@@ -258,7 +272,10 @@ export default function Pkg(props) {
               </AddCard>
               <VersionsCard>
                 <SectionHeader>Versions</SectionHeader>
-                {p.Versions.map((e) => (
+                {p.Versions.slice(
+                  0,
+                  showMoreVersions ? versionsLength : versionsAmount
+                ).map((e) => (
                   <Version key={e}>
                     {e}
                     <span>
@@ -278,6 +295,19 @@ export default function Pkg(props) {
                     </span>
                   </Version>
                 ))}
+                {}
+
+                {versionsLength > versionsAmount && !showMoreVersions && (
+                  <ShowMoreVersions onClick={() => setShowMoreVersions(true)}>
+                    Show {versionsLength - versionsAmount} older versions
+                  </ShowMoreVersions>
+                )}
+
+                {versionsLength > versionsAmount && showMoreVersions && (
+                  <ShowMoreVersions onClick={() => setShowMoreVersions(false)}>
+                    Hide {versionsLength - versionsAmount} older versions
+                  </ShowMoreVersions>
+                )}
               </VersionsCard>
             </Col>
             <Col col={12} lg={8} xl={7}>
