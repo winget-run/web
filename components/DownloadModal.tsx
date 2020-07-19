@@ -310,7 +310,8 @@ const DownloadModal = () => {
                 >
                   <CardIcon
                     src={
-                      e.Package.IconUrl || getIcon(e.Package.Latest.Homepage, false)
+                      e.Package.IconUrl ||
+                      getIcon(e.Package.Latest.Homepage, false)
                     }
                     alt=""
                   />
