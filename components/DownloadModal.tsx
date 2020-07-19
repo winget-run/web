@@ -4,10 +4,11 @@ import { media } from "styled-bootstrap-grid";
 
 import { styled } from "../utils/theme";
 import { IPackage } from "../api/getPackages";
-import { Downloads } from "../utils/state/Downloads";
+import { Downloads, IDownload } from "../utils/state/Downloads";
 import generateClipboard from "../utils/clipboard";
 import generateDownload from "../utils/download";
 import { CardIcon } from "./Card";
+import { getIcon } from "../utils/helperFunctions";
 
 const Button = (styled.button as any)`
   background-color: ${(x) => x.theme.accentDark};
@@ -300,35 +301,33 @@ const DownloadModal = () => {
         {/* List of Packages */}
         <ScrollContainer>
           {shouldBeVisible &&
-            packages.map((e) => (
+            packages.map((e: IDownload) => (
               <span>
                 <h4
-                  key={`download-${e.package.Id}`}
-                  onClick={() => removePackage(e.package)}
+                  key={`download-${e.Package.Id}`}
+                  onClick={() => removePackage(e.Package)}
                   tabIndex={0}
                 >
                   <CardIcon
                     src={
-                      e.package.latest.IconUrl ||
-                      (e.package.latest.Homepage
-                        ? `https://www.google.com/s2/favicons?sz=32&domain_url=${e.package.latest.Homepage}`
-                        : "/favicon.ico")
+                      e.Package.IconUrl ||
+                      getIcon(e.Package.Latest.Homepage, false)
                     }
                     alt=""
                   />
-                  {e.package.latest.Name}
+                  {e.Package.Latest.Name}
                 </h4>
                 <select
-                  value={e.version}
+                  value={e.Version}
                   onChange={(ev) =>
                     changePackageVersion({
                       ...e,
-                      version: ev.currentTarget.value,
+                      Version: ev.currentTarget.value,
                     })
                   }
                 >
-                  {e.package.versions.map((v) => (
-                    <option key={e.package.Id + v}>{v}</option>
+                  {e.Package.Versions.map((v) => (
+                    <option key={e.Package.Id + v}>{v}</option>
                   ))}
                 </select>
                 <img

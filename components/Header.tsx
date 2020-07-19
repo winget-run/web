@@ -113,7 +113,6 @@ const NavIcon = styled(SocialIcon)`
 interface IProps {
   title?: string;
   showSearch?: boolean;
-  totalPackages?: number;
   customBar?: boolean;
   children?: React.ReactChild | React.ReactChild[];
 }
@@ -148,7 +147,7 @@ const Header = (props: IProps) => {
                   <NavIcon
                     src={require("./icons/nav.svg")}
                     alt="winget.run logo"
-                    title="Go home!"
+                    title="Stay home!"
                   />
                 </a>
               </Link>
@@ -194,12 +193,7 @@ const Header = (props: IProps) => {
             <Row>
               <SearchContainer fullWidth={props.showSearch}>
                 <h1>{props.title}</h1>
-                {props.showSearch && (
-                  <Search
-                    resultsHidden={showNavSearch}
-                    totalPackages={props.totalPackages}
-                  />
-                )}
+                {props.showSearch && <Search resultsHidden={showNavSearch} />}
               </SearchContainer>
             </Row>
           </Container>
