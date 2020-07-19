@@ -138,7 +138,9 @@ const Search = ({ inNav, hidden, resultsHidden }: IProps) => {
 
   useEffect(() => {
     if (debouncedSearchTerm && debouncedSearchTerm.length > 1) {
-      getPackages(`packages?query=${debouncedSearchTerm}&take=3`).then((e) => {
+      getPackages(
+        `packages?query=${debouncedSearchTerm}&ensureContains=true&partialMatch=true&take=3`
+      ).then((e) => {
         updateResults(e);
       });
     } else {
