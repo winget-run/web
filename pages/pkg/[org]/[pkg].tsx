@@ -11,13 +11,13 @@ import { useState, useContext } from "react";
 import { useRouter } from "next/router";
 import DownloadModal from "../../../components/DownloadModal";
 import Tag from "../../../components/Tag";
-import Error from "../../_error";
 import { styled } from "../../../utils/theme";
 import Header, { SearchBar } from "../../../components/Header";
 import generateClipboard from "../../../utils/clipboard";
 import { Downloads } from "../../../utils/state/Downloads";
 import { toast } from "react-toastify";
 import Link from "next/link";
+import Custom404 from "../../404";
 
 const TopBar = styled(SearchBar)`
   padding: 91px 0 !important;
@@ -193,7 +193,7 @@ export default function Pkg(props) {
   const [showMoreVersions, setShowMoreVersions] = useState(false);
 
   if ((data as IResponseSingle).Package == null) {
-    return <Error statusCode={404} />;
+    return <Custom404 />;
   }
 
   const p = data.Package as IPackage;
@@ -372,7 +372,10 @@ export default function Pkg(props) {
 }
 
 export async function getServerSideProps({ params }) {
-  const data = await getPackages(`packages/${params.org}/${params.pkg}`);
-
-  return { props: { data } };
+  try {
+    const data = await getPackages(`packages/${params.org}/${params.pkg}`);
+    return { props: { data } };
+  } catch {
+    return { props: { data: { Package: null } } };
+  }
 }
