@@ -57,7 +57,10 @@ const AutocompleteResult = (props: IProps) => {
         <Link href="/pkg/[org]/[pkg]" as={`/pkg/${org}/${pkg.join(".")}`}>
           <a onClick={() => updateClear()}>
             <Title>
-              <CardIcon src={props.iconUrl || getIcon(props.url, true)} alt="" />
+              <CardIcon
+                src={props.iconUrl || getIcon(props.url, true)}
+                alt=""
+              />
               {props.title}
             </Title>
           </a>

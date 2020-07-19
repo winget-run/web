@@ -151,7 +151,10 @@ const Card = ({ p }: { p: IPackage }) => {
       <Link href="/pkg/[org]/[pkg]" as={`/pkg/${org}/${pkg.join(".")}`}>
         <a>
           <CardTitle>
-            <CardIcon src={p.IconUrl || getIcon(p.Latest.Homepage, false)} alt="" />
+            <CardIcon
+              src={p.IconUrl || getIcon(p.Latest.Homepage, false)}
+              alt=""
+            />
             {p.Latest.Name}
           </CardTitle>
         </a>
