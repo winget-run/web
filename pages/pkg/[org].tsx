@@ -6,9 +6,9 @@ import getPackages, { IResponse, IPackage } from "../../api/getPackages";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import DownloadModal from "../../components/DownloadModal";
-import Error from "../_error";
 import LoadMore from "../../components/LoadMore";
 import SectionHeader from "../../components/SectionHeader";
+import Custom404 from "../404";
 
 export default function Org({ data }: { data: IResponse }) {
   const router = useRouter();
@@ -19,7 +19,7 @@ export default function Org({ data }: { data: IResponse }) {
   const [isLoading, setIsLoading] = useState(false);
 
   if (data.Packages == null || data.Packages.length === 0) {
-    return <Error statusCode={404} />;
+    return <Custom404 />;
   }
 
   const loadMore = () => {
@@ -82,7 +82,10 @@ export default function Org({ data }: { data: IResponse }) {
 }
 
 export async function getServerSideProps({ params }) {
-  const data = await getPackages(`packages/${params.org}`);
-
-  return { props: { data } };
+  try {
+    const data = await getPackages(`packages/${params.org}`);
+    return { props: { data } };
+  } catch {
+    return { props: { data: { Packages: null } } };
+  }
 }

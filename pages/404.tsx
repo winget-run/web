@@ -65,14 +65,11 @@ const TextContainer = styled.div`
   }
 `;
 
-function Error({ statusCode }) {
+function Custom404() {
   return (
     <>
       <Head>
-        <title>
-          {statusCode === 404 ? "Page not found" : "An error occured"} |
-          winget.run
-        </title>
+        <title>Page not found | winget.run</title>
       </Head>
       <Background>
         <Container>
@@ -82,10 +79,8 @@ function Error({ statusCode }) {
             </Col>
             <Col lg={6}>
               <TextContainer>
-                <h1>{statusCode ? statusCode : "oof"}</h1>
-                <h2>
-                  {statusCode === 404 ? "Page not found" : "An error occured"}
-                </h2>
+                <h1>404</h1>
+                <h2>Page not found</h2>
                 <Link href="/">
                   <a>Return home?</a>
                 </Link>
@@ -98,9 +93,4 @@ function Error({ statusCode }) {
   );
 }
 
-Error.getInitialProps = ({ res, err }) => {
-  const statusCode = res ? res.statusCode : err ? err.statusCode : 404;
-  return { statusCode };
-};
-
-export default Error;
+export default Custom404;
