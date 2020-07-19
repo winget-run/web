@@ -1,10 +1,14 @@
-export const getIcon = (url: string | null): string => {
+export const getIcon = (url: string | null, isSearch: boolean): string => {
   if (url) {
     let newUrl: string;
 
     // Edge Cases
     if (url.includes("github.com")) {
-      newUrl = "https://github.githubassets.com/favicons/favicon-dark.svg";
+      if (isSearch) {
+        newUrl = "https://github.githubassets.com/favicons/favicon.svg";
+      } else {
+        newUrl = "https://github.githubassets.com/favicons/favicon-dark.svg";
+      }
     }
 
     if (newUrl) {
