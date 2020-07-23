@@ -16,7 +16,6 @@ import generateClipboard from "../../../utils/clipboard";
 import { Downloads } from "../../../utils/state/Downloads";
 import { toast } from "react-toastify";
 import Link from "next/link";
-import Custom404 from "../../404";
 
 const TopBar = styled(SearchBar)`
   padding: 91px 0 !important;
@@ -188,10 +187,6 @@ export default function Pkg(props) {
   const [showMoreVersions, setShowMoreVersions] = useState(false);
 
   const data: IResponseSingle = props.data;
-
-  if (data.Package == null) {
-    return <Custom404 />;
-  }
 
   const p = data.Package;
 
@@ -368,11 +363,13 @@ export default function Pkg(props) {
   );
 }
 
-export async function getServerSideProps({ params }) {
+export async function getServerSideProps({ res, params }) {
   try {
     const data = await getPackages(`packages/${params.org}/${params.pkg}`);
     return { props: { data } };
   } catch {
-    return { props: { data: { Package: null } } };
+    res.statusCode = 404;
+    res.end("Not found");
+    return;
   }
 }

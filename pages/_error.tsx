@@ -4,7 +4,9 @@ import Link from "next/link";
 import Head from "next/head";
 
 const Background = styled.div`
+  /* Fallback to table for browsers that don't support grid in 2020 */
   display: table;
+  display: grid;
   padding: 30px 0;
   width: 100%;
   height: 100%;
