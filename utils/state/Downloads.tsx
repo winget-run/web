@@ -1,12 +1,20 @@
 import React, { createContext, useReducer } from "react";
 import { IPackage } from "../../api/getPackages";
 
-const Downloads = createContext(null);
-
 interface IDownload {
   Package: IPackage;
   Version: string;
 }
+
+interface IDownloadContext {
+  packages: IDownload[];
+  addPackage: (item: IPackage) => void;
+  removePackage: (item: IPackage) => void;
+  changePackageVersion: (item: IDownload) => void;
+  clearPackages: () => void;
+}
+
+const Downloads: React.Context<IDownloadContext> = createContext(null);
 
 //TODO: abstract into seperate file
 function downloadsReducer(state: IDownload[], action) {
