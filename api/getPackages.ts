@@ -78,6 +78,9 @@ export interface IPackage {
 export interface IResponse {
   Packages: IPackage[];
   Total: number;
+  statusCode?: number;
+  error?: string;
+  message?: string;
 }
 
 export interface IResponseSingle {

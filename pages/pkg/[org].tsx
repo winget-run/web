@@ -8,6 +8,7 @@ import { useRouter } from "next/router";
 import DownloadModal from "../../components/DownloadModal";
 import LoadMore from "../../components/LoadMore";
 import SectionHeader from "../../components/SectionHeader";
+import Custom404 from "../404";
 
 export default function Org({ data }: { data: IResponse }) {
   const router = useRouter();
@@ -16,6 +17,10 @@ export default function Org({ data }: { data: IResponse }) {
   const [packages, setPackages] = useState(data.Packages);
   const [page, setPage] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+
+  if (data.Packages == null || data.Packages.length === 0) {
+    return <Custom404 />;
+  }
 
   const loadMore = () => {
     setIsLoading(true);
@@ -79,10 +84,12 @@ export default function Org({ data }: { data: IResponse }) {
 export async function getServerSideProps({ res, params }) {
   try {
     const data = await getPackages(`packages/${params.org}`);
+    if (data.Packages.length === 0) {
+      throw new Error();
+    }
     return { props: { data } };
   } catch {
     res.statusCode = 404;
-    res.end("Not found");
-    return;
+    return { props: { data: { Packages: null } } };
   }
 }
