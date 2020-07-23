@@ -1,7 +1,6 @@
 import Head from "next/head";
 import { CardContainer, Add } from "../../../components/Card";
 import { Container, Row, Col, media } from "styled-bootstrap-grid";
-import useSWR from "swr";
 import getPackages, {
   IResponse,
   IPackage,
@@ -184,21 +183,19 @@ const CodeBlock = styled.code`
 
 export default function Pkg(props) {
   const router = useRouter();
-  const { org, pkg } = router.query;
-  const initialData = props.data;
-  const { data } = useSWR(`packages/${org}/${pkg}`, getPackages, {
-    initialData,
-  });
+  const { org } = router.query;
   const { packages, addPackage, removePackage } = useContext(Downloads);
   const [showMoreVersions, setShowMoreVersions] = useState(false);
 
-  if ((data as IResponseSingle).Package == null) {
+  const data: IResponseSingle = props.data;
+
+  if (data.Package == null) {
     return <Custom404 />;
   }
 
-  const p = data.Package as IPackage;
+  const p = data.Package;
 
-  const inDownloads = packages.find((e) => e.Package.Id === p.Id);
+  const inDownloads = !!packages.find((e) => e.Package.Id === p.Id);
   const versionsAmount = 4;
   const versionsLength = p.Versions.length;
 
