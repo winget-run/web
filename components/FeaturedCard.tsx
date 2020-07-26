@@ -15,7 +15,7 @@ const FeaturedCardContainer = styled(CardContainer)<{ small: boolean }>`
   border-color: rgba(0, 0, 0, 0.65);
   overflow: hidden;
 
-  ${(x) =>
+  ${(x: any) =>
     x.selected &&
     `
   border-color: ${x.theme.accent};
