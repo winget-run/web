@@ -76,7 +76,7 @@ export const Add = styled.button<{ selected: boolean }>`
   }
 `;
 
-const Copy = styled.button`
+export const Copy = styled.button`
   position: absolute;
   bottom: 15px;
   right: 15px;
