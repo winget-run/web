@@ -7,7 +7,10 @@ import { Downloads } from "../utils/state/Downloads";
 import { styled } from "../utils/theme";
 import { CardContainer, Add, Copy } from "./Card";
 
-const FeaturedCardContainer = styled(CardContainer)<{ small: boolean }>`
+const FeaturedCardContainer = styled(CardContainer)<{
+  selected?: boolean;
+  small: boolean;
+}>`
   min-height: ${(x) => (x.small ? "172px" : "235px")};
   background-position: center;
   background-size: cover;
@@ -15,7 +18,7 @@ const FeaturedCardContainer = styled(CardContainer)<{ small: boolean }>`
   border-color: rgba(0, 0, 0, 0.65);
   overflow: hidden;
 
-  ${(x: any) =>
+  ${(x) =>
     x.selected &&
     `
   border-color: ${x.theme.accent};
