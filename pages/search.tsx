@@ -8,6 +8,7 @@ import { useState, useEffect } from "react";
 import LoadMore from "../components/LoadMore";
 import { useRouter } from "next/router";
 import SectionHeader from "../components/SectionHeader";
+import { parseQueryString } from "../utils/helperFunctions";
 
 export default function Search({ data }: { data: IResponse }) {
   const router = useRouter();
@@ -51,7 +52,7 @@ export default function Search({ data }: { data: IResponse }) {
           <Row>
             <Col col={12}>
               <SectionHeader>
-                Search results for "{searchTerm}"
+                Search results for "[object Object]"
                 <span>{packages.length} results</span>
               </SectionHeader>
             </Col>
@@ -75,7 +76,11 @@ export default function Search({ data }: { data: IResponse }) {
 
 export async function getServerSideProps({ query }) {
   try {
-    const data = await getPackages(`search?name=${query.q}&limit=12`);
+    const data = await getPackages(
+      `packages?ensureContains=true&partialMatch=true&take=12&${parseQueryString(
+        query
+      )}`
+    );
     return { props: { data } };
   } catch (error) {
     return { props: { data: { packages: [], total: 0 } } };

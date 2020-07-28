@@ -302,12 +302,8 @@ const DownloadModal = () => {
         <ScrollContainer>
           {shouldBeVisible &&
             packages.map((e: IDownload) => (
-              <span>
-                <h4
-                  key={`download-${e.Package.Id}`}
-                  onClick={() => removePackage(e.Package)}
-                  tabIndex={0}
-                >
+              <span key={`download-${e.Package.Id}`}>
+                <h4 onClick={() => removePackage(e.Package)} tabIndex={0}>
                   <CardIcon
                     src={
                       e.Package.IconUrl ||
