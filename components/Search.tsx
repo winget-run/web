@@ -188,7 +188,6 @@ const Search = ({ inNav, hidden, resultsHidden }: IProps) => {
   const debouncedSearchTerm = useDebounce(search?.term ?? "", 400);
 
   useEffect(() => {
-    console.log(search?.filters);
     if (
       search.filters &&
       Object.values(search.filters).every((e) => e.length > 1)
