@@ -20,7 +20,7 @@ const SectionHeader = styled.h2`
     bottom: 0;
     background-color: ${(x) => x.theme.accent};
   }
-  span {
+  > span {
     color: ${(x) => x.theme.textFade};
     font-size: 20px;
     margin-left: 0;
@@ -29,6 +29,25 @@ const SectionHeader = styled.h2`
     display: inline-block;
     margin-left: 20px;
     `}
+  }
+
+  code {
+    padding: 12px 20px;
+    background: ${(x) => x.theme.grey};
+    border-radius: 8px;
+    font-size: 0.8em;
+    white-space: nowrap;
+    display: inline-block;
+    margin-bottom: 10px;
+    &:first-child {
+      margin-left: 10px;
+    }
+    &:not(:last-child) {
+      margin-right: 10px;
+    }
+    span {
+      color: ${(x) => x.theme.accentLight};
+    }
   }
 `;
 

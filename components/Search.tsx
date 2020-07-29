@@ -8,7 +8,6 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 
 import { Search as SearchContext } from "../utils/state/Search";
-import { type } from "os";
 import { parseQueryString, parseTags } from "../utils/helperFunctions";
 
 const SearchContainer = styled.div`
@@ -25,7 +24,7 @@ const SearchContainer = styled.div`
   }
 `;
 
-const InputRegexLayer = styled.div`
+const InputRegexLayer = styled.div<{ inNav: boolean }>`
   width: 100%;
   height: 55px;
   position: absolute;
@@ -40,9 +39,20 @@ const InputRegexLayer = styled.div`
   color: transparent;
 
   span {
-    background: yellow;
+    background: #ffffa2;
     border-radius: 3px;
   }
+
+  ${(x) =>
+    x.inNav &&
+    `
+    background-color: ${x.theme.accentDark};
+    padding-top: 18px;
+    bottom: -1px;
+    span {
+      background: ${x.theme.accent}
+    }
+    `}
 `;
 
 const StyledInput = styled.input<{ inNav: boolean }>`
@@ -86,7 +96,6 @@ const StyledInput = styled.input<{ inNav: boolean }>`
     margin: 0;
     padding-top: 14px;
     padding-bottom: 14px;
-    background-color: ${x.theme.accentDark};
     color: white;
 
     &::placeholder {
@@ -140,6 +149,19 @@ const ResultsContainer = styled.div`
   }
 `;
 
+const AllResults = styled.a`
+  float: right;
+  color: ${(x) => x.theme.darkGrey};
+  font-weight: 700;
+  margin-top: 15px;
+  &:hover {
+    text-decoration: underline;
+  }
+  img {
+    margin-left: 10px;
+  }
+`;
+
 const NoResultsText = styled.h4`
   color: ${(x) => x.theme.darkGrey};
   text-align: center;
@@ -166,7 +188,11 @@ const Search = ({ inNav, hidden, resultsHidden }: IProps) => {
   const debouncedSearchTerm = useDebounce(search?.term ?? "", 400);
 
   useEffect(() => {
-    if (debouncedSearchTerm && debouncedSearchTerm.length > 1) {
+    console.log(search?.filters);
+    if (
+      search.filters &&
+      Object.values(search.filters).every((e) => e.length > 1)
+    ) {
       getPackages(
         `packages?ensureContains=true&partialMatch=true&take=3&${parseQueryString(
           search.filters
@@ -194,12 +220,14 @@ const Search = ({ inNav, hidden, resultsHidden }: IProps) => {
 
   const handleSearch = () => {
     router.push({ pathname: "/search", query: search.filters as string });
+    updateSearchTerm("");
   };
 
   return (
     <SearchContainer className={hidden ?? false ? "hide" : "show"}>
       <WidthWrapper inNav={inNav}>
         <InputRegexLayer
+          inNav={inNav}
           dangerouslySetInnerHTML={{
             __html: search?.term?.replace(inputRegex, "<span>$&</span>"),
           }}
@@ -270,14 +298,10 @@ const Search = ({ inNav, hidden, resultsHidden }: IProps) => {
                       iconUrl={e.IconUrl}
                     />
                   ))}
-                  <Link
-                    href={{
-                      pathname: "/search",
-                      query: search.filters as string,
-                    }}
-                  >
-                    <a>View all results</a>
-                  </Link>
+                  <AllResults onClick={handleSearch}>
+                    View all results
+                    <img src={require("./icons/arrow.svg")} alt="" />
+                  </AllResults>
                 </>
               )}
             {search?.results != null &&

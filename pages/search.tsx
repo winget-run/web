@@ -9,6 +9,7 @@ import LoadMore from "../components/LoadMore";
 import { useRouter } from "next/router";
 import SectionHeader from "../components/SectionHeader";
 import { parseQueryString } from "../utils/helperFunctions";
+import Tag from "../components/Tag";
 
 export default function Search({ data }: { data: IResponse }) {
   const router = useRouter();
@@ -19,14 +20,29 @@ export default function Search({ data }: { data: IResponse }) {
 
   const loadMore = () => {
     setIsLoading(true);
-    getPackages(`search?name=${searchTerm}&limit=12&page=${page + 1}`).then(
-      (e: IResponse) => {
-        setPackages((prev) => [...prev, ...e.Packages]);
-        setPage((prev) => ++prev);
-        setIsLoading(false);
-      }
-    );
+    getPackages(
+      `packages?ensureContains=true&partialMatch=true&take=12&${parseQueryString(
+        router.query
+      )}&page=${page + 1}`
+    ).then((e: IResponse) => {
+      setPackages((prev) => [...prev, ...e.Packages]);
+      setPage((prev) => ++prev);
+      setIsLoading(false);
+    });
   };
+
+  useEffect(() => {
+    setIsLoading(true);
+    setPage(0);
+    getPackages(
+      `packages?ensureContains=true&partialMatch=true&take=12&${parseQueryString(
+        router.query
+      )}`
+    ).then((e: IResponse) => {
+      setPackages(e.Packages);
+      setIsLoading(false);
+    });
+  }, [router.query]);
 
   return (
     <div className="container">
@@ -52,8 +68,16 @@ export default function Search({ data }: { data: IResponse }) {
           <Row>
             <Col col={12}>
               <SectionHeader>
-                Search results for "[object Object]"
-                <span>{packages.length} results</span>
+                Results for{" "}
+                {Object.entries(router.query).map((e) => (
+                  <code>
+                    <span>{e[0]}: </span>
+                    {e[1]}
+                  </code>
+                ))}
+                <span>
+                  {packages.length} result{packages.length !== 1 ? "s" : ""}
+                </span>
               </SectionHeader>
             </Col>
           </Row>
