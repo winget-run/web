@@ -4,8 +4,11 @@ import { styled } from "../utils/theme";
 import useDebounce from "../utils/hooks/useDebounce";
 import AutocompleteResult from "./AutocompleteResult";
 import getPackages, { IPackage } from "../api/getPackages";
+import { useRouter } from "next/router";
+import Link from "next/link";
 
 import { Search as SearchContext } from "../utils/state/Search";
+import { parseQueryString, parseTags } from "../utils/helperFunctions";
 
 const SearchContainer = styled.div`
   position: relative;
@@ -21,6 +24,37 @@ const SearchContainer = styled.div`
   }
 `;
 
+const InputRegexLayer = styled.div<{ inNav: boolean }>`
+  width: 100%;
+  height: 55px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  z-index: -1;
+  background-color: white;
+  padding: 17px 28px 15px 65px;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 16px;
+  color: transparent;
+
+  span {
+    background: #ffffa2;
+    border-radius: 3px;
+  }
+
+  ${(x) =>
+    x.inNav &&
+    `
+    background-color: ${x.theme.accentDark};
+    padding-top: 18px;
+    bottom: -1px;
+    span {
+      background: ${x.theme.accent}
+    }
+    `}
+`;
+
 const StyledInput = styled.input<{ inNav: boolean }>`
   width: 100%;
   padding: 15px 28px 15px 63px;
@@ -31,6 +65,10 @@ const StyledInput = styled.input<{ inNav: boolean }>`
   font-size: 16px;
   color: ${(x) => x.theme.darkGrey};
   border: 2px solid transparent;
+  background: transparent;
+  &::-webkit-search-cancel-button {
+    display: none;
+  }
 
   + svg {
     position: absolute;
@@ -58,7 +96,6 @@ const StyledInput = styled.input<{ inNav: boolean }>`
     margin: 0;
     padding-top: 14px;
     padding-bottom: 14px;
-    background-color: ${x.theme.accentDark};
     color: white;
 
     &::placeholder {
@@ -112,6 +149,19 @@ const ResultsContainer = styled.div`
   }
 `;
 
+const AllResults = styled.a`
+  float: right;
+  color: ${(x) => x.theme.darkGrey};
+  font-weight: 700;
+  margin-top: 15px;
+  &:hover {
+    text-decoration: underline;
+  }
+  img {
+    margin-left: 10px;
+  }
+`;
+
 const NoResultsText = styled.h4`
   color: ${(x) => x.theme.darkGrey};
   text-align: center;
@@ -126,20 +176,26 @@ interface IProps {
 }
 
 const Search = ({ inNav, hidden, resultsHidden }: IProps) => {
+  const router = useRouter();
   const {
     search,
     updateSearch,
+    updateSearchTerm,
     updateResults,
     updateClearResults,
     updateClear,
   } = useContext(SearchContext);
-
-  const debouncedSearchTerm = useDebounce(search?.filters?.query ?? "", 400);
+  const debouncedSearchTerm = useDebounce(search?.term ?? "", 400);
 
   useEffect(() => {
-    if (debouncedSearchTerm && debouncedSearchTerm.length > 1) {
+    if (
+      search.filters &&
+      Object.values(search.filters).every((e) => e.length > 1)
+    ) {
       getPackages(
-        `packages?query=${debouncedSearchTerm}&ensureContains=true&partialMatch=true&take=3`
+        `packages?ensureContains=true&partialMatch=true&take=3&${parseQueryString(
+          search.filters
+        )}`
       ).then((e) => {
         updateResults(e);
       });
@@ -149,21 +205,40 @@ const Search = ({ inNav, hidden, resultsHidden }: IProps) => {
   }, [debouncedSearchTerm]);
 
   useEffect(() => {
-    if (search?.filters?.query.length < 2) {
+    if (search?.term?.length < 2) {
       updateClearResults();
     }
-  }, [search?.filters?.query]);
+  }, [search?.term]);
+
+  const inputRegex = /(name|publisher|description|tags):/g;
+
+  const handleUpdateSearch = (text: string) => {
+    updateSearchTerm(text);
+    updateSearch(parseTags(text));
+  };
+
+  const handleSearch = () => {
+    router.push({ pathname: "/search", query: search.filters as string });
+    updateSearchTerm("");
+  };
 
   return (
     <SearchContainer className={hidden ?? false ? "hide" : "show"}>
       <WidthWrapper inNav={inNav}>
+        <InputRegexLayer
+          inNav={inNav}
+          dangerouslySetInnerHTML={{
+            __html: search?.term?.replace(inputRegex, "<span>$&</span>"),
+          }}
+        />
         <StyledInput
           aria-label="Search packages"
-          type="text"
+          type="search"
           placeholder="Search packages"
-          value={search?.filters?.query ?? ""}
-          onChange={(e) => updateSearch({ query: e.target.value })}
+          value={search?.term ?? ""}
+          onChange={(e) => handleUpdateSearch(e.target.value)}
           inNav={inNav}
+          onKeyPress={(e) => e.key === "Enter" && handleSearch()}
         />
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -200,27 +275,34 @@ const Search = ({ inNav, hidden, resultsHidden }: IProps) => {
               !!(
                 debouncedSearchTerm &&
                 search?.results != null &&
-                search?.filters?.query.length > 1
+                search?.term.length > 1
               )
             }
           >
             {search?.results != null &&
-              search?.filters?.query != "" &&
-              search?.results?.Packages?.length > 0 &&
-              search?.results?.Packages?.map((e: IPackage) => (
-                <AutocompleteResult
-                  key={`autocomplete-${e.Id}`}
-                  id={e.Id}
-                  title={e.Latest.Name}
-                  org={e.Latest.Publisher}
-                  desc={e.Latest.Description?.replace(
-                    new RegExp(debouncedSearchTerm, "gi"),
-                    "<span>$&</span>"
-                  )}
-                  url={e.Latest.Homepage}
-                  iconUrl={e.IconUrl}
-                />
-              ))}
+              search?.term != "" &&
+              search?.results?.Packages?.length > 0 && (
+                <>
+                  {search?.results?.Packages?.map((e: IPackage) => (
+                    <AutocompleteResult
+                      key={`autocomplete-${e.Id}`}
+                      id={e.Id}
+                      title={e.Latest.Name}
+                      org={e.Latest.Publisher}
+                      desc={e.Latest.Description?.replace(
+                        new RegExp(debouncedSearchTerm, "gi"),
+                        "<span>$&</span>"
+                      )}
+                      url={e.Latest.Homepage}
+                      iconUrl={e.IconUrl}
+                    />
+                  ))}
+                  <AllResults onClick={handleSearch}>
+                    View all results
+                    <img src={require("./icons/arrow.svg")} alt="" />
+                  </AllResults>
+                </>
+              )}
             {search?.results != null &&
               search?.results?.Packages?.length === 0 &&
               debouncedSearchTerm !== "" && (

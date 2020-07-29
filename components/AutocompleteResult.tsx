@@ -29,7 +29,7 @@ const Desc = styled(CardDesc)`
 `;
 
 const Result = styled.div`
-  &:not(:last-child) {
+  &:not(:last-of-type) {
     border-bottom: 1px solid ${(x) => x.theme.lightGrey};
     padding-bottom: 10px;
     margin-bottom: 15px;
