@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import { IPackage } from "../api/getPackages";
 import generateClipboard from "../utils/clipboard";
 import { Downloads } from "../utils/state/Downloads";
-import { styled } from "../utils/theme";
+import styled from "../utils/theme";
 import { CardContainer, Add, Copy } from "./Card";
 
 const FeaturedCardContainer = styled(CardContainer)<{

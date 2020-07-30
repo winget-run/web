@@ -1,11 +1,10 @@
 import { useEffect, useContext } from "react";
 
-import { styled } from "../utils/theme";
+import styled from "../utils/theme";
 import useDebounce from "../utils/hooks/useDebounce";
 import AutocompleteResult from "./AutocompleteResult";
 import getPackages, { IPackage } from "../api/getPackages";
 import { useRouter } from "next/router";
-import Link from "next/link";
 
 import { Search as SearchContext } from "../utils/state/Search";
 import { parseQueryString, parseTags } from "../utils/helperFunctions";

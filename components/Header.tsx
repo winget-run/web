@@ -1,11 +1,10 @@
-import { styled } from "../utils/theme";
-import { Container, Row, Col, media } from "styled-bootstrap-grid";
+import { useState, useEffect } from "react";
+import { mediaBreakpointDown } from "react-grid";
 import Link from "next/link";
 
+import styled from "../utils/theme";
+import { Container, Row, Col } from "../utils/grid";
 import Search from "./Search";
-import { useState, useEffect, createContext, useContext } from "react";
-
-import { Search as SearchContext } from "../utils/state/Search";
 
 const TopBar = styled.div`
   position: fixed;
@@ -36,7 +35,7 @@ export const SearchBar = styled.div`
   }
 `;
 
-const SearchContainer = (styled.div as any)`
+const SearchContainer = styled.div<{ fullWidth: boolean }>`
   padding: 0 15px;
   margin: 0 auto;
   width: 100%;
@@ -48,30 +47,37 @@ const SearchContainer = (styled.div as any)`
   `}
 
   h1 {
-    font-size: 42px;
+    font-size: 71px;
     margin: 0;
     line-height: 1;
     text-align: center;
     word-break: break-word;
 
-    ${media.md`
-      font-size: 71px;
-    `}
+    ${mediaBreakpointDown("sm")} {
+      font-size: 42px;
+    }
   }
 `;
 
 const Links = styled(Col)`
   display: flex;
   align-items: center;
+  ${mediaBreakpointDown("sm")} {
+    flex-grow: 0;
+  }
 `;
 
 const NavLink = styled.h2`
   position: relative;
   margin: 0 20px 0 0;
-  display: none;
+  display: inline-block;
   font-size: 20px;
   font-weight: bold;
   height: auto;
+
+  ${mediaBreakpointDown("md")} {
+    display: none;
+  }
 
   &::after {
     content: "";
@@ -90,10 +96,6 @@ const NavLink = styled.h2`
       transition: 150ms cubic-bezier(0.26, 1.29, 0.7, 1.18);
     }
   }
-
-  ${media.lg`
-    display: inline-block;
-  `}
 `;
 
 const SocialIcon = styled.img`
@@ -104,10 +106,10 @@ const SocialIcon = styled.img`
 
 const NavIcon = styled(SocialIcon)`
   margin-left: 0;
-  margin-right: -15px;
-  ${media.lg`
   margin-right: 30px;
-  `}
+  ${mediaBreakpointDown("md")} {
+    margin-right: -15px;
+  }
 `;
 
 interface IProps {
@@ -118,10 +120,6 @@ interface IProps {
 }
 
 const Header = (props: IProps) => {
-  const { search, updateSearch, updateResults, updateClear } = useContext(
-    SearchContext
-  );
-
   // props.customBar used to check if were on the front page
   // hide nav search on main page and show it on any other page by default
   const [showNavSearch, setShowNavSearch] = useState(true && props.customBar);

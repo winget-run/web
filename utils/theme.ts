@@ -1,4 +1,4 @@
-import baseStyled, { ThemedStyledInterface } from "styled-components";
+import styled, { CreateStyled } from "@emotion/styled";
 
 export const theme = {
   accent: "#327080",
@@ -13,5 +13,17 @@ export const theme = {
   lightGrey: "#9d9d9d",
 };
 
-export type Theme = typeof theme;
-export const styled = baseStyled as ThemedStyledInterface<Theme>;
+type Theme = {
+  accent: "#327080";
+  accentDarker: "#094555";
+  accentDark: "#195261";
+  accentLight: "#64B0C4";
+  text: "#fff";
+  textFade: "#aaa";
+  background: "#1f1f1f";
+  darkGrey: "#111111";
+  grey: "#2b2b2b";
+  lightGrey: "#9d9d9d";
+};
+
+export default styled as CreateStyled<Theme>;

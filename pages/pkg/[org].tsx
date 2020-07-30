@@ -1,6 +1,6 @@
 import Head from "next/head";
 import Card from "../../components/Card";
-import { Container, Row, Col } from "styled-bootstrap-grid";
+import { Container, Row, Col } from "../../utils/grid";
 import Header from "../../components/Header";
 import getPackages, { IResponse, IPackage } from "../../api/getPackages";
 import { useState } from "react";

@@ -1,5 +1,7 @@
-import { styled } from "../utils/theme";
-import { Container, Row, Col, media } from "styled-bootstrap-grid";
+import styled from "../utils/theme";
+import { Container, Row, Col } from "../utils/grid";
+import { mediaBreakpointDown } from "react-grid";
+
 import Link from "next/link";
 import Head from "next/head";
 
@@ -14,10 +16,11 @@ const Background = styled.div`
   background: url("/background.svg") ${(x) => x.theme.background} 10px 10px
     fixed;
 
-  ${Container}, ${Row} {
+  > div,
+  > div > div {
     height: 100%;
   }
-  ${Row} {
+  > div > div {
     align-items: center;
   }
 `;
@@ -30,26 +33,25 @@ const Image = styled.img`
 
 const TextContainer = styled.div`
   width: 100%;
-  padding: 30px;
+  padding: 40px;
   background-color: ${(x) => x.theme.background};
-
-  ${media.sm`
-    padding: 40px;
-  `}
+  ${mediaBreakpointDown("sm")} {
+    padding: 30px;
+  }
 
   h1 {
-    font-size: 48px;
-    margin: 0;
-    ${media.sm`
     font-size: 71px;
-  `}
+    margin: 0;
+    ${mediaBreakpointDown("sm")} {
+      font-size: 48px;
+    }
   }
   h2 {
-    font-size: 32px;
-    margin: 0 0 74px;
-    ${media.sm`
     font-size: 47px;
-    `}
+    margin: 0 0 74px;
+    ${mediaBreakpointDown("sm")} {
+      font-size: 32px;
+    }
   }
   a {
     display: inline-block;

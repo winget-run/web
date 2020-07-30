@@ -1,6 +1,6 @@
 import Head from "next/head";
 import Card from "../components/Card";
-import { Container, Row, Col } from "styled-bootstrap-grid";
+import { Container, Row, Col } from "../utils/grid";
 import Header from "../components/Header";
 import DownloadModal from "../components/DownloadModal";
 import getPackages, { IResponse } from "../api/getPackages";
@@ -9,7 +9,6 @@ import LoadMore from "../components/LoadMore";
 import { useRouter } from "next/router";
 import SectionHeader from "../components/SectionHeader";
 import { parseQueryString } from "../utils/helperFunctions";
-import Tag from "../components/Tag";
 
 export default function Search({ data }: { data: IResponse }) {
   const router = useRouter();
