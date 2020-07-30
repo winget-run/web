@@ -1,4 +1,4 @@
-import { styled } from "../utils/theme";
+import styled from "../utils/theme";
 import Link from "next/link";
 
 import { CardTitle, CardOrg, CardDesc, CardIcon } from "./Card";

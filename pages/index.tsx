@@ -1,6 +1,6 @@
 import Head from "next/head";
 import Card from "../components/Card";
-import { Container, Row, Col } from "styled-bootstrap-grid";
+import { Container, Row, Col } from "../utils/grid";
 import Header from "../components/Header";
 import DownloadModal from "../components/DownloadModal";
 import getPackages, { IResponse } from "../api/getPackages";
@@ -59,12 +59,12 @@ export default function Home({
             </Col>
           </Row>
           <Row>
-            {featured?.Packages.slice(0, 3).map((e) => (
+            {featured?.Packages?.slice(0, 3).map((e) => (
               <Col key={e.Id} md={6} lg={4}>
                 <FeaturedCard p={e} />
               </Col>
             ))}
-            {featured?.Packages.slice(3, 7).map((e) => (
+            {featured?.Packages?.slice(3, 7).map((e) => (
               <Col key={e.Id} md={6} lg={4} xl={3}>
                 <FeaturedCard p={e} small />
               </Col>

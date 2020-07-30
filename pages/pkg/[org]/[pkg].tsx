@@ -1,21 +1,23 @@
+import { useState, useContext } from "react";
 import Head from "next/head";
+import { useRouter } from "next/router";
+import { toast } from "react-toastify";
+import Link from "next/link";
+import { mediaBreakpointDown } from "react-grid";
+
 import { CardContainer, Add } from "../../../components/Card";
-import { Container, Row, Col, media } from "styled-bootstrap-grid";
+import { Container, Row, Col } from "../../../utils/grid";
 import getPackages, {
   IResponse,
   IPackage,
   IResponseSingle,
 } from "../../../api/getPackages";
-import { useState, useContext } from "react";
-import { useRouter } from "next/router";
 import DownloadModal from "../../../components/DownloadModal";
 import Tag from "../../../components/Tag";
-import { styled } from "../../../utils/theme";
+import styled from "../../../utils/theme";
 import Header, { SearchBar } from "../../../components/Header";
 import generateClipboard from "../../../utils/clipboard";
 import { Downloads } from "../../../utils/state/Downloads";
-import { toast } from "react-toastify";
-import Link from "next/link";
 import Custom404 from "../../404";
 
 const TopBar = styled(SearchBar)`
@@ -24,32 +26,29 @@ const TopBar = styled(SearchBar)`
   margin-bottom: 30px;
 
   h1 {
-    font-size: 36px;
+    font-size: 60px;
     line-height: 1.2;
     margin: 0;
-
-    ${media.md`
-      font-size: 60px;
-    `}
+    ${mediaBreakpointDown("sm")} {
+      font-size: 36px;
+    }
 
     span {
-      font-size: 22px;
-      margin-left: 15px;
-
-      ${media.md`
       font-size: 32px;
-    `}
+      margin-left: 15px;
+      ${mediaBreakpointDown("sm")} {
+        font-size: 22px;
+      }
     }
   }
 
   h2 {
-    font-size: 26px;
-    margin: 15px 0 0;
-
-    ${media.md`
-      margin: 0;
-      font-size: 32px;
-    `}
+    margin: 0;
+    font-size: 32px;
+    ${mediaBreakpointDown("sm")} {
+      font-size: 26px;
+      margin: 15px 0 0;
+    }
   }
   h3 {
     font-size: 18px;
@@ -61,10 +60,10 @@ const TopBar = styled(SearchBar)`
 `;
 
 const CustomRow = styled(Row)`
-  flex-direction: column-reverse;
-  ${media.lg`
-    flex-direction: row;
-  `};
+  flex-direction: row;
+  ${mediaBreakpointDown("md")} {
+    flex-direction: column-reverse;
+  }
 `;
 
 const SectionHeader = styled.h2`
@@ -74,13 +73,14 @@ const SectionHeader = styled.h2`
 `;
 
 const SectionInfo = styled.p`
-  font-size: 16px;
+  font-size: 20px;
   line-height: 30px;
   color: ${(x) => x.theme.textFade};
   margin: 0 0 30px;
-  ${media.md`
-      font-size: 20px;
-  `}
+  ${mediaBreakpointDown("sm")} {
+    font-size: 16px;
+  }
+
   a:hover {
     text-decoration: underline;
   }
@@ -96,7 +96,7 @@ const VersionsCard = styled(CardContainer)`
 `;
 
 const AddCard = styled(VersionsCard)`
-  ${SectionHeader} {
+  h2 {
     margin: 0;
     font-weight: 500;
     font-size: 20px;
@@ -124,11 +124,11 @@ const ShowMoreVersions = styled.p`
 
 const Version = styled.p`
   font-weight: 500;
-  font-size: 16px;
+  font-size: 20px;
   margin: 0 0 20px;
-  ${media.md`
-    font-size: 20px;
-  `}
+  ${mediaBreakpointDown("sm")} {
+    font-size: 16px;
+  }
 
   span {
     float: right;
@@ -146,7 +146,7 @@ const CodeBlock = styled.code`
   margin-bottom: 30px;
   padding: 16px 62px 16px 20px;
   font-family: "Consolas", monospace;
-  font-size: 16px;
+  font-size: 20px;
   color: ${(x) => x.theme.textFade};
   border-radius: 8px;
   background-color: ${(x) => x.theme.darkGrey};
@@ -154,10 +154,9 @@ const CodeBlock = styled.code`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-
-  ${media.md`
-      font-size: 20px;
-    `}
+  ${mediaBreakpointDown("sm")} {
+    font-size: 16px;
+  }
 
   &::before {
     content: "> ";

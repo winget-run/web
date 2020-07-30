@@ -1,14 +1,11 @@
-//TODO: fix this fucking abortion
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-//@ts-nocheck
-import { useState, useContext } from "react";
+import { useContext } from "react";
 import { toast } from "react-toastify";
 import Link from "next/link";
-import { media } from "styled-bootstrap-grid";
+import { mediaBreakpointDown } from "react-grid";
 
 import { IPackage } from "../api/getPackages";
 import { Downloads } from "../utils/state/Downloads";
-import { styled } from "../utils/theme";
+import styled from "../utils/theme";
 import generateClipboard from "../utils/clipboard";
 import { getIcon } from "../utils/helperFunctions";
 
@@ -16,23 +13,22 @@ export const CardContainer = styled.div<{ selected?: boolean }>`
   border-radius: 8px;
   background: ${(x) => x.theme.grey};
   width: 100%;
-  height: calc(100% - 15px);
+  height: calc(100% - 30px);
+  margin-bottom: 30px;
   padding: 15px 15px 54px;
-  margin-bottom: 15px;
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
   position: relative;
   border: 2px solid transparent;
   transition: border-color 200ms ease;
+  ${mediaBreakpointDown("sm")} {
+    height: calc(100% - 15px);
+    margin-bottom: 15px;
+  }
 
   ${(x) =>
     x.selected &&
     `
   border-color: ${x.theme.accent};
-  `}
-
-  ${media.md`
-    height: calc(100% - 30px);
-    margin-bottom: 30px;
   `}
 `;
 

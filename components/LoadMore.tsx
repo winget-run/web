@@ -1,6 +1,5 @@
-import { styled } from "../utils/theme";
-import React from "react";
-import { keyframes } from "styled-components";
+import styled from "../utils/theme";
+import { keyframes } from "@emotion/core";
 
 const rotate = keyframes`
   from {
