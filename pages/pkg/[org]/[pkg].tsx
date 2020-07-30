@@ -19,6 +19,9 @@ import Header, { SearchBar } from "../../../components/Header";
 import generateClipboard from "../../../utils/clipboard";
 import { Downloads } from "../../../utils/state/Downloads";
 import Custom404 from "../../404";
+import getStats, { IStatsResponse } from "../../../api/getStats";
+import StatsChart from "../../../components/StatsChart";
+import { padDate } from "../../../utils/helperFunctions";
 
 const TopBar = styled(SearchBar)`
   padding: 91px 0 !important;
@@ -180,19 +183,23 @@ const CodeBlock = styled.code`
   }
 `;
 
-export default function Pkg(props) {
+interface IProps {
+  data: IResponseSingle;
+  stats: IStatsResponse;
+}
+
+export default function Pkg({ data, stats }: IProps) {
   const router = useRouter();
   const { org } = router.query;
   const { packages, addPackage, removePackage } = useContext(Downloads);
   const [showMoreVersions, setShowMoreVersions] = useState(false);
-
-  const data: IResponseSingle = props.data;
 
   if (data.Package == null) {
     return <Custom404 />;
   }
 
   const p = data.Package;
+  const s = stats.Stats?.Data;
 
   const inDownloads = !!packages.find((e) => e.Package.Id === p.Id);
   const versionsAmount = 4;
@@ -266,6 +273,7 @@ export default function Pkg(props) {
                   aria-label="Add to multi-download"
                 />
               </AddCard>
+              <StatsChart data={padDate(s)} />
               <VersionsCard>
                 <SectionHeader>Versions</SectionHeader>
                 {p.Versions.slice(
@@ -375,10 +383,25 @@ export default function Pkg(props) {
 export async function getServerSideProps({ res, params }) {
   try {
     const data = await getPackages(`packages/${params.org}/${params.pkg}`);
+
+    const beforeDate = new Date();
+    beforeDate.setDate(beforeDate.getDate() - 1);
+    const afterDate = new Date();
+    afterDate.setDate(afterDate.getDate() - 8);
+
+    const stats = await getStats(
+      `${params.org}.${params.pkg}`,
+      "day",
+      beforeDate.toISOString(),
+      afterDate.toISOString()
+    );
+
     if (data.statusCode === 404) {
       throw new Error();
     }
-    return { props: { data } };
+
+    console.log(stats);
+    return { props: { data, stats } };
   } catch {
     res.statusCode = 404;
     return { props: { data: { Package: null } } };
