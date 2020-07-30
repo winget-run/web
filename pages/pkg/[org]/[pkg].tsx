@@ -337,7 +337,12 @@ export default function Pkg(props) {
                 <section>
                   <SectionHeader>Tags</SectionHeader>
                   {p.Latest.Tags.map((x) => (
-                    <Tag key={x}>{x}</Tag>
+                    <Link
+                      key={x}
+                      href={`/search?tags=${encodeURIComponent(x)}`}
+                    >
+                      <Tag>{x}</Tag>
+                    </Link>
                   ))}
                 </section>
               )}
