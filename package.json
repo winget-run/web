@@ -31,7 +31,6 @@
     "@types/react": "^16.9.35",
     "@typescript-eslint/eslint-plugin": "^3.0.0",
     "@typescript-eslint/parser": "^3.0.0",
-    "babel-plugin-emotion": "^10.0.33",
     "cross-env": "^7.0.2",
     "eslint": "^6",
     "eslint-config-prettier": "^6.11.0",

@@ -96,6 +96,10 @@ const NavLink = styled.h2`
       transition: 150ms cubic-bezier(0.26, 1.29, 0.7, 1.18);
     }
   }
+
+  a:hover {
+    text-decoration: none !important;
+  }
 `;
 
 const SocialIcon = styled.img`
@@ -138,7 +142,7 @@ const Header = (props: IProps) => {
     <>
       <TopBar>
         <Container>
-          <Row justifyContent="between" alignItems="center">
+          <Row css={{ justifyContent: "between", alignItems: "center" }}>
             <Links col="auto">
               <Link href="/" as="/">
                 <a>
