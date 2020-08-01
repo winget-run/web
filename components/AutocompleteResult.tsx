@@ -28,7 +28,7 @@ const Desc = styled(CardDesc)`
   }
 `;
 
-const Result = styled.div`
+const Result = styled.article`
   &:not(:last-of-type) {
     border-bottom: 1px solid ${(x) => x.theme.lightGrey};
     padding-bottom: 10px;
