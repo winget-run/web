@@ -33,7 +33,7 @@ export default function Home({
   };
 
   return (
-    <div className="container">
+    <div>
       <Head>
         <title>winget.run | Finding winget packages made simple.</title>
         <meta
