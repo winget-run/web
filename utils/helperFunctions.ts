@@ -26,7 +26,8 @@ export const parseTagMatches = (query: string): string[] => {
 
   const tags = taglist
     .map((e) => query.indexOf(`${e}:`))
-    .filter((e) => e !== -1);
+    .filter((e) => e !== -1)
+    .sort((a, b) => a - b);
   if (tags.length === 0) {
     return [`query:${query}`];
   }
@@ -34,8 +35,8 @@ export const parseTagMatches = (query: string): string[] => {
   return tags.map((e, i, a) => query.slice(e, a[i + 1] ?? query.length).trim());
 };
 
-export const parseTags = (query: string): ISearchFilters => {
-  const data = parseTagMatches(query);
+export const parseTags = (q: string): ISearchFilters => {
+  const data = parseTagMatches(q);
 
   const final = data.reduce((a, c) => {
     const [tag, query] = c.split(":");

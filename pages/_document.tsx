@@ -3,6 +3,7 @@ import getConfig from "next/config";
 
 import { css, Global } from "@emotion/core";
 import { extractCritical } from "emotion-server";
+import Footer from "../components/Footer";
 
 export const globalStyles = (
   <Global
@@ -98,6 +99,7 @@ export default class MyDocument extends Document {
         <body>
           <Main />
           <NextScript />
+          <Footer />
         </body>
       </html>
     );
