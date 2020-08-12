@@ -48,5 +48,5 @@ export const parseTags = (q: string): ISearchFilters => {
 
 export const parseQueryString = (obj: ISearchFilters): string =>
   Object.entries(obj)
-    .map(([k, v]) => `${k}=${encodeURIComponent(v)}`)
+    .map(([k, v]) => (v ? `${k}=${encodeURIComponent(v)}` : null))
     .join("&");

@@ -26,23 +26,20 @@ const SectionHeader = styled.h2`
     font-size: 20px;
     display: inline-block;
     margin-left: 20px;
-    ${mediaBreakpointDown("sm")} {
+    ${mediaBreakpointDown("xs")} {
       margin-left: 0;
       display: block;
     }
   }
 
   code {
-    padding: 12px 20px;
+    padding: 8px 20px 12px;
     background: ${(x) => x.theme.grey};
     border-radius: 8px;
     font-size: 0.8em;
     white-space: nowrap;
     display: inline-block;
     margin-bottom: 10px;
-    &:first-child {
-      margin-left: 10px;
-    }
     &:not(:last-child) {
       margin-right: 10px;
     }
