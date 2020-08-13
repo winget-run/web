@@ -7,7 +7,11 @@ import getPackages, { IPackage } from "../api/getPackages";
 import { useRouter } from "next/router";
 
 import { Search as SearchContext } from "../utils/state/Search";
-import { parseQueryString, parseTags } from "../utils/helperFunctions";
+import {
+  parseQueryString,
+  parseTags,
+  regexWrapJSX,
+} from "../utils/helperFunctions";
 
 const SearchContainer = styled.div`
   position: relative;
@@ -313,10 +317,9 @@ const Search = ({ inNav, hidden, resultsHidden }: IProps) => {
                       id={e.Id}
                       title={e.Latest.Name}
                       org={e.Latest.Publisher}
-                      desc={e.Latest.Description?.replace(
+                      desc={regexWrapJSX(e.Latest.Description, [
                         new RegExp(debouncedSearchTerm, "gi"),
-                        "<span>$&</span>"
-                      )}
+                      ])}
                       url={e.Latest.Homepage}
                       iconUrl={e.IconUrl}
                     />

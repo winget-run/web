@@ -21,6 +21,24 @@ export const getIcon = (url: string | null, isSearch: boolean): string => {
   return "/favicon.ico";
 };
 
+export const regexWrapJSX = (
+  input: string,
+  regexes: RegExp[]
+): React.ReactElement[] | string[] | string => {
+  if (!regexes.length) {
+    return input;
+  }
+  let split = input.split(regexes[0]);
+  let replacements = input.match(regexes[0]);
+  let result = [];
+  for (let i = 0; i < split.length - 1; i++) {
+    result.push(regexWrapJSX(split[i], regexes.slice(1)));
+    result.push(<span>{replacements[i]}</span>);
+  }
+  result.push(regexWrapJSX(split[split.length - 1], regexes.slice(1)));
+  return result;
+};
+
 export const parseTagMatches = (query: string): string[] => {
   const taglist = ["name", "publisher", "description", "tags"];
 
