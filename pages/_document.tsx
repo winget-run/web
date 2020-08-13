@@ -23,6 +23,7 @@ export const globalStyles = (
 
       main {
         padding-bottom: 150px;
+        overflow-x: hidden;
       }
 
       a {

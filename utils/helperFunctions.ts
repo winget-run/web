@@ -51,13 +51,10 @@ export const parseQueryString = (obj: ISearchFilters): string =>
     .map(([k, v]) => `${k}=${encodeURIComponent(v)}`)
     .join("&");
 
-// TODO: you might want to exclude the current day and include the 7 days before that,
-// to do that here you need to add a day to CURRENT_DATE_MS (1000 * 60 * 60 * 24),
-// didnt wanna do it here cos idk what other logic you have which may need changes
 export const padDate = (stats: IStat[]) => {
   const SAMPLING_PERIOD = 1000 * 60 * 60 * 24;
 
-  const CURRENT_DATE_MS = Date.now();
+  const CURRENT_DATE_MS = Date.now() - SAMPLING_PERIOD;
   const SAMPLE_COUNT = 7;
 
   const paddedStats = [...new Array(SAMPLE_COUNT).keys()].reverse().map((e) => {
@@ -67,7 +64,7 @@ export const padDate = (stats: IStat[]) => {
     return (
       stats.find((f) => f.Period === time.toISOString()) ?? {
         Period: time.toISOString(),
-        Value: 0,
+        Value: "0",
       }
     );
   });

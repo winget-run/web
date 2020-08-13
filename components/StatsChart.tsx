@@ -18,7 +18,18 @@ const ChartContainer = styled.div`
 `;
 
 const TextContent = styled.div`
-  padding: 20px 20px 15px;
+  padding: 20px 20px 20px;
+  h2 {
+    margin: 0;
+    font-size: 24px;
+  }
+
+  h3 {
+    margin: 5px 0 0;
+    font-size: 16px;
+    font-weight: 400;
+    color: ${(x) => x.theme.textFade};
+  }
 `;
 
 const CustomTooltip = (datum) => (
@@ -92,33 +103,41 @@ const StatsChart = ({ data }: { data: IStat[] }) => {
     []
   );
 
+  const totalViews = useMemo(
+    () => data.map((e) => parseInt(e.Value)).reduce((a, b) => a + b, 0),
+    [data]
+  );
+
   return (
     <Card>
       <TextContent>
-        <h1>test</h1>
+        <h2>Daily views</h2>
+        <h3>{totalViews} views in the last week</h3>
       </TextContent>
-      <ChartContainer>
-        <Chart
-          data={chartData}
-          series={series}
-          axes={axes}
-          tooltip={tooltip}
-          getSeriesStyle={getSeriesStyle}
-          css={css`
-            z-index: 999;
-            svg {
-              border-radius: 0 0 8px 8px;
-            }
-            .tooltip-wrap > div > div > div {
-              background: #111 !important;
-              border-radius: 8px !important;
-              > div {
-                border-right-color: #111 !important;
+      {totalViews > 0 && (
+        <ChartContainer>
+          <Chart
+            data={chartData}
+            series={series}
+            axes={axes}
+            tooltip={tooltip}
+            getSeriesStyle={getSeriesStyle}
+            css={css`
+              z-index: 999;
+              svg {
+                border-radius: 0 0 8px 8px;
               }
-            }
-          `}
-        />
-      </ChartContainer>
+              .tooltip-wrap > div > div > div {
+                background: #111 !important;
+                border-radius: 8px !important;
+                > div {
+                  border-right-color: #111 !important;
+                }
+              }
+            `}
+          />
+        </ChartContainer>
+      )}
     </Card>
   );
 };

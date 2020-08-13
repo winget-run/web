@@ -303,13 +303,15 @@ export default function Pkg({ data, stats }: IProps) {
 
                 {versionsLength > versionsAmount && !showMoreVersions && (
                   <ShowMoreVersions onClick={() => setShowMoreVersions(true)}>
-                    Show {versionsLength - versionsAmount} older versions
+                    Show {versionsLength - versionsAmount} older version
+                    {versionsLength - versionsAmount === 1 ? "" : "s"}
                   </ShowMoreVersions>
                 )}
 
                 {versionsLength > versionsAmount && showMoreVersions && (
                   <ShowMoreVersions onClick={() => setShowMoreVersions(false)}>
-                    Hide {versionsLength - versionsAmount} older versions
+                    Hide {versionsLength - versionsAmount} older version
+                    {versionsLength - versionsAmount === 1 ? "" : "s"}
                   </ShowMoreVersions>
                 )}
               </VersionsCard>
@@ -400,7 +402,6 @@ export async function getServerSideProps({ res, params }) {
       throw new Error();
     }
 
-    console.log(stats);
     return { props: { data, stats } };
   } catch {
     res.statusCode = 404;
