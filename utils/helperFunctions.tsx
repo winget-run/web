@@ -28,9 +28,9 @@ export const regexWrapJSX = (
   if (!regexes.length) {
     return input;
   }
-  let split = input.split(regexes[0]);
-  let replacements = input.match(regexes[0]);
-  let result = [];
+  const split = input.split(regexes[0]);
+  const replacements = input.match(regexes[0]);
+  const result = [];
   for (let i = 0; i < split.length - 1; i++) {
     result.push(regexWrapJSX(split[i], regexes.slice(1)));
     result.push(<span>{replacements[i]}</span>);
