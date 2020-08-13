@@ -7,7 +7,11 @@ import getPackages, { IPackage } from "../api/getPackages";
 import { useRouter } from "next/router";
 
 import { Search as SearchContext } from "../utils/state/Search";
-import { parseQueryString, parseTags } from "../utils/helperFunctions";
+import {
+  parseQueryString,
+  parseTags,
+  regexWrapJSX,
+} from "../utils/helperFunctions";
 
 const SearchContainer = styled.div`
   position: relative;
@@ -246,51 +250,56 @@ const Search = ({ inNav, hidden, resultsHidden }: IProps) => {
   return (
     <SearchContainer className={hidden ?? false ? "hide" : "show"}>
       <WidthWrapper inNav={inNav}>
-        <InputRegexLayer
-          inNav={inNav}
-          dangerouslySetInnerHTML={{
-            __html: search?.term?.replace(inputRegex, "<span>$&</span>"),
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            e.currentTarget.querySelector("input").blur();
+            handleSearch();
           }}
-        />
-        <StyledInput
-          aria-label="Search packages"
-          type="search"
-          placeholder="Search packages"
-          value={search?.term ?? ""}
-          onChange={(e) => handleUpdateSearch(e.target.value)}
-          inNav={inNav}
-          onKeyPress={(e) => e.key === "Enter" && handleSearch()}
-          onFocus={() => setFocus(true)}
-          onBlur={() => setFocus(false)}
-        />
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="26.621"
-          height="26.621"
-          viewBox="0 0 26.621 26.621"
-          aria-hidden
         >
-          <g opacity={inNav ? 0.75 : 1}>
-            <g
-              fill="none"
-              stroke={inNav ? "#fff" : "#aaa"}
-              strokeLinecap="round"
-              strokeWidth="3"
-            >
-              <circle cx="11" cy="11" r="11" stroke="none" />
-              <circle cx="11" cy="11" r="9.5" fill="none" />
+          <InputRegexLayer inNav={inNav}>
+            {search?.term &&
+              regexWrapJSX(search?.term, [new RegExp(inputRegex, "gi")])}
+          </InputRegexLayer>
+          <StyledInput
+            aria-label="Search packages"
+            type="search"
+            placeholder="Search packages"
+            value={search?.term ?? ""}
+            onChange={(e) => handleUpdateSearch(e.target.value)}
+            inNav={inNav}
+            onFocus={() => setFocus(true)}
+            onBlur={() => setFocus(false)}
+          />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="26.621"
+            height="26.621"
+            viewBox="0 0 26.621 26.621"
+            aria-hidden
+          >
+            <g opacity={inNav ? 0.75 : 1}>
+              <g
+                fill="none"
+                stroke={inNav ? "#fff" : "#aaa"}
+                strokeLinecap="round"
+                strokeWidth="3"
+              >
+                <circle cx="11" cy="11" r="11" stroke="none" />
+                <circle cx="11" cy="11" r="9.5" fill="none" />
+              </g>
+              <line
+                x2="6"
+                y2="6"
+                transform="translate(18.5 18.5)"
+                fill="none"
+                stroke={inNav ? "#fff" : "#aaa"}
+                strokeLinecap="round"
+                strokeWidth="3"
+              />
             </g>
-            <line
-              x2="6"
-              y2="6"
-              transform="translate(18.5 18.5)"
-              fill="none"
-              stroke={inNav ? "#fff" : "#aaa"}
-              strokeLinecap="round"
-              strokeWidth="3"
-            />
-          </g>
-        </svg>
+          </svg>
+        </form>
         {(!resultsHidden ?? true) && (
           <ResultsContainer
             aria-live="polite"
@@ -306,10 +315,12 @@ const Search = ({ inNav, hidden, resultsHidden }: IProps) => {
                       id={e.Id}
                       title={e.Latest.Name}
                       org={e.Latest.Publisher}
-                      desc={e.Latest.Description?.replace(
-                        new RegExp(debouncedSearchTerm, "gi"),
-                        "<span>$&</span>"
-                      )}
+                      desc={
+                        e?.Latest?.Description &&
+                        regexWrapJSX(e.Latest.Description, [
+                          new RegExp(debouncedSearchTerm, "gi"),
+                        ])
+                      }
                       url={e.Latest.Homepage}
                       iconUrl={e.IconUrl}
                     />

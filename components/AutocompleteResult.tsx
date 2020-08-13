@@ -40,15 +40,13 @@ interface IProps {
   id: string;
   title: string;
   org: string;
-  desc: string;
+  desc: React.ReactElement[] | string | string[];
   url: string;
   iconUrl: string;
 }
 
 const AutocompleteResult = (props: IProps) => {
-  const { search, updateSearch, updateResults, updateClear } = useContext(
-    SearchContext
-  );
+  const { updateClear } = useContext(SearchContext);
 
   const [org, ...pkg] = props.id.split(".");
   return (
@@ -71,7 +69,7 @@ const AutocompleteResult = (props: IProps) => {
           </a>
         </Link>
       </span>
-      <Desc dangerouslySetInnerHTML={{ __html: props.desc }}></Desc>
+      <Desc>{props.desc}</Desc>
     </Result>
   );
 };
