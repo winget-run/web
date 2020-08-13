@@ -257,12 +257,10 @@ const Search = ({ inNav, hidden, resultsHidden }: IProps) => {
             handleSearch();
           }}
         >
-          <InputRegexLayer
-            inNav={inNav}
-            dangerouslySetInnerHTML={{
-              __html: search?.term?.replace(inputRegex, "<span>$&</span>"),
-            }}
-          />
+          <InputRegexLayer inNav={inNav}>
+            {search?.term &&
+              regexWrapJSX(search?.term, [new RegExp(inputRegex, "gi")])}
+          </InputRegexLayer>
           <StyledInput
             aria-label="Search packages"
             type="search"
@@ -317,9 +315,12 @@ const Search = ({ inNav, hidden, resultsHidden }: IProps) => {
                       id={e.Id}
                       title={e.Latest.Name}
                       org={e.Latest.Publisher}
-                      desc={regexWrapJSX(e.Latest.Description, [
-                        new RegExp(debouncedSearchTerm, "gi"),
-                      ])}
+                      desc={
+                        e?.Latest?.Description &&
+                        regexWrapJSX(e.Latest.Description, [
+                          new RegExp(debouncedSearchTerm, "gi"),
+                        ])
+                      }
                       url={e.Latest.Homepage}
                       iconUrl={e.IconUrl}
                     />
