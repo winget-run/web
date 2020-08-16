@@ -1,6 +1,4 @@
 import App from "next/app";
-import { cache } from "emotion";
-import { CacheProvider } from "@emotion/core";
 import { ThemeProvider } from "emotion-theming";
 import { globalStyles } from "./_document";
 import { theme } from "../utils/theme";

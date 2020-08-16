@@ -52,7 +52,7 @@ export default class MyDocument extends Document {
   static async getInitialProps(ctx) {
     const initialProps = await Document.getInitialProps(ctx);
     const styles = extractCritical(initialProps.html);
-    ctx.res.setHeader("X-Frame-Options","DENY");
+    ctx.res.setHeader("X-Frame-Options", "DENY");
     ctx.res.setHeader(
       "X-PoweredBy",
       "https://www.youtube.com/watch?v=6n3pFFPSlW4"
