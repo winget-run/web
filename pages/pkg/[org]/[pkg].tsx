@@ -234,7 +234,11 @@ export default function Pkg(props) {
                     </a>
                   </Link>
                   {p.Latest.Homepage && (
-                    <a href={p.Latest.Homepage} target="_blank">
+                    <a
+                      href={p.Latest.Homepage}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       <h3>
                         Visit website
                         <img

@@ -103,6 +103,10 @@ function Error({ statusCode }) {
 }
 
 Error.getInitialProps = ({ res, err }) => {
+  res.setHeader("X-FRAME-OPTIONS", "DENY");
+  res.setHeader("X-PoweredBy", "https://www.youtube.com/watch?v=6n3pFFPSlW4");
+  res.setHeader("Cache-Control", "public, max-age=604800, immutable");
+
   const statusCode = res ? res.statusCode : err ? err.statusCode : 404;
   return { statusCode };
 };

@@ -14,13 +14,11 @@ export default class MyApp extends App {
     const { Component, pageProps } = this.props;
     return (
       <StateWrapper>
-        <CacheProvider value={cache}>
-          {globalStyles}
-          <ThemeProvider theme={theme}>
-            <Component {...pageProps} />
-            <ToastContainer autoClose={2000} hideProgressBar />
-          </ThemeProvider>
-        </CacheProvider>
+        {globalStyles}
+        <ThemeProvider theme={theme}>
+          <Component {...pageProps} />
+          <ToastContainer autoClose={2000} hideProgressBar />
+        </ThemeProvider>
       </StateWrapper>
     );
   }
