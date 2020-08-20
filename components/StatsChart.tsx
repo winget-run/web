@@ -44,7 +44,7 @@ const CustomTooltip = (datum) => (
         margin: 0;
       `}
     >
-      {new Date(datum?.datum?.primary).toLocaleDateString()}
+      {datum?.datum?.primary.toISOString().slice(0, 10)}
     </h2>
     <h3
       css={css`
@@ -104,7 +104,7 @@ const StatsChart = ({ data }: { data: IStat[] }) => {
   );
 
   const totalViews = useMemo(
-    () => data.map((e) => parseInt(e.Value)).reduce((a, b) => a + b, 0),
+    () => data.map((e) => e.Value).reduce((a, b) => a + b, 0),
     [data]
   );
 

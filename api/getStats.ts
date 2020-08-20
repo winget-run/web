@@ -1,11 +1,9 @@
 import fetch from "isomorphic-unfetch";
-import getConfig from "next/config";
-
-const { serverRuntimeConfig, publicRuntimeConfig } = getConfig();
+import { getAPIUrl } from "../utils/helperFunctions";
 
 export interface IStat {
   Period: string;
-  Value: string;
+  Value: number;
 }
 
 export interface IStatsResponse {
@@ -15,14 +13,6 @@ export interface IStatsResponse {
   };
 }
 
-let URL = "api.winget.run";
-if (
-  serverRuntimeConfig.K8S_ENV === "dev" ||
-  publicRuntimeConfig.K8S_ENV === "dev"
-) {
-  URL = "dev-api.winget.run";
-}
-
 export default async function getStats(
   packageId: string,
   resolution: string,
@@ -30,6 +20,6 @@ export default async function getStats(
   afterDate: string
 ): Promise<IStatsResponse> {
   return fetch(
-    `https://${URL}/v2/stats?packageId=${packageId}&resolution=${resolution}&before=${beforeDate}&after=${afterDate}`
+    `https://${getAPIUrl()}/v2/stats?packageId=${packageId}&resolution=${resolution}&before=${beforeDate}&after=${afterDate}`
   ).then((e) => e.json());
 }

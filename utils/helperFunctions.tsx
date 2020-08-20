@@ -1,5 +1,11 @@
+import getConfig from "next/config";
 import { IStat, IStatsResponse } from "../api/getStats";
 import { ISearchFilters } from "./state/Search";
+
+const SAMPLING_PERIOD = 1000 * 60 * 60 * 24;
+const CURRENT_DATE_MS = Date.now() - SAMPLING_PERIOD;
+const SAMPLE_COUNT = 7;
+const { serverRuntimeConfig, publicRuntimeConfig } = getConfig();
 
 export const getIcon = (url: string | null, isSearch: boolean): string => {
   if (url) {
@@ -71,11 +77,6 @@ export const parseQueryString = (obj: ISearchFilters): string =>
     .join("&");
 
 export const padDate = (stats: IStat[]) => {
-  const SAMPLING_PERIOD = 1000 * 60 * 60 * 24;
-
-  const CURRENT_DATE_MS = Date.now() - SAMPLING_PERIOD;
-  const SAMPLE_COUNT = 7;
-
   const paddedStats = [...new Array(SAMPLE_COUNT).keys()].reverse().map((e) => {
     const time = new Date(CURRENT_DATE_MS - e * SAMPLING_PERIOD);
     time.setUTCHours(0, 0, 0, 0);
@@ -83,9 +84,20 @@ export const padDate = (stats: IStat[]) => {
     return (
       stats.find((f) => f.Period === time.toISOString()) ?? {
         Period: time.toISOString(),
-        Value: "0",
+        Value: 0,
       }
     );
   });
   return paddedStats;
+};
+
+export const getAPIUrl = () => {
+  let URL = "api.winget.run";
+  if (
+    serverRuntimeConfig.K8S_ENV === "dev" ||
+    publicRuntimeConfig.K8S_ENV === "dev"
+  ) {
+    URL = "dev-api.winget.run";
+  }
+  return URL;
 };
