@@ -4,7 +4,6 @@ import getConfig from "next/config";
 import { css, Global } from "@emotion/core";
 import { extractCritical } from "emotion-server";
 import Footer from "../components/Footer";
-import { errorMonitor } from "stream";
 
 export const globalStyles = (
   <Global
@@ -52,12 +51,15 @@ export default class MyDocument extends Document {
   static async getInitialProps(ctx) {
     const initialProps = await Document.getInitialProps(ctx);
     const styles = extractCritical(initialProps.html);
-    ctx.res.setHeader("X-Frame-Options", "DENY");
-    ctx.res.setHeader(
-      "X-PoweredBy",
-      "https://www.youtube.com/watch?v=6n3pFFPSlW4"
-    );
-    ctx.res.setHeader("Cache-Control", "public, max-age=604800, immutable");
+
+    if (ctx.pathname != "/404") {
+      ctx.res.setHeader("X-Frame-Options", "DENY");
+      ctx.res.setHeader(
+        "X-PoweredBy",
+        "https://www.youtube.com/watch?v=6n3pFFPSlW4"
+      );
+      ctx.res.setHeader("Cache-Control", "public, max-age=604800, immutable");
+    }
 
     return {
       ...initialProps,
