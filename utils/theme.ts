@@ -11,6 +11,7 @@ export const theme = {
   darkGrey: "#111111",
   grey: "#2b2b2b",
   lightGrey: "#9d9d9d",
+  dirtyWhite: "#EEE",
 };
 
 type Theme = {
@@ -24,6 +25,7 @@ type Theme = {
   darkGrey: "#111111";
   grey: "#2b2b2b";
   lightGrey: "#9d9d9d";
+  dirtyWhite: "#EEE";
 };
 
 export default styled as CreateStyled<Theme>;

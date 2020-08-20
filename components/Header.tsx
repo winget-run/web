@@ -158,11 +158,6 @@ const Header = (props: IProps) => {
                   Install winget
                 </a>
               </NavLink>
-              <NavLink>
-                <a href="https://docs.microsoft.com/en-us/windows/package-manager/">
-                  Documentation
-                </a>
-              </NavLink>
             </Links>
             <Links
               col="auto"

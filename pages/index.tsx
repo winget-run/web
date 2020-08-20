@@ -33,7 +33,7 @@ export default function Home({
   };
 
   return (
-    <div className="container">
+    <div>
       <Head>
         <title>winget.run | Finding winget packages made simple.</title>
         <meta
@@ -53,25 +53,29 @@ export default function Home({
       </header>
       <main>
         <Container>
-          <Row>
-            <Col col={12}>
-              <SectionHeader>Featured packages</SectionHeader>
-            </Col>
-          </Row>
-          <Row>
-            {featured?.Packages?.slice(0, 3).map((e) => (
-              <Col key={e.Id} md={6} lg={4}>
-                <FeaturedCard p={e} />
-              </Col>
-            ))}
-            {featured?.Packages?.slice(3, 7).map((e) => (
-              <Col key={e.Id} md={6} lg={4} xl={3}>
-                <FeaturedCard p={e} small />
-              </Col>
-            ))}
-          </Row>
-          <br />
-          <br />
+          {featured?.Packages?.length > 0 && (
+            <>
+              <Row>
+                <Col col={12}>
+                  <SectionHeader>Featured packages</SectionHeader>
+                </Col>
+              </Row>
+              <Row>
+                {featured?.Packages?.slice(0, 3).map((e) => (
+                  <Col key={e.Id} md={6} lg={4}>
+                    <FeaturedCard p={e} />
+                  </Col>
+                ))}
+                {featured?.Packages?.slice(3, 7).map((e) => (
+                  <Col key={e.Id} md={6} lg={4} xl={3}>
+                    <FeaturedCard p={e} small />
+                  </Col>
+                ))}
+              </Row>
+              <br />
+              <br />
+            </>
+          )}
           <Row>
             <Col col={12}>
               <SectionHeader>

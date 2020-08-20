@@ -25,6 +25,8 @@ export interface ISearchFilters {
   publisher?: string;
   description?: string;
   tags?: string;
+  sort?: string;
+  order?: number;
 }
 
 interface ISearchState {
