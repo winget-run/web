@@ -19,6 +19,9 @@ import Header, { SearchBar } from "../../../components/Header";
 import generateClipboard from "../../../utils/clipboard";
 import { Downloads } from "../../../utils/state/Downloads";
 import Custom404 from "../../404";
+import getStats, { IStatsResponse } from "../../../api/getStats";
+import StatsChart from "../../../components/StatsChart";
+import { padDate } from "../../../utils/helperFunctions";
 
 const TopBar = styled(SearchBar)`
   padding: 91px 0 !important;
@@ -180,41 +183,45 @@ const CodeBlock = styled.code`
   }
 `;
 
-export default function Pkg(props) {
+interface IProps {
+  data: IResponseSingle;
+  stats: IStatsResponse;
+}
+
+export default function Pkg({ data: { Package }, stats: { Stats } }: IProps) {
   const router = useRouter();
   const { org } = router.query;
   const { packages, addPackage, removePackage } = useContext(Downloads);
   const [showMoreVersions, setShowMoreVersions] = useState(false);
 
-  const data: IResponseSingle = props.data;
-
-  if (data.Package == null) {
+  if (Package == null) {
     return <Custom404 />;
   }
 
-  const p = data.Package;
-
-  const inDownloads = !!packages.find((e) => e.Package.Id === p.Id);
+  const inDownloads = !!packages.find((e) => e.Package.Id === Package.Id);
   const versionsAmount = 4;
-  const versionsLength = p.Versions.length;
+  const versionsLength = Package.Versions.length;
 
   return (
     <div className="container">
       <Head>
-        <title>Download and install {p.Latest.Name} with winget</title>
+        <title>Download and install {Package.Latest.Name} with winget</title>
         <meta
           name="description"
           content={
-            p.Latest.Description ||
-            `Download and install ${p.Latest.Name} and other packages with winget`
+            Package.Latest.Description ||
+            `Download and install ${Package.Latest.Name} and other packages with winget`
           }
         />
-        <meta name="twitter:title" content={`${p.Latest.Name} on winget.run`} />
+        <meta
+          name="twitter:title"
+          content={`${Package.Latest.Name} on winget.run`}
+        />
         <meta
           name="twitter:description"
           content={
-            p.Latest.Description ||
-            `Download and install ${p.Latest.Name} and other packages with winget`
+            Package.Latest.Description ||
+            `Download and install ${Package.Latest.Name} and other packages with winget`
           }
         />
       </Head>
@@ -225,16 +232,16 @@ export default function Pkg(props) {
               <Row>
                 <Col col={12}>
                   <h1>
-                    {p.Latest.Name}
-                    <span>v{p.Versions[0]}</span>
+                    {Package.Latest.Name}
+                    <span>v{Package.Versions[0]}</span>
                   </h1>
                   <Link href="/pkg/[org]" as={`/pkg/${org}`}>
                     <a>
-                      <h2>{p.Latest.Publisher}</h2>
+                      <h2>{Package.Latest.Publisher}</h2>
                     </a>
                   </Link>
-                  {p.Latest.Homepage && (
-                    <a href={p.Latest.Homepage} target="_blank">
+                  {Package.Latest.Homepage && (
+                    <a href={Package.Latest.Homepage} target="_blank">
                       <h3>
                         Visit website
                         <img
@@ -260,15 +267,16 @@ export default function Pkg(props) {
                 </SectionHeader>
                 <Add
                   onClick={() => {
-                    inDownloads ? removePackage(p) : addPackage(p);
+                    inDownloads ? removePackage(Package) : addPackage(Package);
                   }}
                   selected={inDownloads}
                   aria-label="Add to multi-download"
                 />
               </AddCard>
+              <StatsChart data={padDate(Stats?.Data)} />
               <VersionsCard>
                 <SectionHeader>Versions</SectionHeader>
-                {p.Versions.slice(
+                {Package.Versions.slice(
                   0,
                   showMoreVersions ? versionsLength : versionsAmount
                 ).map((e) => (
@@ -279,9 +287,9 @@ export default function Pkg(props) {
                         role="button"
                         tabIndex={0}
                         onClick={() => {
-                          generateClipboard([{ Package: p, Version: e }]);
+                          generateClipboard([{ Package: Package, Version: e }]);
                           toast.dark(
-                            `Copied ${p.Latest.Name}@${e} to clipboard!`
+                            `Copied ${Package.Latest.Name}@${e} to clipboard!`
                           );
                         }}
                         src={require("../../../components/icons/copy.svg")}
@@ -295,13 +303,15 @@ export default function Pkg(props) {
 
                 {versionsLength > versionsAmount && !showMoreVersions && (
                   <ShowMoreVersions onClick={() => setShowMoreVersions(true)}>
-                    Show {versionsLength - versionsAmount} older versions
+                    Show {versionsLength - versionsAmount} older version
+                    {versionsLength - versionsAmount === 1 ? "" : "s"}
                   </ShowMoreVersions>
                 )}
 
                 {versionsLength > versionsAmount && showMoreVersions && (
                   <ShowMoreVersions onClick={() => setShowMoreVersions(false)}>
-                    Hide {versionsLength - versionsAmount} older versions
+                    Hide {versionsLength - versionsAmount} older version
+                    {versionsLength - versionsAmount === 1 ? "" : "s"}
                   </ShowMoreVersions>
                 )}
               </VersionsCard>
@@ -310,15 +320,15 @@ export default function Pkg(props) {
               <section>
                 <SectionHeader>How to install</SectionHeader>
                 <CodeBlock>
-                  <span>winget</span> install -e --id {p.Id}
+                  <span>winget</span> install -e --id {Package.Id}
                   <img
                     role="button"
                     tabIndex={0}
                     onClick={() => {
                       generateClipboard([
-                        { Package: p, Version: p.Versions[0] },
+                        { Package: Package, Version: Package.Versions[0] },
                       ]);
-                      toast.dark(`Copied ${p.Latest.Name} to clipboard!`);
+                      toast.dark(`Copied ${Package.Latest.Name} to clipboard!`);
                     }}
                     src={require("../../../components/icons/copy.svg")}
                     alt=""
@@ -326,16 +336,16 @@ export default function Pkg(props) {
                   />
                 </CodeBlock>
               </section>
-              {p.Latest.Description && (
+              {Package.Latest.Description && (
                 <section>
-                  <SectionHeader>About {p.Latest.Name}</SectionHeader>
-                  <SectionInfo>{p.Latest.Description}</SectionInfo>
+                  <SectionHeader>About {Package.Latest.Name}</SectionHeader>
+                  <SectionInfo>{Package.Latest.Description}</SectionInfo>
                 </section>
               )}
-              {p.Latest.Tags?.length > 0 && (
+              {Package.Latest.Tags?.length > 0 && (
                 <section>
                   <SectionHeader>Tags</SectionHeader>
-                  {p.Latest.Tags.map((x) => (
+                  {Package.Latest.Tags.map((x) => (
                     <Link
                       key={x}
                       href={`/search?tags=${encodeURIComponent(x)}`}
@@ -345,20 +355,20 @@ export default function Pkg(props) {
                   ))}
                 </section>
               )}
-              {p.Latest.License && (
+              {Package.Latest.License && (
                 <section>
                   <SectionHeader>License</SectionHeader>
                   <SectionInfo>
-                    {p.Latest.LicenseUrl ? (
-                      <a href={p.Latest.LicenseUrl}>
+                    {Package.Latest.LicenseUrl ? (
+                      <a href={Package.Latest.LicenseUrl}>
                         <img
                           src={require("../../../components/icons/link.svg")}
                           alt=""
                         />
-                        {p.Latest.License}
+                        {Package.Latest.License}
                       </a>
                     ) : (
-                      p.Latest.License
+                      Package.Latest.License
                     )}
                   </SectionInfo>
                 </section>
@@ -375,10 +385,24 @@ export default function Pkg(props) {
 export async function getServerSideProps({ res, params }) {
   try {
     const data = await getPackages(`packages/${params.org}/${params.pkg}`);
+
+    const beforeDate = new Date();
+    beforeDate.setUTCDate(beforeDate.getDate() - 1);
+    const afterDate = new Date();
+    afterDate.setUTCDate(afterDate.getDate() - 8);
+
+    const stats = await getStats(
+      `${params.org}.${params.pkg}`,
+      "day",
+      beforeDate.toISOString(),
+      afterDate.toISOString()
+    );
+
     if (data.statusCode === 404) {
       throw new Error();
     }
-    return { props: { data } };
+
+    return { props: { data, stats } };
   } catch {
     res.statusCode = 404;
     return { props: { data: { Package: null } } };
