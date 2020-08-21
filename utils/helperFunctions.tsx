@@ -3,7 +3,6 @@ import { IStat, IStatsResponse } from "../api/getStats";
 import { ISearchFilters } from "./state/Search";
 
 const SAMPLING_PERIOD = 1000 * 60 * 60 * 24;
-const CURRENT_DATE_MS = Date.now() - SAMPLING_PERIOD;
 const SAMPLE_COUNT = 7;
 const { serverRuntimeConfig, publicRuntimeConfig } = getConfig();
 
@@ -77,8 +76,9 @@ export const parseQueryString = (obj: ISearchFilters): string =>
     .join("&");
 
 export const padDate = (stats: IStat[]) => {
+  const currentDateInMs = Date.now() - SAMPLING_PERIOD;
   const paddedStats = [...new Array(SAMPLE_COUNT).keys()].reverse().map((e) => {
-    const time = new Date(CURRENT_DATE_MS - e * SAMPLING_PERIOD);
+    const time = new Date(currentDateInMs - e * SAMPLING_PERIOD);
     time.setUTCHours(0, 0, 0, 0);
 
     return (
