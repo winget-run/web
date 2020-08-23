@@ -1,11 +1,11 @@
 import Link from "next/link";
-import React, { useContext } from "react";
-import { toast } from "react-toastify";
+import React, { useContext, useEffect, useState } from "react";
 import { IPackage } from "../api/getPackages";
 import generateClipboard from "../utils/clipboard";
 import { Downloads } from "../utils/state/Downloads";
 import styled from "../utils/theme";
 import { CardContainer, Add, Copy } from "./Card";
+import Tooltip from "./Tooltip";
 
 const FeaturedCardContainer = styled(CardContainer)<{
   selected?: boolean;
@@ -48,9 +48,17 @@ const Logo = styled.img<{ small: boolean }>`
 `;
 
 const FeaturedCard = ({ p, small }: { p: IPackage; small?: boolean }) => {
+  const [showTooltip, setShowTooltip] = useState(false);
   const [org, ...pkg] = p.Id.split(".");
   const { packages, addPackage, removePackage } = useContext(Downloads);
   const inPackages = !!packages.find((e) => e.Package.Id === p.Id);
+
+  useEffect(() => {
+    if (showTooltip) {
+      setTimeout(() => setShowTooltip(false), 1000);
+    }
+  }, [showTooltip]);
+
   return (
     <FeaturedCardContainer
       selected={inPackages}
@@ -73,12 +81,13 @@ const FeaturedCard = ({ p, small }: { p: IPackage; small?: boolean }) => {
       <Copy
         onClick={() => {
           generateClipboard([{ Package: p, Version: p.Versions[0] }]);
-          toast.dark(`Copied ${p.Latest.Name} to clipboard!`);
+          setShowTooltip(true);
         }}
         title="Copy the command to your clipboard"
       >
         <img src={require("./icons/copy.svg")} alt="" />
         Copy command
+        {showTooltip && <Tooltip />}
       </Copy>
     </FeaturedCardContainer>
   );

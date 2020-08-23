@@ -1,7 +1,6 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { toast } from "react-toastify";
 import Link from "next/link";
 import { mediaBreakpointDown } from "react-grid";
 
@@ -14,6 +13,8 @@ import getPackages, {
 } from "../../../api/getPackages";
 import DownloadModal from "../../../components/DownloadModal";
 import Tag from "../../../components/Tag";
+import Tooltip from "../../../components/Tooltip";
+import Version from "../../../components/Version";
 import styled from "../../../utils/theme";
 import Header, { SearchBar } from "../../../components/Header";
 import generateClipboard from "../../../utils/clipboard";
@@ -125,24 +126,6 @@ const ShowMoreVersions = styled.p`
   }
 `;
 
-const Version = styled.p`
-  font-weight: 500;
-  font-size: 20px;
-  margin: 0 0 20px;
-  ${mediaBreakpointDown("sm")} {
-    font-size: 16px;
-  }
-
-  span {
-    float: right;
-    cursor: pointer;
-  }
-
-  &:last-child {
-    margin: 0;
-  }
-`;
-
 const CodeBlock = styled.code`
   display: block;
   position: relative;
@@ -153,10 +136,8 @@ const CodeBlock = styled.code`
   color: ${(x) => x.theme.textFade};
   border-radius: 8px;
   background-color: ${(x) => x.theme.darkGrey};
+  word-break: break-word;
 
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
   ${mediaBreakpointDown("sm")} {
     font-size: 16px;
   }
@@ -167,19 +148,22 @@ const CodeBlock = styled.code`
   }
 
   img {
-    position: absolute;
-    right: 20px;
-    top: 50%;
-    transform: translateY(-50%);
-    padding: 0px;
     cursor: pointer;
     height: 25px;
     width: 22px;
   }
 
-  span {
+  span.highlight {
     font-family: inherit;
     color: #fcff9b;
+  }
+
+  span.button-wrap {
+    padding: 0px;
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
   }
 `;
 
@@ -193,6 +177,13 @@ export default function Pkg({ data: { Package }, stats: { Stats } }: IProps) {
   const { org } = router.query;
   const { packages, addPackage, removePackage } = useContext(Downloads);
   const [showMoreVersions, setShowMoreVersions] = useState(false);
+  const [showTooltip, setShowTooltip] = useState(false);
+
+  useEffect(() => {
+    if (showTooltip) {
+      setTimeout(() => setShowTooltip(false), 1000);
+    }
+  }, [showTooltip]);
 
   if (Package == null) {
     return <Custom404 />;
@@ -280,26 +271,8 @@ export default function Pkg({ data: { Package }, stats: { Stats } }: IProps) {
                   0,
                   showMoreVersions ? versionsLength : versionsAmount
                 ).map((e) => (
-                  <Version key={e}>
-                    {e}
-                    <span>
-                      <img
-                        role="button"
-                        tabIndex={0}
-                        onClick={() => {
-                          generateClipboard([{ Package: Package, Version: e }]);
-                          toast.dark(
-                            `Copied ${Package.Latest.Name}@${e} to clipboard!`
-                          );
-                        }}
-                        src={require("../../../components/icons/copy.svg")}
-                        alt=""
-                        aria-label={`Copy command for version ${e}`}
-                      />
-                    </span>
-                  </Version>
+                  <Version key={e} name={e} Package={Package} />
                 ))}
-                {}
 
                 {versionsLength > versionsAmount && !showMoreVersions && (
                   <ShowMoreVersions onClick={() => setShowMoreVersions(true)}>
@@ -320,20 +293,24 @@ export default function Pkg({ data: { Package }, stats: { Stats } }: IProps) {
               <section>
                 <SectionHeader>How to install</SectionHeader>
                 <CodeBlock>
-                  <span>winget</span> install -e --id {Package.Id}
-                  <img
-                    role="button"
-                    tabIndex={0}
-                    onClick={() => {
-                      generateClipboard([
-                        { Package: Package, Version: Package.Versions[0] },
-                      ]);
-                      toast.dark(`Copied ${Package.Latest.Name} to clipboard!`);
-                    }}
-                    src={require("../../../components/icons/copy.svg")}
-                    alt=""
-                    aria-label="Copy command"
-                  />
+                  <span className="highlight">winget</span> install -e --id{" "}
+                  {Package.Id}
+                  <span className="button-wrap">
+                    <img
+                      role="button"
+                      tabIndex={0}
+                      onClick={() => {
+                        generateClipboard([
+                          { Package: Package, Version: Package.Versions[0] },
+                        ]);
+                        setShowTooltip(true);
+                      }}
+                      src={require("../../../components/icons/copy.svg")}
+                      alt=""
+                      aria-label="Copy command"
+                    />
+                    {showTooltip && <Tooltip />}
+                  </span>
                 </CodeBlock>
               </section>
               {Package.Latest.Description && (
