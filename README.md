@@ -1,30 +1,67 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/zeit/next.js/tree/canary/packages/create-next-app).
+# Winget.run React App
 
-## Getting Started
+The frontend to [winget.run](https://winget.run), allowing users to search, discover, and install winget packages effortlessly without any third-party programs. Package manifests are periodically fetched from the GitHub API to prevent hitting ratelimits.
 
-First, run the development server:
+If you wish to use our API, please take a look at [our docs](https://docs.winget.run). All other non-documentation info will be provided in this readme.
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+## Contents
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- [Installation](#installation)
+- [Development](#development)
+- [Deployment](#deployment)
+- [Contributing](#contributing)
+- [Authors](#authors)
+- [Acknowledgments](#acknowledgments)
+- [License](#license)
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+## Installation
 
-## Learn More
+A Docker image is built for the project in our CI/CD pipeline on the develop, release/\* and master branches. These can be found [here](https://github.com/winget-run/web/packages/237282). A detailed example of building and running the project without docker can be found in the [development](#Development) section.
 
-To learn more about Next.js, take a look at the following resources:
+## Development
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Local development requires the following software:
 
-You can check out [the Next.js GitHub repository](https://github.com/zeit/next.js/) - your feedback and contributions are welcome!
+- NodeJS
+- Yarn
 
-## Deploy on Vercel
+If everything is set up correctly, run the following command for an optimal development environment, which will make Next.js watch for changes and statefully hot-reload.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/import?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- `yarn dev` - To use the development API
+- `yarn dev:prod` - To use the production API
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Tests and linting can be run using the following commands:
+
+- `yarn test`
+- `yarn lint`
+
+To create and serve a production-ready bundle, run:
+
+- `yarn build`
+- `yarn serve`
+
+For any additional commands, check out the package.json.
+
+## Deployment
+
+We use GitHub Actions CI/CD and Kubernetes for our deployments. All required into regarding deployments can be found in /.github and /chart.
+
+## Contributing
+
+Issues and pull requests are welcome. We currently don't have any templates (at the time of writing) so a pr for those would be nice as well. If you wish to check the progress of current tickets, we have boards set up using [ZenHub](https://www.zenhub.com/).
+
+We currently don't have tests, but will add them soon™.
+
+## Authors
+
+- **Matthew Watt** _(MattheousDT)_
+- **Lukasz Niezabitowski** _(Dragon1320)_
+- **Ryan Larkin** _(rlarkin212)_
+
+## Acknowledgments
+
+- Myself, for not ending it sooner. I'm proud of myself.
+
+## License
+
+Ask us if you want to use the code, or suggest a license and make a pr.
