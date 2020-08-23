@@ -12,7 +12,6 @@ export default class MyApp extends App {
         {globalStyles}
         <ThemeProvider theme={theme}>
           <Component {...pageProps} />
-          <ToastContainer autoClose={2000} hideProgressBar />
         </ThemeProvider>
       </StateWrapper>
     );

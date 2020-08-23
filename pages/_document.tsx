@@ -32,7 +32,7 @@ export const globalStyles = (
         cursor: pointer;
         color: inherit;
       }
-      a:hover :first-of-type {
+      a:hover > :first-of-type {
         text-decoration: underline;
       }
     `}
