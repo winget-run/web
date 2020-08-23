@@ -76,7 +76,7 @@ export const SectionHeaderWithFilters = styled(SectionHeader)`
     flex-direction: column;
   }
   > div {
-    &:first-child {
+    &:first-of-type {
       flex: auto;
       position: relative;
       margin: 0 0 30px;

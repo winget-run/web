@@ -232,7 +232,11 @@ export default function Pkg({ data: { Package }, stats: { Stats } }: IProps) {
                     </a>
                   </Link>
                   {Package.Latest.Homepage && (
-                    <a href={Package.Latest.Homepage} target="_blank">
+                    <a
+                      href={Package.Latest.Homepage}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       <h3>
                         Visit website
                         <img

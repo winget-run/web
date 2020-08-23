@@ -32,7 +32,7 @@ export const globalStyles = (
         cursor: pointer;
         color: inherit;
       }
-      a:hover :first-child {
+      a:hover > :first-of-type {
         text-decoration: underline;
       }
     `}
@@ -52,6 +52,16 @@ export default class MyDocument extends Document {
   static async getInitialProps(ctx) {
     const initialProps = await Document.getInitialProps(ctx);
     const styles = extractCritical(initialProps.html);
+
+    if (ctx.pathname !== "/404") {
+      ctx.res.setHeader("X-Frame-Options", "DENY");
+      ctx.res.setHeader(
+        "X-PoweredBy",
+        "https://www.youtube.com/watch?v=6n3pFFPSlW4"
+      );
+      ctx.res.setHeader("Cache-Control", "public, max-age=604800, immutable");
+    }
+
     return {
       ...initialProps,
       styles: (

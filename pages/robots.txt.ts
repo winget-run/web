@@ -11,6 +11,11 @@ if (serverRuntimeConfig.K8S_ENV === "dev") {
 
 class Sitemap extends React.Component {
   static async getInitialProps({ res }) {
+    res.setHeader("X-Frame-Options", "DENY");
+    res.setHeader("X-PoweredBy", "https://www.youtube.com/watch?v=6n3pFFPSlW4");
+    res.setHeader("Cache-Control", "public, max-age=604800, immutable");
+    res.setHeader("Content-Type", "text/plain");
+
     res.write(mrRoboto);
     res.end();
   }

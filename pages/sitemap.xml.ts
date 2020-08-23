@@ -48,6 +48,10 @@ class Sitemap extends React.Component {
       URL = "dev-api.winget.run";
     }
 
+    res.setHeader("X-Frame-Options", "DENY");
+    res.setHeader("X-PoweredBy", "https://www.youtube.com/watch?v=6n3pFFPSlW4");
+    res.setHeader("Cache-Control", "public, max-age=604800, immutable");
+
     try {
       const data = await fetch(`https://${URL}/v1/list`).then((e) => e.json());
       res.setHeader("Content-Type", "text/xml");
