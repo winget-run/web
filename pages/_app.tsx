@@ -4,9 +4,6 @@ import { globalStyles } from "./_document";
 import { theme } from "../utils/theme";
 import StateWrapper from "../utils/state";
 
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-
 export default class MyApp extends App {
   render() {
     const { Component, pageProps } = this.props;

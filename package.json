@@ -20,9 +20,9 @@
     "isomorphic-unfetch": "^3.0.0",
     "next": "9.4.2",
     "react": "16.13.1",
+    "react-charts": "^2.0.0-beta.7",
     "react-dom": "16.13.1",
-    "react-grid": "^4.0.4",
-    "react-toastify": "^6.0.5"
+    "react-grid": "^4.0.4"
   },
   "devDependencies": {
     "@emotion/babel-preset-css-prop": "^10.0.27",

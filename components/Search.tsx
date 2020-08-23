@@ -383,7 +383,7 @@ const Search = ({ inNav, hidden, resultsHidden }: IProps) => {
                 </p>
                 <p>
                   <code>tags:</code> Searches for packages with a specific tags
-                  (comma seperated).
+                  (comma separated).
                 </p>
               </SearchOptions>
             )}
