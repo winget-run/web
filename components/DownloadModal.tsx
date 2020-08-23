@@ -299,6 +299,7 @@ const DownloadModal = () => {
             className="clear"
             src={require("./icons/clear.svg")}
             alt="Clear all packages"
+            title="Clear all packages"
             onClick={clearPackages}
           />
         </h3>
