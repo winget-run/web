@@ -4,9 +4,9 @@ import { Container, Row, Col } from "../utils/grid";
 import Header from "../components/Header";
 import DownloadModal from "../components/DownloadModal";
 import getPackages, { IResponse } from "../api/getPackages";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import LoadMore from "../components/LoadMore";
-import { Router, useRouter } from "next/router";
+import { useRouter } from "next/router";
 import {
   SectionHeaderWithFilters,
   SortSelectWrapper,
@@ -14,7 +14,6 @@ import {
   OrderButton,
 } from "../components/SectionHeaderWithFilters";
 import { parseQueryString } from "../utils/helperFunctions";
-import styled from "../utils/theme";
 
 const orderOptions = {
   Ascending: 1,
@@ -32,7 +31,9 @@ export default function Search({ data }: { data: IResponse }) {
   const [packages, setPackages] = useState(data.Packages);
   const [page, setPage] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
-  const [order, setOrder] = useState(parseInt(query.order as string) || null);
+  const [order, setOrder] = useState(
+    parseInt(query.order as string) || orderOptions.Ascending
+  );
   const [sort, setSort] = useState((query.sort as string) || null);
 
   const loadMore = () => {
@@ -49,7 +50,7 @@ export default function Search({ data }: { data: IResponse }) {
   };
 
   const handleSetOrder = () => {
-    if (order === null || order === orderOptions.Descending) {
+    if (order === orderOptions.Descending) {
       setOrder(orderOptions.Ascending);
     } else {
       setOrder(orderOptions.Descending);
@@ -58,7 +59,6 @@ export default function Search({ data }: { data: IResponse }) {
 
   useEffect(() => {
     const additions = { order, sort };
-    order === null && delete additions.order;
     sort === null && delete additions.sort;
 
     setIsLoading(true);
@@ -123,7 +123,7 @@ export default function Search({ data }: { data: IResponse }) {
                         setSort(e.target.value);
                       }}
                     >
-                      <option value="">Relevancy</option>
+                      <option value="">Relevance</option>
                       {Object.entries(sortOptions).map((e) => (
                         <option value={e[1]}>{e[0]}</option>
                       ))}
@@ -137,8 +137,12 @@ export default function Search({ data }: { data: IResponse }) {
                     onClick={handleSetOrder}
                     disabled={sort === null || sort === ""}
                   >
-                    <span>{order === 1 ? "Ascending" : "Descending"}</span>
-                    {order === 1 ? (
+                    <span>
+                      {order === orderOptions.Ascending
+                        ? "Ascending"
+                        : "Descending"}
+                    </span>
+                    {order === orderOptions.Ascending ? (
                       <img
                         src={require("../components/icons/sort-amount-up.svg")}
                         alt=""
