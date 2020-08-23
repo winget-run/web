@@ -1,5 +1,4 @@
-import { useContext } from "react";
-import { toast } from "react-toastify";
+import { useContext, useEffect, useState } from "react";
 import Link from "next/link";
 import { mediaBreakpointDown } from "react-grid";
 
@@ -8,6 +7,7 @@ import { Downloads } from "../utils/state/Downloads";
 import styled from "../utils/theme";
 import generateClipboard from "../utils/clipboard";
 import { getIcon } from "../utils/helperFunctions";
+import Tooltip from "./Tooltip";
 
 export const CardContainer = styled.div<{ selected?: boolean }>`
   border-radius: 8px;
@@ -132,8 +132,16 @@ export const CardDesc = styled.p`
 
 const Card = ({ p }: { p: IPackage }) => {
   const [org, ...pkg] = p.Id.split(".");
+  const [showTooltip, setShowTooltip] = useState(false);
   const { packages, addPackage, removePackage } = useContext(Downloads);
   const inPackages = !!packages.find((e) => e.Package.Id === p.Id);
+
+  useEffect(() => {
+    if (showTooltip) {
+      setTimeout(() => setShowTooltip(false), 1000);
+    }
+  }, [showTooltip]);
+
   return (
     <CardContainer selected={inPackages}>
       <Add
@@ -164,12 +172,13 @@ const Card = ({ p }: { p: IPackage }) => {
       <Copy
         onClick={() => {
           generateClipboard([{ Package: p, Version: p.Versions[0] }]);
-          toast.dark(`Copied ${p.Latest.Name} to clipboard!`);
+          setShowTooltip(true);
         }}
         title="Copy the command to your clipboard"
       >
         <img src={require("./icons/copy.svg")} alt="" />
         Copy command
+        {showTooltip && <Tooltip />}
       </Copy>
     </CardContainer>
   );

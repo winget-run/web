@@ -1,5 +1,4 @@
 import { useContext, useState, useEffect } from "react";
-import { toast } from "react-toastify";
 import { mediaBreakpointDown } from "react-grid";
 
 import styled from "../utils/theme";
@@ -8,6 +7,7 @@ import generateClipboard from "../utils/clipboard";
 import generateDownload from "../utils/download";
 import { CardIcon } from "./Card";
 import { getIcon } from "../utils/helperFunctions";
+import Tooltip from "./Tooltip";
 
 interface IVisibleExpanded {
   visible: boolean;
@@ -238,6 +238,7 @@ const ButtonContainer = styled.div`
 `;
 
 const CopyButton = styled.button`
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -276,6 +277,7 @@ const DownloadModal = () => {
     clearPackages,
   } = useContext(Downloads);
   const [expanded, setExpanded] = useState(false);
+  const [showTooltip, setShowTooltip] = useState(false);
 
   const shouldBeVisible = packages.length > 0;
 
@@ -284,6 +286,12 @@ const DownloadModal = () => {
       setExpanded(false);
     }
   }, [packages]);
+
+  useEffect(() => {
+    if (showTooltip) {
+      setTimeout(() => setShowTooltip(false), 1000);
+    }
+  }, [showTooltip]);
 
   return (
     <>
@@ -345,11 +353,12 @@ const DownloadModal = () => {
           <CopyButton
             onClick={() => {
               generateClipboard(packages);
-              toast.dark(`Copied packages to clipboard!`);
+              setShowTooltip(true);
             }}
           >
             <img src={require("./icons/copy.svg")} alt="" />
             Copy
+            {showTooltip && <Tooltip />}
           </CopyButton>
           <DownloadButton onClick={() => generateDownload(packages)}>
             <img src={require("./icons/download.svg")} alt="" />

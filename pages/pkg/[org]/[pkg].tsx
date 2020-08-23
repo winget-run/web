@@ -1,7 +1,6 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { toast } from "react-toastify";
 import Link from "next/link";
 import { mediaBreakpointDown } from "react-grid";
 
@@ -14,6 +13,7 @@ import getPackages, {
 } from "../../../api/getPackages";
 import DownloadModal from "../../../components/DownloadModal";
 import Tag from "../../../components/Tag";
+import Tooltip from "../../../components/Tooltip";
 import styled from "../../../utils/theme";
 import Header, { SearchBar } from "../../../components/Header";
 import generateClipboard from "../../../utils/clipboard";
@@ -133,7 +133,8 @@ const Version = styled.p`
     font-size: 16px;
   }
 
-  span {
+  span:not([role="tooltip"]) {
+    position: relative;
     float: right;
     cursor: pointer;
   }
@@ -153,10 +154,8 @@ const CodeBlock = styled.code`
   color: ${(x) => x.theme.textFade};
   border-radius: 8px;
   background-color: ${(x) => x.theme.darkGrey};
+  word-break: break-word;
 
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
   ${mediaBreakpointDown("sm")} {
     font-size: 16px;
   }
@@ -167,19 +166,22 @@ const CodeBlock = styled.code`
   }
 
   img {
-    position: absolute;
-    right: 20px;
-    top: 50%;
-    transform: translateY(-50%);
-    padding: 0px;
     cursor: pointer;
     height: 25px;
     width: 22px;
   }
 
-  span {
+  span.highlight {
     font-family: inherit;
     color: #fcff9b;
+  }
+
+  span.button-wrap {
+    padding: 0px;
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
   }
 `;
 
@@ -193,6 +195,7 @@ export default function Pkg({ data: { Package }, stats: { Stats } }: IProps) {
   const { org } = router.query;
   const { packages, addPackage, removePackage } = useContext(Downloads);
   const [showMoreVersions, setShowMoreVersions] = useState(false);
+  const [showTooltip, setShowTooltip] = useState(false);
 
   if (Package == null) {
     return <Custom404 />;
@@ -201,6 +204,12 @@ export default function Pkg({ data: { Package }, stats: { Stats } }: IProps) {
   const inDownloads = !!packages.find((e) => e.Package.Id === Package.Id);
   const versionsAmount = 4;
   const versionsLength = Package.Versions.length;
+
+  useEffect(() => {
+    if (showTooltip) {
+      setTimeout(() => setShowTooltip(false), 1000);
+    }
+  }, [showTooltip]);
 
   return (
     <div className="container">
@@ -279,27 +288,39 @@ export default function Pkg({ data: { Package }, stats: { Stats } }: IProps) {
                 {Package.Versions.slice(
                   0,
                   showMoreVersions ? versionsLength : versionsAmount
-                ).map((e) => (
-                  <Version key={e}>
-                    {e}
-                    <span>
-                      <img
-                        role="button"
-                        tabIndex={0}
-                        onClick={() => {
-                          generateClipboard([{ Package: Package, Version: e }]);
-                          toast.dark(
-                            `Copied ${Package.Latest.Name}@${e} to clipboard!`
-                          );
-                        }}
-                        src={require("../../../components/icons/copy.svg")}
-                        alt=""
-                        aria-label={`Copy command for version ${e}`}
-                      />
-                    </span>
-                  </Version>
-                ))}
-                {}
+                ).map((e) => {
+                  const [showVersionTooltip, setShowVersionTooltip] = useState(
+                    false
+                  );
+
+                  useEffect(() => {
+                    if (showVersionTooltip) {
+                      setTimeout(() => setShowVersionTooltip(false), 1000);
+                    }
+                  }, [showVersionTooltip]);
+
+                  return (
+                    <Version key={e}>
+                      {e}
+                      <span>
+                        <img
+                          role="button"
+                          tabIndex={0}
+                          onClick={() => {
+                            generateClipboard([
+                              { Package: Package, Version: e },
+                            ]);
+                            setShowVersionTooltip(true);
+                          }}
+                          src={require("../../../components/icons/copy.svg")}
+                          alt=""
+                          aria-label={`Copy command for version ${e}`}
+                        />
+                        {showVersionTooltip && <Tooltip />}
+                      </span>
+                    </Version>
+                  );
+                })}
 
                 {versionsLength > versionsAmount && !showMoreVersions && (
                   <ShowMoreVersions onClick={() => setShowMoreVersions(true)}>
@@ -320,20 +341,24 @@ export default function Pkg({ data: { Package }, stats: { Stats } }: IProps) {
               <section>
                 <SectionHeader>How to install</SectionHeader>
                 <CodeBlock>
-                  <span>winget</span> install -e --id {Package.Id}
-                  <img
-                    role="button"
-                    tabIndex={0}
-                    onClick={() => {
-                      generateClipboard([
-                        { Package: Package, Version: Package.Versions[0] },
-                      ]);
-                      toast.dark(`Copied ${Package.Latest.Name} to clipboard!`);
-                    }}
-                    src={require("../../../components/icons/copy.svg")}
-                    alt=""
-                    aria-label="Copy command"
-                  />
+                  <span className="highlight">winget</span> install -e --id{" "}
+                  {Package.Id}
+                  <span className="button-wrap">
+                    <img
+                      role="button"
+                      tabIndex={0}
+                      onClick={() => {
+                        generateClipboard([
+                          { Package: Package, Version: Package.Versions[0] },
+                        ]);
+                        setShowTooltip(true);
+                      }}
+                      src={require("../../../components/icons/copy.svg")}
+                      alt=""
+                      aria-label="Copy command"
+                    />
+                    {showTooltip && <Tooltip />}
+                  </span>
                 </CodeBlock>
               </section>
               {Package.Latest.Description && (
