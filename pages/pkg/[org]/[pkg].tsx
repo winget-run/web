@@ -14,6 +14,7 @@ import getPackages, {
 import DownloadModal from "../../../components/DownloadModal";
 import Tag from "../../../components/Tag";
 import Tooltip from "../../../components/Tooltip";
+import Version from "../../../components/Version";
 import styled from "../../../utils/theme";
 import Header, { SearchBar } from "../../../components/Header";
 import generateClipboard from "../../../utils/clipboard";
@@ -125,25 +126,6 @@ const ShowMoreVersions = styled.p`
   }
 `;
 
-const Version = styled.p`
-  font-weight: 500;
-  font-size: 20px;
-  margin: 0 0 20px;
-  ${mediaBreakpointDown("sm")} {
-    font-size: 16px;
-  }
-
-  span:not([role="tooltip"]) {
-    position: relative;
-    float: right;
-    cursor: pointer;
-  }
-
-  &:last-child {
-    margin: 0;
-  }
-`;
-
 const CodeBlock = styled.code`
   display: block;
   position: relative;
@@ -197,6 +179,12 @@ export default function Pkg({ data: { Package }, stats: { Stats } }: IProps) {
   const [showMoreVersions, setShowMoreVersions] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
 
+  useEffect(() => {
+    if (showTooltip) {
+      setTimeout(() => setShowTooltip(false), 1000);
+    }
+  }, [showTooltip]);
+
   if (Package == null) {
     return <Custom404 />;
   }
@@ -204,12 +192,6 @@ export default function Pkg({ data: { Package }, stats: { Stats } }: IProps) {
   const inDownloads = !!packages.find((e) => e.Package.Id === Package.Id);
   const versionsAmount = 4;
   const versionsLength = Package.Versions.length;
-
-  useEffect(() => {
-    if (showTooltip) {
-      setTimeout(() => setShowTooltip(false), 1000);
-    }
-  }, [showTooltip]);
 
   return (
     <div className="container">
@@ -288,39 +270,9 @@ export default function Pkg({ data: { Package }, stats: { Stats } }: IProps) {
                 {Package.Versions.slice(
                   0,
                   showMoreVersions ? versionsLength : versionsAmount
-                ).map((e) => {
-                  const [showVersionTooltip, setShowVersionTooltip] = useState(
-                    false
-                  );
-
-                  useEffect(() => {
-                    if (showVersionTooltip) {
-                      setTimeout(() => setShowVersionTooltip(false), 1000);
-                    }
-                  }, [showVersionTooltip]);
-
-                  return (
-                    <Version key={e}>
-                      {e}
-                      <span>
-                        <img
-                          role="button"
-                          tabIndex={0}
-                          onClick={() => {
-                            generateClipboard([
-                              { Package: Package, Version: e },
-                            ]);
-                            setShowVersionTooltip(true);
-                          }}
-                          src={require("../../../components/icons/copy.svg")}
-                          alt=""
-                          aria-label={`Copy command for version ${e}`}
-                        />
-                        {showVersionTooltip && <Tooltip />}
-                      </span>
-                    </Version>
-                  );
-                })}
+                ).map((e) => (
+                  <Version key={e} name={e} Package={Package} />
+                ))}
 
                 {versionsLength > versionsAmount && !showMoreVersions && (
                   <ShowMoreVersions onClick={() => setShowMoreVersions(true)}>
