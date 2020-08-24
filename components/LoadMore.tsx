@@ -70,13 +70,9 @@ const LoadMore = ({ isLoading, onClick }: IProps) => {
     <Button onClick={onClick}>
       Load more packages
       {isLoading ? (
-        <img
-          className="spinner"
-          src={require("./icons/spinner.svg")}
-          alt="Loading"
-        />
+        <img className="spinner" src={require("./icons/spinner.svg")} alt="" />
       ) : (
-        <img src={require("./icons/plus.svg")} alt="Load More" />
+        <img src={require("./icons/plus.svg")} alt="" />
       )}
     </Button>
   );

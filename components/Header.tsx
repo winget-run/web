@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { mediaBreakpointDown } from "react-grid";
+import { mediaBreakpointDown, mediaBreakpointUp } from "react-grid";
 import Link from "next/link";
 
 import styled from "../utils/theme";
@@ -65,11 +65,21 @@ const Links = styled(Col)`
   ${mediaBreakpointDown("sm")} {
     flex-grow: 0;
   }
+
+  &.socials {
+    flex: 1 0;
+    justify-content: flex-end;
+    > a {
+      ${mediaBreakpointUp("lg")} {
+        display: none;
+      }
+    }
+  }
 `;
 
 const NavLink = styled.h2`
   position: relative;
-  margin: 0 20px 0 0;
+  margin: 0 30px 0 0;
   display: inline-block;
   font-size: 20px;
   font-weight: bold;
@@ -95,6 +105,10 @@ const NavLink = styled.h2`
       height: 4px;
       transition: 150ms cubic-bezier(0.26, 1.29, 0.7, 1.18);
     }
+  }
+
+  &:last-of-type {
+    margin: 0;
   }
 
   a:hover {
@@ -143,7 +157,7 @@ const Header = (props: IProps) => {
       <TopBar>
         <Container>
           <Row css={{ justifyContent: "between", alignItems: "center" }}>
-            <Links col="auto">
+            <Links col="auto" role="nav">
               <Link href="/" as="/">
                 <a>
                   <NavIcon
@@ -158,24 +172,25 @@ const Header = (props: IProps) => {
                   Install winget
                 </a>
               </NavLink>
+              <NavLink>
+                <a href="https://github.com/winget-run">GitHub</a>
+              </NavLink>
+              <NavLink>
+                <a href="https://ko-fi.com/wingetdotrun">Support us</a>
+              </NavLink>
             </Links>
-            <Links
-              col="auto"
-              style={{ flex: "1 0", justifyContent: "flex-end" }}
-            >
+            <Links col="auto" className="socials">
               <Search hidden={!showNavSearch} inNav />
               <a href="https://ko-fi.com/wingetdotrun">
                 <SocialIcon
                   src={require("./icons/kofi.svg")}
                   alt="Support us on Ko-Fi!"
-                  title="Support us on Ko-Fi!"
                 />
               </a>
               <a href="https://github.com/winget-run">
                 <SocialIcon
                   src={require("./icons/github.svg")}
                   alt="View on GitHub"
-                  title="Contribute on GitHub"
                 />
               </a>
             </Links>
@@ -189,7 +204,9 @@ const Header = (props: IProps) => {
           <Container>
             <Row>
               <SearchContainer fullWidth={props.showSearch}>
-                <h1>{props.title}</h1>
+                <h1 role="heading" aria-level={1}>
+                  {props.title}
+                </h1>
                 {props.showSearch && <Search resultsHidden={showNavSearch} />}
               </SearchContainer>
             </Row>
