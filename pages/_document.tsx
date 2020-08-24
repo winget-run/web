@@ -53,7 +53,7 @@ export default class MyDocument extends Document {
     const initialProps = await Document.getInitialProps(ctx);
     const styles = extractCritical(initialProps.html);
 
-    if (ctx.pathname !== "/404") {
+    if (ctx.pathname !== "/404" && ctx.pathname !== "/healthz") {
       ctx.res.setHeader("X-Frame-Options", "DENY");
       ctx.res.setHeader(
         "X-PoweredBy",
