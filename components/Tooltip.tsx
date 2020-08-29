@@ -17,9 +17,9 @@ const StyledTooltip = styled.span`
   padding: 10px 15px;
   color: white;
   font-size: 16px;
-  bottom: -10px;
+  top: -10px;
   left: 50%;
-  transform: translate(-50%, 100%);
+  transform: translate(-50%, -100%);
   z-index: 10;
   user-select: none;
   pointer-events: none;
@@ -29,13 +29,13 @@ const StyledTooltip = styled.span`
   &::before {
     content: "";
     position: absolute;
-    top: 0;
+    bottom: 1px;
     left: 50%;
-    transform: translate(-50%, -100%);
+    transform: translate(-50%, 100%);
 
     border-style: solid;
-    border-width: 0 7.5px 8px 7.5px;
-    border-color: transparent transparent ${(x) => x.theme.darkGrey} transparent;
+    border-width: 7.5px 8px 0 8px;
+    border-color: ${(x) => x.theme.darkGrey} transparent transparent transparent;
   }
 `;
 

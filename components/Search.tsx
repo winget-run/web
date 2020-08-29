@@ -208,6 +208,7 @@ const Search = ({ inNav, hidden, resultsHidden }: IProps) => {
     updateClear,
   } = useContext(SearchContext);
   const debouncedSearchTerm = useDebounce(search?.term ?? "", 400);
+  const debouncedSearchFilters = useDebounce(search?.filters, 400);
   const [focus, setFocus] = useState(false);
   const [showSearchOptions, setShowSearchOptions] = useState(false);
 
@@ -317,9 +318,12 @@ const Search = ({ inNav, hidden, resultsHidden }: IProps) => {
                       org={e.Latest.Publisher}
                       desc={
                         e?.Latest?.Description &&
-                        regexWrapJSX(e.Latest.Description, [
-                          new RegExp(debouncedSearchTerm, "gi"),
-                        ])
+                        regexWrapJSX(
+                          e.Latest.Description,
+                          Object.values(debouncedSearchFilters).map(
+                            (x) => new RegExp(x, "gi")
+                          )
+                        )
                       }
                       url={e.Latest.Homepage}
                       iconUrl={e.IconUrl}
