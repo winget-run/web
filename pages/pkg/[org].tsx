@@ -1,6 +1,6 @@
 import Head from "next/head";
 import Card from "../../components/Card";
-import { Container, Row, Col } from "styled-bootstrap-grid";
+import { Container, Row, Col } from "../../utils/grid";
 import Header from "../../components/Header";
 import getPackages, { IResponse, IPackage } from "../../api/getPackages";
 import { useState } from "react";
@@ -81,11 +81,15 @@ export default function Org({ data }: { data: IResponse }) {
   );
 }
 
-export async function getServerSideProps({ params }) {
+export async function getServerSideProps({ res, params }) {
   try {
     const data = await getPackages(`packages/${params.org}`);
+    if (data.Packages.length === 0) {
+      throw new Error();
+    }
     return { props: { data } };
   } catch {
+    res.statusCode = 404;
     return { props: { data: { Packages: null } } };
   }
 }

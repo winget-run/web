@@ -4,12 +4,14 @@ import { useReducer, createContext } from "react";
 enum SearchActionType {
   Search = "search",
   Results = "results",
+  Term = "term",
   ClearResults = "clearResults",
   Clear = "clear",
 }
 
 type ISearchAction =
   | { type: SearchActionType.Search; payload: ISearchFilters }
+  | { type: SearchActionType.Term; payload: string }
   | { type: SearchActionType.Results; payload: IResponse }
   | {
       type: SearchActionType.Clear | SearchActionType.ClearResults;
@@ -17,18 +19,26 @@ type ISearchAction =
     };
 
 // can be expanded later to add more search functionality
-interface ISearchFilters {
+export interface ISearchFilters {
   query?: string;
+  name?: string;
+  publisher?: string;
+  description?: string;
+  tags?: string;
+  sort?: string;
+  order?: number;
 }
 
 interface ISearchState {
   filters?: ISearchFilters;
+  term?: string;
   results?: IResponse;
 }
 
 interface ISearchContext {
   search: ISearchState;
   updateSearch: (filters: ISearchFilters) => void;
+  updateSearchTerm: (term: string) => void;
   updateResults: (results: IResponse) => void;
   updateClearResults: () => void;
   updateClear: () => void;
@@ -44,6 +54,9 @@ const searchReducer = (state: ISearchState, action: ISearchAction) => {
         filters: action.payload,
       };
       // break;
+    }
+    case "term": {
+      return { ...state, term: action.payload };
     }
     case "results": {
       return {
@@ -76,6 +89,9 @@ const SearchWrapper = ({ children }) => {
   const updateSearch = (filters) =>
     dispatch({ type: SearchActionType.Search, payload: filters });
 
+  const updateSearchTerm = (term: string) =>
+    dispatch({ type: SearchActionType.Term, payload: term });
+
   const updateResults = (results) =>
     dispatch({ type: SearchActionType.Results, payload: results });
 
@@ -90,6 +106,7 @@ const SearchWrapper = ({ children }) => {
       value={{
         search: state,
         updateSearch,
+        updateSearchTerm,
         updateResults,
         updateClearResults,
         updateClear,

@@ -1,23 +1,28 @@
+import { useState, useContext, useEffect } from "react";
 import Head from "next/head";
+import { useRouter } from "next/router";
+import Link from "next/link";
+import { mediaBreakpointDown } from "react-grid";
+
 import { CardContainer, Add } from "../../../components/Card";
-import { Container, Row, Col, media } from "styled-bootstrap-grid";
-import useSWR from "swr";
+import { Container, Row, Col } from "../../../utils/grid";
 import getPackages, {
   IResponse,
   IPackage,
   IResponseSingle,
 } from "../../../api/getPackages";
-import { useState, useContext } from "react";
-import { useRouter } from "next/router";
 import DownloadModal from "../../../components/DownloadModal";
 import Tag from "../../../components/Tag";
-import { styled } from "../../../utils/theme";
+import Tooltip from "../../../components/Tooltip";
+import Version from "../../../components/Version";
+import styled from "../../../utils/theme";
 import Header, { SearchBar } from "../../../components/Header";
 import generateClipboard from "../../../utils/clipboard";
 import { Downloads } from "../../../utils/state/Downloads";
-import { toast } from "react-toastify";
-import Link from "next/link";
 import Custom404 from "../../404";
+import getStats, { IStatsResponse } from "../../../api/getStats";
+import StatsChart from "../../../components/StatsChart";
+import { padDate } from "../../../utils/helperFunctions";
 
 const TopBar = styled(SearchBar)`
   padding: 91px 0 !important;
@@ -25,32 +30,29 @@ const TopBar = styled(SearchBar)`
   margin-bottom: 30px;
 
   h1 {
-    font-size: 36px;
+    font-size: 60px;
     line-height: 1.2;
     margin: 0;
-
-    ${media.md`
-      font-size: 60px;
-    `}
+    ${mediaBreakpointDown("sm")} {
+      font-size: 36px;
+    }
 
     span {
-      font-size: 22px;
-      margin-left: 15px;
-
-      ${media.md`
       font-size: 32px;
-    `}
+      margin-left: 15px;
+      ${mediaBreakpointDown("sm")} {
+        font-size: 22px;
+      }
     }
   }
 
   h2 {
-    font-size: 26px;
-    margin: 15px 0 0;
-
-    ${media.md`
-      margin: 0;
-      font-size: 32px;
-    `}
+    margin: 0;
+    font-size: 32px;
+    ${mediaBreakpointDown("sm")} {
+      font-size: 26px;
+      margin: 15px 0 0;
+    }
   }
   h3 {
     font-size: 18px;
@@ -62,10 +64,10 @@ const TopBar = styled(SearchBar)`
 `;
 
 const CustomRow = styled(Row)`
-  flex-direction: column-reverse;
-  ${media.lg`
-    flex-direction: row;
-  `};
+  flex-direction: row;
+  ${mediaBreakpointDown("md")} {
+    flex-direction: column-reverse;
+  }
 `;
 
 const SectionHeader = styled.h2`
@@ -75,13 +77,14 @@ const SectionHeader = styled.h2`
 `;
 
 const SectionInfo = styled.p`
-  font-size: 16px;
+  font-size: 20px;
   line-height: 30px;
   color: ${(x) => x.theme.textFade};
   margin: 0 0 30px;
-  ${media.md`
-      font-size: 20px;
-  `}
+  ${mediaBreakpointDown("sm")} {
+    font-size: 16px;
+  }
+
   a:hover {
     text-decoration: underline;
   }
@@ -97,7 +100,7 @@ const VersionsCard = styled(CardContainer)`
 `;
 
 const AddCard = styled(VersionsCard)`
-  ${SectionHeader} {
+  h2 {
     margin: 0;
     font-weight: 500;
     font-size: 20px;
@@ -123,42 +126,21 @@ const ShowMoreVersions = styled.p`
   }
 `;
 
-const Version = styled.p`
-  font-weight: 500;
-  font-size: 16px;
-  margin: 0 0 20px;
-  ${media.md`
-    font-size: 20px;
-  `}
-
-  span {
-    float: right;
-    cursor: pointer;
-  }
-
-  &:last-child {
-    margin: 0;
-  }
-`;
-
 const CodeBlock = styled.code`
   display: block;
   position: relative;
   margin-bottom: 30px;
   padding: 16px 62px 16px 20px;
   font-family: "Consolas", monospace;
-  font-size: 16px;
+  font-size: 20px;
   color: ${(x) => x.theme.textFade};
   border-radius: 8px;
   background-color: ${(x) => x.theme.darkGrey};
+  word-break: break-word;
 
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-
-  ${media.md`
-      font-size: 20px;
-    `}
+  ${mediaBreakpointDown("sm")} {
+    font-size: 16px;
+  }
 
   &::before {
     content: "> ";
@@ -166,59 +148,71 @@ const CodeBlock = styled.code`
   }
 
   img {
-    position: absolute;
-    right: 20px;
-    top: 50%;
-    transform: translateY(-50%);
-    padding: 0px;
     cursor: pointer;
     height: 25px;
     width: 22px;
   }
 
-  span {
+  span.highlight {
     font-family: inherit;
     color: #fcff9b;
   }
+
+  span.button-wrap {
+    padding: 0px;
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
 `;
 
-export default function Pkg(props) {
+interface IProps {
+  data: IResponseSingle;
+  stats: IStatsResponse;
+}
+
+export default function Pkg({ data: { Package }, stats: { Stats } }: IProps) {
   const router = useRouter();
-  const { org, pkg } = router.query;
-  const initialData = props.data;
-  const { data } = useSWR(`packages/${org}/${pkg}`, getPackages, {
-    initialData,
-  });
+  const { org } = router.query;
   const { packages, addPackage, removePackage } = useContext(Downloads);
   const [showMoreVersions, setShowMoreVersions] = useState(false);
+  const [showTooltip, setShowTooltip] = useState(false);
 
-  if ((data as IResponseSingle).Package == null) {
+  useEffect(() => {
+    if (showTooltip) {
+      setTimeout(() => setShowTooltip(false), 1000);
+    }
+  }, [showTooltip]);
+
+  if (Package == null) {
     return <Custom404 />;
   }
 
-  const p = data.Package as IPackage;
-
-  const inDownloads = packages.find((e) => e.Package.Id === p.Id);
+  const inDownloads = !!packages.find((e) => e.Package.Id === Package.Id);
   const versionsAmount = 4;
-  const versionsLength = p.Versions.length;
+  const versionsLength = Package.Versions.length;
 
   return (
     <div className="container">
       <Head>
-        <title>Download and install {p.Latest.Name} with winget</title>
+        <title>Download and install {Package.Latest.Name} with winget</title>
         <meta
           name="description"
           content={
-            p.Latest.Description ||
-            `Download and install ${p.Latest.Name} and other packages with winget`
+            Package.Latest.Description ||
+            `Download and install ${Package.Latest.Name} and other packages with winget`
           }
         />
-        <meta name="twitter:title" content={`${p.Latest.Name} on winget.run`} />
+        <meta
+          name="twitter:title"
+          content={`${Package.Latest.Name} on winget.run`}
+        />
         <meta
           name="twitter:description"
           content={
-            p.Latest.Description ||
-            `Download and install ${p.Latest.Name} and other packages with winget`
+            Package.Latest.Description ||
+            `Download and install ${Package.Latest.Name} and other packages with winget`
           }
         />
       </Head>
@@ -229,16 +223,20 @@ export default function Pkg(props) {
               <Row>
                 <Col col={12}>
                   <h1>
-                    {p.Latest.Name}
-                    <span>v{p.Versions[0]}</span>
+                    {Package.Latest.Name}
+                    <span>v{Package.Versions[0]}</span>
                   </h1>
                   <Link href="/pkg/[org]" as={`/pkg/${org}`}>
                     <a>
-                      <h2>{p.Latest.Publisher}</h2>
+                      <h2>{Package.Latest.Publisher}</h2>
                     </a>
                   </Link>
-                  {p.Latest.Homepage && (
-                    <a href={p.Latest.Homepage} target="_blank">
+                  {Package.Latest.Homepage && (
+                    <a
+                      href={Package.Latest.Homepage}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       <h3>
                         Visit website
                         <img
@@ -264,48 +262,33 @@ export default function Pkg(props) {
                 </SectionHeader>
                 <Add
                   onClick={() => {
-                    inDownloads ? removePackage(p) : addPackage(p);
+                    inDownloads ? removePackage(Package) : addPackage(Package);
                   }}
                   selected={inDownloads}
                   aria-label="Add to multi-download"
                 />
               </AddCard>
+              <StatsChart data={padDate(Stats?.Data)} />
               <VersionsCard>
                 <SectionHeader>Versions</SectionHeader>
-                {p.Versions.slice(
+                {Package.Versions.slice(
                   0,
                   showMoreVersions ? versionsLength : versionsAmount
                 ).map((e) => (
-                  <Version key={e}>
-                    {e}
-                    <span>
-                      <img
-                        role="button"
-                        tabIndex={0}
-                        onClick={() => {
-                          generateClipboard([{ Package: p, Version: e }]);
-                          toast.dark(
-                            `Copied ${p.Latest.Name}@${e} to clipboard!`
-                          );
-                        }}
-                        src={require("../../../components/icons/copy.svg")}
-                        alt=""
-                        aria-label={`Copy command for version ${e}`}
-                      />
-                    </span>
-                  </Version>
+                  <Version key={e} name={e} Package={Package} />
                 ))}
-                {}
 
                 {versionsLength > versionsAmount && !showMoreVersions && (
                   <ShowMoreVersions onClick={() => setShowMoreVersions(true)}>
-                    Show {versionsLength - versionsAmount} older versions
+                    Show {versionsLength - versionsAmount} older version
+                    {versionsLength - versionsAmount === 1 ? "" : "s"}
                   </ShowMoreVersions>
                 )}
 
                 {versionsLength > versionsAmount && showMoreVersions && (
                   <ShowMoreVersions onClick={() => setShowMoreVersions(false)}>
-                    Hide {versionsLength - versionsAmount} older versions
+                    Hide {versionsLength - versionsAmount} older version
+                    {versionsLength - versionsAmount === 1 ? "" : "s"}
                   </ShowMoreVersions>
                 )}
               </VersionsCard>
@@ -314,50 +297,59 @@ export default function Pkg(props) {
               <section>
                 <SectionHeader>How to install</SectionHeader>
                 <CodeBlock>
-                  <span>winget</span> install -e --id {p.Id}
-                  <img
-                    role="button"
-                    tabIndex={0}
-                    onClick={() => {
-                      generateClipboard([
-                        { Package: p, Version: p.Versions[0] },
-                      ]);
-                      toast.dark(`Copied ${p.Latest.Name} to clipboard!`);
-                    }}
-                    src={require("../../../components/icons/copy.svg")}
-                    alt=""
-                    aria-label="Copy command"
-                  />
+                  <span className="highlight">winget</span> install -e --id{" "}
+                  {Package.Id}
+                  <span className="button-wrap">
+                    <img
+                      role="button"
+                      tabIndex={0}
+                      onClick={() => {
+                        generateClipboard([
+                          { Package: Package, Version: Package.Versions[0] },
+                        ]);
+                        setShowTooltip(true);
+                      }}
+                      src={require("../../../components/icons/copy.svg")}
+                      alt=""
+                      aria-label="Copy command"
+                    />
+                    {showTooltip && <Tooltip />}
+                  </span>
                 </CodeBlock>
               </section>
-              {p.Latest.Description && (
+              {Package.Latest.Description && (
                 <section>
-                  <SectionHeader>About {p.Latest.Name}</SectionHeader>
-                  <SectionInfo>{p.Latest.Description}</SectionInfo>
+                  <SectionHeader>About {Package.Latest.Name}</SectionHeader>
+                  <SectionInfo>{Package.Latest.Description}</SectionInfo>
                 </section>
               )}
-              {p.Latest.Tags?.length > 0 && (
+              {Package.Latest.Tags?.length > 0 && (
                 <section>
                   <SectionHeader>Tags</SectionHeader>
-                  {p.Latest.Tags.map((x) => (
-                    <Tag key={x}>{x}</Tag>
+                  {Package.Latest.Tags.map((x) => (
+                    <Link
+                      key={x}
+                      href={`/search?tags=${encodeURIComponent(x)}`}
+                    >
+                      <Tag>{x}</Tag>
+                    </Link>
                   ))}
                 </section>
               )}
-              {p.Latest.License && (
+              {Package.Latest.License && (
                 <section>
                   <SectionHeader>License</SectionHeader>
                   <SectionInfo>
-                    {p.Latest.LicenseUrl ? (
-                      <a href={p.Latest.LicenseUrl}>
+                    {Package.Latest.LicenseUrl ? (
+                      <a href={Package.Latest.LicenseUrl}>
                         <img
                           src={require("../../../components/icons/link.svg")}
                           alt=""
                         />
-                        {p.Latest.License}
+                        {Package.Latest.License}
                       </a>
                     ) : (
-                      p.Latest.License
+                      Package.Latest.License
                     )}
                   </SectionInfo>
                 </section>
@@ -371,11 +363,29 @@ export default function Pkg(props) {
   );
 }
 
-export async function getServerSideProps({ params }) {
+export async function getServerSideProps({ res, params }) {
   try {
     const data = await getPackages(`packages/${params.org}/${params.pkg}`);
-    return { props: { data } };
+
+    const beforeDate = new Date();
+    beforeDate.setUTCDate(beforeDate.getDate() - 1);
+    const afterDate = new Date();
+    afterDate.setUTCDate(afterDate.getDate() - 8);
+
+    const stats = await getStats(
+      `${params.org}.${params.pkg}`,
+      "day",
+      beforeDate.toISOString(),
+      afterDate.toISOString()
+    );
+
+    if (data.statusCode === 404) {
+      throw new Error();
+    }
+
+    return { props: { data, stats } };
   } catch {
+    res.statusCode = 404;
     return { props: { data: { Package: null } } };
   }
 }

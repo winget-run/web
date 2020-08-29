@@ -1,4 +1,4 @@
-import { styled } from "../utils/theme";
+import styled from "../utils/theme";
 
 const Tag = styled.a`
   display: inline-block;

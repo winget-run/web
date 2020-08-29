@@ -1,36 +1,86 @@
 import Head from "next/head";
 import Card from "../components/Card";
-import { Container, Row, Col } from "styled-bootstrap-grid";
+import { Container, Row, Col } from "../utils/grid";
 import Header from "../components/Header";
 import DownloadModal from "../components/DownloadModal";
 import getPackages, { IResponse } from "../api/getPackages";
 import { useState, useEffect } from "react";
 import LoadMore from "../components/LoadMore";
 import { useRouter } from "next/router";
-import SectionHeader from "../components/SectionHeader";
+import {
+  SectionHeaderWithFilters,
+  SortSelectWrapper,
+  SortSelect,
+  OrderButton,
+} from "../components/SectionHeaderWithFilters";
+import { parseQueryString } from "../utils/helperFunctions";
+
+const orderOptions = {
+  Ascending: 1,
+  Descending: -1,
+};
+
+const sortOptions = {
+  Name: "Latest.Name",
+  Publisher: "Latest.Publisher",
+  Updated: "UpdatedAt",
+};
 
 export default function Search({ data }: { data: IResponse }) {
-  const router = useRouter();
+  const { query } = useRouter();
   const [packages, setPackages] = useState(data.Packages);
-  const [searchTerm, setSearchTerm] = useState(router.query.q);
   const [page, setPage] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const [order, setOrder] = useState(
+    parseInt(query.order as string) || orderOptions.Ascending
+  );
+  const [sort, setSort] = useState((query.sort as string) || null);
 
   const loadMore = () => {
     setIsLoading(true);
-    getPackages(`search?name=${searchTerm}&limit=12&page=${page + 1}`).then(
-      (e: IResponse) => {
-        setPackages((prev) => [...prev, ...e.Packages]);
-        setPage((prev) => ++prev);
-        setIsLoading(false);
-      }
-    );
+    getPackages(
+      `packages?ensureContains=true&partialMatch=true&take=12&${parseQueryString(
+        query
+      )}&page=${page + 1}`
+    ).then((e: IResponse) => {
+      setPackages((prev) => [...prev, ...e.Packages]);
+      setPage((prev) => ++prev);
+      setIsLoading(false);
+    });
   };
+
+  const handleSetOrder = () => {
+    if (order === orderOptions.Descending) {
+      setOrder(orderOptions.Ascending);
+    } else {
+      setOrder(orderOptions.Descending);
+    }
+  };
+
+  useEffect(() => {
+    const additions = { order, sort };
+    sort === null && delete additions.sort;
+
+    setIsLoading(true);
+    setPage(0);
+    getPackages(
+      `packages?ensureContains=true&partialMatch=true&take=12&${parseQueryString(
+        { ...query, ...additions }
+      )}`
+    ).then((e: IResponse) => {
+      if (e.Packages) {
+        setPackages(e.Packages);
+      } else {
+        setPackages([]);
+      }
+      setIsLoading(false);
+    });
+  }, [query, order, sort]);
 
   return (
     <div className="container">
       <Head>
-        <title>Search results for {searchTerm} | winget.run</title>
+        <title>Search results | winget.run</title>
         <meta
           name="description"
           content="Searching, discovering and installing winget packages made effortless without any third-party programs"
@@ -50,10 +100,62 @@ export default function Search({ data }: { data: IResponse }) {
         <Container>
           <Row>
             <Col col={12}>
-              <SectionHeader>
-                Search results for "{searchTerm}"
-                <span>{packages.length} results</span>
-              </SectionHeader>
+              <SectionHeaderWithFilters>
+                <div>
+                  {Object.entries(query)
+                    .filter((e) => e[0] !== "order" && e[0] !== "sort")
+                    .map((e) => (
+                      <code>
+                        <span>{e[0]}: </span>
+                        {e[1]}
+                      </code>
+                    ))}
+                  <span>
+                    {data.Total} result
+                    {data.Total !== 1 ? "s" : ""}
+                  </span>
+                </div>
+                <div>
+                  <SortSelectWrapper>
+                    <SortSelect
+                      value={sort}
+                      onChange={(e) => {
+                        setSort(e.target.value);
+                      }}
+                    >
+                      <option value="">Relevance</option>
+                      {Object.entries(sortOptions).map((e) => (
+                        <option value={e[1]}>{e[0]}</option>
+                      ))}
+                    </SortSelect>
+                    <img
+                      src={require("../components/icons/chevron-down.svg")}
+                      alt=""
+                    />
+                  </SortSelectWrapper>
+                  <OrderButton
+                    onClick={handleSetOrder}
+                    disabled={sort === null || sort === ""}
+                  >
+                    <span>
+                      {order === orderOptions.Ascending
+                        ? "Ascending"
+                        : "Descending"}
+                    </span>
+                    {order === orderOptions.Ascending ? (
+                      <img
+                        src={require("../components/icons/sort-amount-up.svg")}
+                        alt=""
+                      />
+                    ) : (
+                      <img
+                        src={require("../components/icons/sort-amount-down.svg")}
+                        alt=""
+                      />
+                    )}
+                  </OrderButton>
+                </div>
+              </SectionHeaderWithFilters>
             </Col>
           </Row>
           <Row>
@@ -75,7 +177,11 @@ export default function Search({ data }: { data: IResponse }) {
 
 export async function getServerSideProps({ query }) {
   try {
-    const data = await getPackages(`search?name=${query.q}&limit=12`);
+    const data = await getPackages(
+      `packages?ensureContains=true&partialMatch=true&take=12&${parseQueryString(
+        query
+      )}`
+    );
     return { props: { data } };
   } catch (error) {
     return { props: { data: { packages: [], total: 0 } } };

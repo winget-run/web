@@ -1,38 +1,34 @@
-//TODO: fix this fucking abortion
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-//@ts-nocheck
-import { useState, useContext } from "react";
-import { toast } from "react-toastify";
+import { useContext, useEffect, useState } from "react";
 import Link from "next/link";
-import { media } from "styled-bootstrap-grid";
+import { mediaBreakpointDown } from "react-grid";
 
 import { IPackage } from "../api/getPackages";
 import { Downloads } from "../utils/state/Downloads";
-import { styled } from "../utils/theme";
+import styled from "../utils/theme";
 import generateClipboard from "../utils/clipboard";
 import { getIcon } from "../utils/helperFunctions";
+import Tooltip from "./Tooltip";
 
 export const CardContainer = styled.div<{ selected?: boolean }>`
   border-radius: 8px;
   background: ${(x) => x.theme.grey};
   width: 100%;
-  height: calc(100% - 15px);
+  height: calc(100% - 30px);
+  margin-bottom: 30px;
   padding: 15px 15px 54px;
-  margin-bottom: 15px;
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
   position: relative;
   border: 2px solid transparent;
   transition: border-color 200ms ease;
+  ${mediaBreakpointDown("sm")} {
+    height: calc(100% - 15px);
+    margin-bottom: 15px;
+  }
 
   ${(x) =>
     x.selected &&
     `
   border-color: ${x.theme.accent};
-  `}
-
-  ${media.md`
-    height: calc(100% - 30px);
-    margin-bottom: 30px;
   `}
 `;
 
@@ -76,7 +72,7 @@ export const Add = styled.button<{ selected: boolean }>`
   }
 `;
 
-const Copy = styled.button`
+export const Copy = styled.button`
   position: absolute;
   bottom: 15px;
   right: 15px;
@@ -136,8 +132,16 @@ export const CardDesc = styled.p`
 
 const Card = ({ p }: { p: IPackage }) => {
   const [org, ...pkg] = p.Id.split(".");
+  const [showTooltip, setShowTooltip] = useState(false);
   const { packages, addPackage, removePackage } = useContext(Downloads);
   const inPackages = !!packages.find((e) => e.Package.Id === p.Id);
+
+  useEffect(() => {
+    if (showTooltip) {
+      setTimeout(() => setShowTooltip(false), 1000);
+    }
+  }, [showTooltip]);
+
   return (
     <CardContainer selected={inPackages}>
       <Add
@@ -168,12 +172,13 @@ const Card = ({ p }: { p: IPackage }) => {
       <Copy
         onClick={() => {
           generateClipboard([{ Package: p, Version: p.Versions[0] }]);
-          toast.dark(`Copied ${p.Latest.Name} to clipboard!`);
+          setShowTooltip(true);
         }}
         title="Copy the command to your clipboard"
       >
         <img src={require("./icons/copy.svg")} alt="" />
         Copy command
+        {showTooltip && <Tooltip />}
       </Copy>
     </CardContainer>
   );

@@ -1,24 +1,28 @@
 import { useContext, useState, useEffect } from "react";
-import { toast } from "react-toastify";
-import { media } from "styled-bootstrap-grid";
+import { mediaBreakpointDown } from "react-grid";
 
-import { styled } from "../utils/theme";
-import { IPackage } from "../api/getPackages";
+import styled from "../utils/theme";
 import { Downloads, IDownload } from "../utils/state/Downloads";
 import generateClipboard from "../utils/clipboard";
 import generateDownload from "../utils/download";
 import { CardIcon } from "./Card";
 import { getIcon } from "../utils/helperFunctions";
+import Tooltip from "./Tooltip";
 
-const Button = (styled.button as any)`
+interface IVisibleExpanded {
+  visible: boolean;
+  expanded: boolean;
+}
+
+const Button = styled.button<IVisibleExpanded>`
   background-color: ${(x) => x.theme.accentDark};
   border: none;
   border-radius: 50%;
   width: 56px;
   height: 56px;
   position: fixed;
-  bottom: 30px;
-  right: 30px;
+  bottom: 50px;
+  right: 50px;
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
   cursor: pointer;
   transition: all 250ms ease;
@@ -26,6 +30,12 @@ const Button = (styled.button as any)`
   opacity: 0;
   z-index: 999;
   overflow: visible;
+  ${mediaBreakpointDown("xs")} {
+    padding: 30px;
+    bottom: 30px;
+    right: 30px;
+  }
+
   ${(x) =>
     x.visible &&
     `
@@ -33,11 +43,6 @@ const Button = (styled.button as any)`
       opacity: 1;
       transition: transform 250ms cubic-bezier(0.26, 1.29, 0.7, 1.18);
     `}
-
-  ${media.sm`
-    bottom: 50px;
-    right: 50px;
-  `}
 
   &:focus {
     outline: none;
@@ -101,7 +106,7 @@ const Button = (styled.button as any)`
   }
 `;
 
-const ModalContainer = (styled.div as any)`
+const ModalContainer = styled.div<IVisibleExpanded>`
   position: fixed;
   display: flex;
   flex-direction: column;
@@ -110,20 +115,20 @@ const ModalContainer = (styled.div as any)`
   max-width: 370px;
   width: calc(100% - 30px);
   height: 468px;
-  max-height: calc(100% - (30px + 56px + 100px));
+  max-height: calc(100% - (50px + 56px + 100px));
   min-height: 200px;
-  bottom: 100px;
-  right: 15px;
+  bottom: 120px;
+  right: 50px;
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
   padding: 20px;
   pointer-events: none;
   z-index: 999;
 
-  ${media.sm`
-    right: 50px;
-    bottom: 120px;
-    max-height: calc(100% - (50px + 56px + 100px));
-  `}
+  ${mediaBreakpointDown("xs")} {
+    max-height: calc(100% - (30px + 56px + 100px));
+    bottom: 100px;
+    right: 15px;
+  }
 
   h3 {
     font-size: 24px;
@@ -233,6 +238,7 @@ const ButtonContainer = styled.div`
 `;
 
 const CopyButton = styled.button`
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -271,6 +277,7 @@ const DownloadModal = () => {
     clearPackages,
   } = useContext(Downloads);
   const [expanded, setExpanded] = useState(false);
+  const [showTooltip, setShowTooltip] = useState(false);
 
   const shouldBeVisible = packages.length > 0;
 
@@ -279,6 +286,12 @@ const DownloadModal = () => {
       setExpanded(false);
     }
   }, [packages]);
+
+  useEffect(() => {
+    if (showTooltip) {
+      setTimeout(() => setShowTooltip(false), 1000);
+    }
+  }, [showTooltip]);
 
   return (
     <>
@@ -293,7 +306,7 @@ const DownloadModal = () => {
           <img
             className="clear"
             src={require("./icons/clear.svg")}
-            alt="Clear all packages"
+            title="Clear all packages"
             onClick={clearPackages}
           />
         </h3>
@@ -302,12 +315,8 @@ const DownloadModal = () => {
         <ScrollContainer>
           {shouldBeVisible &&
             packages.map((e: IDownload) => (
-              <span>
-                <h4
-                  key={`download-${e.Package.Id}`}
-                  onClick={() => removePackage(e.Package)}
-                  tabIndex={0}
-                >
+              <span key={`download-${e.Package.Id}`}>
+                <h4 onClick={() => removePackage(e.Package)} tabIndex={0}>
                   <CardIcon
                     src={
                       e.Package.IconUrl ||
@@ -344,11 +353,12 @@ const DownloadModal = () => {
           <CopyButton
             onClick={() => {
               generateClipboard(packages);
-              toast.dark(`Copied packages to clipboard!`);
+              setShowTooltip(true);
             }}
           >
             <img src={require("./icons/copy.svg")} alt="" />
             Copy
+            {showTooltip && <Tooltip />}
           </CopyButton>
           <DownloadButton onClick={() => generateDownload(packages)}>
             <img src={require("./icons/download.svg")} alt="" />

@@ -1,6 +1,48 @@
 import Document, { Head, Main, NextScript } from "next/document";
-import { ServerStyleSheet } from "styled-components";
 import getConfig from "next/config";
+
+import { css, Global } from "@emotion/core";
+import { extractCritical } from "emotion-server";
+import Footer from "../components/Footer";
+
+export const globalStyles = (
+  <Global
+    styles={css`
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        font-family: Segoe UI, Arial, Helvetica, sans-serif;
+      }
+      body {
+        margin: 0;
+        background: #1f1f1f;
+        color: white;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        min-height: 100vh;
+      }
+
+      main {
+        padding-bottom: 150px;
+        overflow-x: hidden;
+      }
+
+      a {
+        text-decoration: none;
+        cursor: pointer;
+        color: inherit;
+      }
+      a:hover > :first-of-type {
+        text-decoration: underline;
+      }
+    `}
+  />
+);
 
 export default class MyDocument extends Document {
   serverRuntimeConfig: any;
@@ -12,52 +54,37 @@ export default class MyDocument extends Document {
     this.publicRuntimeConfig = getConfig().publicRuntimeConfig;
   }
 
-  static getInitialProps({ renderPage }) {
-    const sheet = new ServerStyleSheet();
+  static async getInitialProps(ctx) {
+    const initialProps = await Document.getInitialProps(ctx);
+    const styles = extractCritical(initialProps.html);
 
-    const page = renderPage((App) => (props) =>
-      sheet.collectStyles(<App {...props} />)
-    );
+    if (ctx.pathname !== "/404" && ctx.pathname !== "/healthz") {
+      ctx.res.setHeader("X-Frame-Options", "DENY");
+      ctx.res.setHeader(
+        "X-PoweredBy",
+        "https://www.youtube.com/watch?v=6n3pFFPSlW4"
+      );
+      ctx.res.setHeader("Cache-Control", "public, max-age=604800, immutable");
+    }
 
-    const styleTags = sheet.getStyleElement();
-
-    return { ...page, styleTags };
+    return {
+      ...initialProps,
+      styles: (
+        <>
+          {initialProps.styles}
+          <style
+            data-emotion-css={styles.ids.join(" ")}
+            dangerouslySetInnerHTML={{ __html: styles.css }}
+          />
+        </>
+      ),
+    };
   }
 
   render() {
     return (
       <html lang="en">
         <Head>
-          {/* @ts-ignore */}
-          {this.props.styleTags}
-          <style>
-            {`
-              *, *::before, *::after {
-                box-sizing: border-box;
-                font-family: Segoe UI, Arial, Helvetica, sans-serif;
-              }
-              body {
-                margin: 0;
-                background: #1F1F1F;
-                color: white;
-                -webkit-font-smoothing: antialiased;
-                -moz-osx-font-smoothing: grayscale;
-              }
-
-              main {
-                padding-bottom: 150px;
-              }
-
-              a {
-                text-decoration: none;
-                cursor: pointer;
-                color: inherit;
-              }
-              a:hover :first-child {
-                text-decoration: underline;
-              }
-            `}
-          </style>
           <link rel="icon" href="/favicon.ico" />
           <link
             type="application/opensearchdescription+xml"
@@ -88,6 +115,7 @@ export default class MyDocument extends Document {
         <body>
           <Main />
           <NextScript />
+          <Footer />
         </body>
       </html>
     );
