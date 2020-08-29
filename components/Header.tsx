@@ -12,7 +12,7 @@ const TopBar = styled.div`
   align-items: center;
   top: 0;
   width: 100%;
-  z-index: 50;
+  z-index: 666;
   height: 70px;
   padding: 0;
   background: ${(x) => x.theme.accent};

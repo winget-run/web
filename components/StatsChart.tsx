@@ -123,7 +123,7 @@ const StatsChart = ({ data }: { data: IStat[] }) => {
             tooltip={tooltip}
             getSeriesStyle={getSeriesStyle}
             css={css`
-              z-index: 999;
+              z-index: 69;
               svg {
                 border-radius: 0 0 8px 8px;
               }
