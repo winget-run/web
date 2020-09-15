@@ -157,7 +157,7 @@ const Header = (props: IProps) => {
       <TopBar>
         <Container>
           <Row css={{ justifyContent: "between", alignItems: "center" }}>
-            <Links col="auto" role="nav">
+            <Links col="auto" role="navigation">
               <Link href="/" as="/">
                 <a>
                   <NavIcon
