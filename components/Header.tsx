@@ -168,13 +168,8 @@ const Header = (props: IProps) => {
                 </a>
               </Link>
               <NavLink>
-                <a href="https://github.com/microsoft/winget-cli/releases">
-                  Install winget
-                </a>
-              </NavLink>
-              <NavLink>
                 <a href="ms-appinstaller:?source=https://aka.ms/getwinget">
-                  Direct Install winget
+                  Install winget
                 </a>
               </NavLink>
               <NavLink>
