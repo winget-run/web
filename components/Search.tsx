@@ -8,6 +8,7 @@ import { useRouter } from "next/router";
 
 import { Search as SearchContext } from "../utils/state/Search";
 import {
+  escapeRegExp,
   parseQueryString,
   parseTags,
   regexWrapJSX,
@@ -321,7 +322,7 @@ const Search = ({ inNav, hidden, resultsHidden }: IProps) => {
                         regexWrapJSX(
                           e.Latest.Description,
                           Object.values(debouncedSearchFilters).map(
-                            (x) => new RegExp(x, "gi")
+                            (x) => new RegExp(escapeRegExp(x), "gi")
                           )
                         )
                       }

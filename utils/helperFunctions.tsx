@@ -39,10 +39,20 @@ export const regexWrapJSX = (
   const result = [];
   for (let i = 0; i < split.length - 1; i++) {
     result.push(regexWrapJSX(split[i], regexes.slice(1)));
-    result.push(<span>{replacements[i]}</span>);
+    result.push(<span key={result.length}>{replacements[i]}</span>);
   }
   result.push(regexWrapJSX(split[split.length - 1], regexes.slice(1)));
   return result;
+};
+
+/**
+ * @url https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions#escaping
+ *
+ * @param string
+ * @returns Escaped string
+ */
+export const escapeRegExp = (string: string) => {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
 };
 
 export const parseTagMatches = (query: string): string[] => {
