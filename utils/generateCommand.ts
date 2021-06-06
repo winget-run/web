@@ -8,5 +8,5 @@ export default function generateCommand(packages: IDownload[]): string {
           e.Version !== e.Package.Versions[0] ? ` -v ${e.Version}` : ""
         }`
     )
-    .join("\r\n")}\r\n`;
+    .join(";")}`;
 }
