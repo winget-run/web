@@ -8,12 +8,12 @@
 # testing
 /coverage
 
-# next.js
-/.next/
-/out/
+# svelte
+/.svelte-kit
 
 # production
 /build
+/package
 
 # misc
 .DS_Store

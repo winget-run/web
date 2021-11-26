@@ -1,50 +1,36 @@
 {
-  "name": "winget-run",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "cross-env K8S_ENV=dev next dev",
-    "dev:prod": "next dev",
-    "build": "next build",
-    "serve": "next start --hostname 0.0.0.0",
-    "serve:dev": "cross-env K8S_ENV=dev next start --hostname 0.0.0.0",
-    "lint": "eslint **/*.{js,jsx,ts,tsx}",
-    "test": "jest"
-  },
-  "dependencies": {
-    "@emotion/core": "^10.0.28",
-    "@emotion/styled": "^10.0.27",
-    "emotion": "^10.0.27",
-    "emotion-server": "^10.0.27",
-    "emotion-theming": "^10.0.27",
-    "isomorphic-unfetch": "^3.0.0",
-    "next": "9.4.2",
-    "react": "16.13.1",
-    "react-charts": "^2.0.0-beta.7",
-    "react-dom": "16.13.1",
-    "react-grid": "^4.0.4"
-  },
-  "devDependencies": {
-    "@emotion/babel-preset-css-prop": "^10.0.27",
-    "@types/jest": "^25.2.3",
-    "@types/node": "^14.0.5",
-    "@types/react": "^16.9.35",
-    "@typescript-eslint/eslint-plugin": "^3.0.0",
-    "@typescript-eslint/parser": "^3.0.0",
-    "cross-env": "^7.0.2",
-    "eslint": "^6",
-    "eslint-config-prettier": "^6.11.0",
-    "eslint-config-react-app": "^5.2.1",
-    "eslint-plugin-babel": "^5.3.0",
-    "eslint-plugin-flowtype": "^5.1.0",
-    "eslint-plugin-import": "^2.20.2",
-    "eslint-plugin-jsx-a11y": "^6.2.3",
-    "eslint-plugin-prettier": "^3.1.3",
-    "eslint-plugin-react": "^7.20.0",
-    "eslint-plugin-react-hooks": "^4.0.2",
-    "jest": "^26.0.1",
-    "next-images": "^1.4.0",
-    "prettier": "^2.0.5",
-    "typescript": "^3.9.3"
-  }
+	"name": "winget-svelte",
+	"version": "0.0.1",
+	"scripts": {
+		"dev": "svelte-kit dev",
+		"build": "svelte-kit build",
+		"preview": "svelte-kit preview",
+		"check": "svelte-check --tsconfig ./tsconfig.json",
+		"check:watch": "svelte-check --tsconfig ./tsconfig.json --watch",
+		"lint": "prettier --ignore-path .gitignore --check --plugin-search-dir=. . && eslint --ignore-path .gitignore .",
+		"format": "prettier --ignore-path .gitignore --write --plugin-search-dir=. ."
+	},
+	"dependencies": {
+		"@iconify/icons-uil": "^1.1.1",
+		"@iconify/svelte": "^2.1.0"
+	},
+	"devDependencies": {
+		"@sveltejs/adapter-node": "^1.0.0-next.55",
+		"@sveltejs/kit": "next",
+		"@typescript-eslint/eslint-plugin": "^4.33.0",
+		"@typescript-eslint/parser": "^4.33.0",
+		"eslint": "^7.32.0",
+		"eslint-config-prettier": "^8.3.0",
+		"eslint-plugin-svelte3": "^3.2.1",
+		"prettier": "^2.4.1",
+		"prettier-plugin-svelte": "^2.5.0",
+		"svelte": "^3.44.2",
+		"svelte-check": "^2.2.10",
+		"svelte-preprocess": "^4.9.8",
+		"tslib": "^2.3.1",
+		"typescript": "^4.5.2",
+		"vite-plugin-windicss": "^1.5.1",
+		"windicss": "^3.2.1"
+	},
+	"type": "module"
 }

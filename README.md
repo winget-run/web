@@ -1,4 +1,4 @@
-# Winget.run React App
+# Winget.run Svelte App
 
 The frontend to [winget.run](https://winget.run), allowing users to search, discover, and install winget packages effortlessly without any third-party programs. Package manifests are periodically fetched from the GitHub API to prevent hitting ratelimits.
 
@@ -6,13 +6,15 @@ If you wish to use our API, please take a look at [our docs](https://docs.winget
 
 ## Contents
 
-- [Installation](#installation)
-- [Development](#development)
-- [Deployment](#deployment)
-- [Contributing](#contributing)
-- [Authors](#authors)
-- [Acknowledgments](#acknowledgments)
-- [License](#license)
+- [Winget.run Svelte App](#wingetrun-svelte-app)
+  - [Contents](#contents)
+  - [Installation](#installation)
+  - [Development](#development)
+  - [Deployment](#deployment)
+  - [Contributing](#contributing)
+  - [Authors](#authors)
+  - [Acknowledgments](#acknowledgments)
+  - [License](#license)
 
 ## Installation
 
@@ -23,22 +25,24 @@ A Docker image is built for the project in our CI/CD pipeline on the develop, re
 Local development requires the following software:
 
 - NodeJS
-- Yarn
+- PNPM
 
-If everything is set up correctly, run the following command for an optimal development environment, which will make Next.js watch for changes and statefully hot-reload.
+To install the nessasary dependencies, run:
+- `pnpm install`
 
-- `yarn dev` - To use the development API
-- `yarn dev:prod` - To use the production API
+If everything is set up correctly, run the following command for an optimal development environment, which will make Sveltekit watch for changes and statefully hot-reload.
+
+- `pnpm run dev`
 
 Tests and linting can be run using the following commands:
 
-- `yarn test`
-- `yarn lint`
+- `pnpm run test`
+- `pnpm run lint`
 
 To create and serve a production-ready bundle, run:
 
-- `yarn build`
-- `yarn serve`
+- `pnpm run build`
+- `pnpm run preview`
 
 For any additional commands, check out the package.json.
 

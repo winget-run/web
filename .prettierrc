@@ -1,2 +1,6 @@
-tabWidth: 2
-endOfLine: "auto"
+{
+	"useTabs": true,
+	"singleQuote": false,
+	"trailingComma": "es5",
+	"printWidth": 100
+}
