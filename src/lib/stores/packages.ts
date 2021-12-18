@@ -8,3 +8,4 @@ export interface IDownload {
 
 export const updatedPackages = writable<IResponse>(null);
 export const downloads = writable<IDownload[]>([]);
+export const searchResults = writable<IResponse>(null);

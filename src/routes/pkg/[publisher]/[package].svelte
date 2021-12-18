@@ -1,12 +1,17 @@
 <script lang="ts" context="module">
-	import type { Load } from "@sveltejs/kit";
-
 	export const load: Load = async ({ page }) => {
 		const publisher = page.params["publisher"];
 		const app = page.params["package"];
 
 		const api = new Wingetdotrun();
-		const response = await api.package(publisher, app).catch(console.error);
+		const response = await api.package(publisher, app);
+
+		if (!response?.Package) {
+			return {
+				status: 404,
+				error: "No package found",
+			};
+		}
 
 		const before = new Date();
 		before.setUTCDate(before.getDate() - 1);
@@ -31,24 +36,37 @@
 </script>
 
 <script lang="ts">
-	import type { IResponseSingle } from "$lib/types/package";
-	import Button from "$lib/components/Button.svelte";
-	import { fly } from "svelte/transition";
-	import { backOut } from "svelte/easing";
-	import external from "@iconify/icons-uil/external-link-alt";
-	import Icon from "@iconify/svelte";
-	import type { IStatsResponse } from "$lib/types/stats";
 	import Wingetdotrun from "$lib/api/wingetdotrun";
+	import Button from "$lib/components/Button.svelte";
+	import Codeblock from "$lib/components/codeblock.svelte";
 	import Graph from "$lib/components/graph.svelte";
-	import { api } from "$lib/stores/api";
-	import clipboardNotes from "@iconify/icons-uil/clipboard-notes";
-	import calendar from "@iconify/icons-uil/calendar-alt";
-	import plus from "@iconify/icons-uil/plus";
+	import Versions from "$lib/components/versions.svelte";
+	import { downloads } from "$lib/stores/packages";
+	import type { IResponseSingle } from "$lib/types/package";
+	import type { IStatsResponse } from "$lib/types/stats";
 	import { padDate } from "$lib/utils/helpers";
+	import calendar from "@iconify/icons-uil/calendar-alt";
+	import clipboardNotes from "@iconify/icons-uil/clipboard-notes";
+	import external from "@iconify/icons-uil/external-link-alt";
+	import plus from "@iconify/icons-uil/plus";
+	import Icon from "@iconify/svelte";
+	import type { Load } from "@sveltejs/kit";
+	import { backOut } from "svelte/easing";
+	import { fly } from "svelte/transition";
 
 	export let response: IResponseSingle;
 	export let stats: IStatsResponse;
 	export let publisher: string;
+
+	$: selected = $downloads.find((x) => x.package.Id === pack.Id);
+
+	function addOrRemove() {
+		if (selected) {
+			downloads.update((x) => x.filter((y) => y.package.Id !== selected.package.Id));
+		} else {
+			downloads.update((x) => [...x, { package: pack, version: "latest" }]);
+		}
+	}
 
 	const dateFormatter = new Intl.DateTimeFormat("en-US", {
 		dateStyle: "medium",
@@ -63,6 +81,21 @@
 	$: pack = response.Package;
 </script>
 
+<svelte:head>
+	<title>Download and install {pack.Latest.Name} with winget</title>
+	<meta
+		name="description"
+		content={pack.Latest.Description ||
+			`Download and install ${pack.Latest.Name} and other packages with winget`}
+	/>
+	<meta name="twitter:title" content={`${pack.Latest.Name} on winget.run`} />
+	<meta
+		name="twitter:description"
+		content={pack.Latest.Description ||
+			`Download and install ${pack.Latest.Name} and other packages with winget`}
+	/>
+</svelte:head>
+
 <div class="w-full max-w-[1178px] mx-auto">
 	<header in:fly={{ y: 20, duration: 500, easing: backOut }} class="flex my-16">
 		<img
@@ -75,8 +108,8 @@
 		/>
 		<div class="ml-8">
 			<h1 class="font-semibold text-5xl text-title mt-2 leading-none">
-				{pack.Latest.Name}
-				<span class="font-medium italic text-2xl text-sub ml-2">{pack.Versions[0]}</span>
+				<span class="mr-2">{pack.Latest.Name}</span>
+				<span class="font-medium italic text-2xl text-sub">{pack.Versions[0]}</span>
 			</h1>
 			<a
 				href="/pkg/{publisher}"
@@ -97,7 +130,7 @@
 				</Button>
 			{/if}
 
-			<div class="bg-white rounded-xl w-full border transition-all shadow-card">
+			<div class="bg-white rounded-xl w-full border transition-all shadow-card mb-5">
 				{#if pack.Latest.Tags?.length > 0}
 					<section class="mb-10 px-5 mt-5">
 						<h2 class="font-semibold text-2xl text-title mb-2 leading-tight">Tags</h2>
@@ -128,36 +161,50 @@
 						</h2>
 						<h3 class="px-5 font-medium italic text-sm text-sub">in the last 14 days</h3>
 					{/if}
-					<Graph
-						class="w-full"
-						stats={dates}
-						bind:selected={selectedDateIdx}
-						verticalPadding={20}
-						height={120}
-						width={graphWidth}
-					/>
+					{#key dates}
+						<Graph
+							class="w-full rounded-b-xl"
+							stats={dates}
+							bind:selected={selectedDateIdx}
+							verticalPadding={20}
+							height={120}
+							width={graphWidth}
+						/>
+					{/key}
 				</section>
+			</div>
+
+			<div class="bg-white rounded-xl w-full border transition-all shadow-card">
+				<h2 class="font-semibold text-2xl text-title mb-2 leading-tight p-5 pb-1">
+					Older versions
+				</h2>
+				<Versions {pack} class="px-2.5 mb-5" />
 			</div>
 		</div>
 		<div class="col-span-7">
+			<!-- Code snippet -->
 			<section class="mb-10">
 				<h2 class="font-semibold text-2xl text-title mb-2 leading-tight">How to install</h2>
-				<code class="code bg-grey-10 rounded-lg p-5 leading-none block truncate w-full mb-3">
-					winget install -e --id {pack.Id}
-				</code>
-				<div class="flex items-center">
-					<Button class="" size="lg" outlined let:iconSize>
-						<Icon class="mr-3" icon={plus} width={iconSize} height={iconSize} />
-						Add to selected packages
+				<Codeblock code="winget install -e --id {pack.Id}" class="w-full mb-3" />
+				<!-- <div class="flex items-center">
+					<Button on:click={() => alert("bruh")} size="lg" outlined={!selected} let:iconSize>
+						<Icon
+							class="mr-3 transform {selected && 'rotate-45'}"
+							icon={plus}
+							width={iconSize}
+							height={iconSize}
+						/>
+						{selected ? "Remove from selected packages" : "Add to selected packages"}
 					</Button>
 					<p class="mx-4 text-body">or</p>
 					<Button class="truncate" size="lg" let:iconSize>
 						<Icon class="mr-3" icon={clipboardNotes} width={iconSize} height={iconSize} />
 						Copy to clipboard
 					</Button>
-				</div>
+				</div> -->
 			</section>
 
+			<!-- Description -->
 			{#if pack.Latest.Description}
 				<section class="mb-10">
 					<h2 class="font-semibold text-2xl text-title mb-2 leading-tight">About</h2>
@@ -165,38 +212,30 @@
 				</section>
 			{/if}
 
-			{#if pack.Latest.LicenseUrl}
-				<section class="mb-10">
-					<h2 class="font-semibold text-2xl text-title mb-2 leading-tight">Licensed under</h2>
-					{#if pack.Latest.LicenseUrl}
-						<a
-							href={pack.Latest.LicenseUrl}
-							rel="nofollow"
-							class="text-body inline-flex items-center"
-						>
-							<Icon class="mr-2" icon={external} width={16} height={16} />
-							{pack.Latest.License}
-						</a>
-					{:else}
-						<p class="text-body">
-							{pack.Latest.License}
-						</p>
-					{/if}
-				</section>
-				<section>
-					<p class="text-body inline-flex items-center">
-						<Icon class="mr-3" icon={calendar} width={16} height={16} />
-						Last updated on {dateFormatter.format(new Date(pack.UpdatedAt))}
+			<section class="mb-10">
+				<h2 class="font-semibold text-2xl text-title mb-2 leading-tight">Other details</h2>
+				<!-- Updated Date -->
+				<p class="text-body flex items-center mb-3">
+					<Icon class="mr-2" icon={calendar} width={16} height={16} />
+					Last updated on {dateFormatter.format(new Date(pack.UpdatedAt))}
+				</p>
+
+				<!-- License -->
+				{#if pack.Latest.LicenseUrl}
+					<a
+						href={pack.Latest.LicenseUrl}
+						rel="nofollow"
+						class="text-body flex items-center mb-3 hover:(underline text-primary)"
+					>
+						<Icon class="mr-2" icon={external} width={16} height={16} />
+						{pack.Latest.License}
+					</a>
+				{:else}
+					<p class="text-body flex mb-3">
+						{pack.Latest.License}
 					</p>
-				</section>
-			{/if}
+				{/if}
+			</section>
 		</div>
 	</div>
 </div>
-
-<style>
-	.code::before {
-		content: ">";
-		margin-right: 0.5rem;
-	}
-</style>

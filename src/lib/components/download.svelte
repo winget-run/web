@@ -2,12 +2,20 @@
 	import { downloads, IDownload } from "$lib/stores/packages";
 	import plus from "@iconify/icons-uil/plus";
 	import Icon from "@iconify/svelte";
+	import { get } from "svelte/store";
 	import Dropdown from "./dropdown.svelte";
 
 	export let download: IDownload;
 
 	function remove() {
 		downloads.update((x) => x.filter((y) => y.package.Id !== download.package.Id));
+	}
+
+	function changeVersion(version: string) {
+		let newDownloads = get(downloads);
+		const index = newDownloads.findIndex((x) => x.package.Id === download.package.Id);
+		newDownloads[index] = { ...newDownloads[index], version };
+		downloads.set(newDownloads);
 	}
 
 	let items = [
@@ -46,5 +54,10 @@
 			<Icon icon={plus} width={24} height={24} />
 		</button>
 	</div>
-	<Dropdown class="mt-5 w-full" {items} selected={0} />
+	<Dropdown
+		class="mt-5 w-full"
+		{items}
+		selected={items.findIndex((x) => x.value === download.version)}
+		on:change={({ detail }) => changeVersion(detail)}
+	/>
 </article>

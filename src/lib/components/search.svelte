@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { goto } from "$app/navigation";
+
 	import EmptyBox from "$lib/animations/empty_box.svelte";
 	import { prefersReducedMotion } from "$lib/stores/a11y";
 	import { searchOpen, searchResults } from "$lib/stores/search";
@@ -14,6 +16,7 @@
 	import Package from "./package.svelte";
 	import SearchOptions from "./search_options.svelte";
 
+	let input: HTMLInputElement;
 	let content: HTMLDivElement;
 	let value: string;
 
@@ -46,6 +49,10 @@
 		}
 	}
 
+	$: {
+		if ($searchOpen) input.focus();
+	}
+
 	function handleInputScroll(
 		e: UIEvent & {
 			currentTarget: EventTarget & HTMLInputElement;
@@ -71,6 +78,15 @@
 		});
 	}
 
+	function viewAllResults() {
+		const { order, sort, ...tags } = parseTags(value);
+		const params = new URLSearchParams({
+			...tags,
+		});
+		searchOpen.set(false);
+		goto(`/search?${params.toString()}`);
+	}
+
 	$: flyAmount = $prefersReducedMotion ? 0 : 10;
 </script>
 
@@ -87,17 +103,27 @@
 		>
 			{@html contentHTML}
 		</div>
-		<input
-			class="w-full h-full text-title focus:outline-none relative bg-transparent | font-medium"
-			bind:value
-			on:focus={() => searchOpen.set(true)}
-			on:blur={() => !value && searchOpen.set(false)}
-			on:scroll={handleInputScroll}
-			type="search"
-			placeholder="Search 2700+ packages"
-			spellcheck="false"
-			autocomplete="false"
-		/>
+		<form on:submit|preventDefault={viewAllResults}>
+			<input
+				bind:this={input}
+				class="w-full h-full text-title focus:outline-none relative bg-transparent | font-medium"
+				bind:value
+				on:focus={() => searchOpen.set(true)}
+				on:blur={() => !value && searchOpen.set(false)}
+				on:scroll={handleInputScroll}
+				type="search"
+				placeholder="Search 2700+ packages"
+				spellcheck="false"
+				autocomplete="false"
+			/>
+		</form>
+		{#if !$searchOpen}
+			<kbd
+				class="text-xs text-sub bg-white font-semibold leading-none rounded px-1.5 py-1 border border-b-2 border-sub | absolute right-0 top-1/2 transform -translate-y-1/2"
+			>
+				CTRL + K
+			</kbd>
+		{/if}
 	</div>
 
 	{#if $searchOpen}
@@ -155,6 +181,9 @@
 							/>
 						</button>
 						<button
+							on:click={() => {
+								$searchResults.Total === 1 ? null : viewAllResults();
+							}}
 							in:fly={{
 								y: flyAmount,
 								delay: $prefersReducedMotion ? 0 : $searchResults.Packages.length * 50 + 100,

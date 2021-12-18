@@ -5,5 +5,5 @@ export interface ISearchFilters {
 	description?: string;
 	tags?: string;
 	sort?: string;
-	order?: number;
+	order?: string;
 }

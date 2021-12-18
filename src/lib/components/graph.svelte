@@ -4,7 +4,6 @@
 
 	export let height = 100;
 	export let width = 300;
-	export let horizontalPadding = 0;
 	export let verticalPadding = 0;
 
 	export let stats: IStat[];
@@ -26,13 +25,14 @@
 
 	$: curvePoints = points
 		.map(({ x, y }, i) => {
-			if (i === 0) return `${Math.round(x)} ${Math.round(y)}`;
+			const r = Math.round;
+			if (i === 0) return `${r(x)} ${r(y)}`;
 			const prevPoint = points[i - 1];
-			return `C${Math.round(prevPoint.x + interval / 3)} ${Math.round(prevPoint.y)} ${Math.round(
-				x - interval / 3
-			)} ${Math.round(y)} ${Math.round(x)} ${Math.round(y)}`;
+			return `${r(prevPoint.x + interval / 3)} ${r(prevPoint.y)} ${r(x - interval / 3)} ${r(y)} ${r(
+				x
+			)}	${r(y)}`;
 		})
-		.join(" ");
+		.join("C");
 
 	const handleMouseMove = (
 		e: MouseEvent & {
@@ -50,20 +50,20 @@
 <svg
 	on:mousemove={handleMouseMove}
 	on:mouseleave={() => (selected = null)}
-	{...$$props}
+	class={$$props.class}
 	viewBox="0 0 {width} {height}"
 >
+	<path
+		in:fade={{ duration: 1000, delay: 1500 }}
+		fill="url(#graph-gradient)"
+		d="M{curvePoints} L{width} {height} L0 {height} Z"
+	/>
 	<path
 		in:draw={{ duration: 1000, delay: 500 }}
 		fill="none"
 		stroke={color}
 		stroke-width="2"
-		d="M {curvePoints}"
-	/>
-	<path
-		in:fade={{ duration: 1000, delay: 1500 }}
-		fill="url(#graph-gradient)"
-		d="M {curvePoints} L{width} {height} L0 {height} Z"
+		d="M{curvePoints}"
 	/>
 
 	{#if selected !== null}
@@ -81,7 +81,7 @@
 			gradientUnits="userSpaceOnUse"
 		>
 			<stop stop-color={color} stop-opacity="0.4" />
-			<stop stop-color={color} stop-opacity="0" offset="1" />
+			<stop stop-color={color} stop-opacity="0.05" offset="1" />
 		</linearGradient>
 	</defs>
 </svg>

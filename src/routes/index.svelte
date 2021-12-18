@@ -1,10 +1,14 @@
 <script lang="ts" context="module">
 	import Wingetdotrun from "$lib/api/wingetdotrun";
+	import Button from "$lib/components/Button.svelte";
 	import Package from "$lib/components/package.svelte";
 	import SectionTitle from "$lib/components/section_title.svelte";
 	import { prefersReducedMotion } from "$lib/stores/a11y";
+	import { api } from "$lib/stores/api";
 	import { updatedPackages } from "$lib/stores/packages";
 	import type { IResponse } from "$lib/types/package";
+	import spinner from "@iconify/icons-uil/spinner";
+	import Icon from "@iconify/svelte";
 	import type { Load } from "@sveltejs/kit";
 	import { flip } from "svelte/animate";
 	import { backOut, circOut } from "svelte/easing";
@@ -34,22 +38,43 @@
 
 <script lang="ts">
 	let page = 0;
+	let loading = false;
+
 	export let featured: IResponse;
 
 	$: flyAmount = $prefersReducedMotion ? 0 : 20;
 
 	function getMore() {
+		loading = true;
 		page = page + 1;
-		fetch(`https://api.winget.run/v2/packages?sort=UpdatedAt&order=-1&page=${page}&take=${limit}`)
-			.then((e) => e.json())
-			.then((e: IResponse) =>
-				updatedPackages.update((x) => ({ ...x, Packages: [...x.Packages, ...e.Packages] }))
-			);
+		$api
+			.packages({
+				sort: "UpdatedAt",
+				order: "-1",
+				page: page.toString(),
+				take: limit.toString(),
+			})
+			.then((e: IResponse) => {
+				loading = false;
+				updatedPackages.update((x) => ({ ...x, Packages: [...x.Packages, ...e.Packages] }));
+			});
 	}
 </script>
 
-<SectionTitle class="mt-2 mb-4"><h2>Featured Packages</h2></SectionTitle>
-<div class="flex flex-wrap -mx-4 justify-start">
+<svelte:head>
+	<title>wingetdotrun | Finding winget packages made simple.</title>
+	<meta
+		name="description"
+		content="Searching, discovering and installing winget packages made effortless without any third-party programs"
+	/>
+	<meta
+		name="twitter:description"
+		content="Searching, discovering and installing winget packages made effortless without any third-party programs"
+	/>
+</svelte:head>
+
+<SectionTitle class="mt-2 mb-8"><h2>Featured Packages</h2></SectionTitle>
+<div class="packages-grid">
 	{#if featured}
 		{#each featured.Packages as pack, i (pack.Id)}
 			<div
@@ -61,16 +86,16 @@
 					easing: backOut,
 				}}
 				animate:flip={{ duration: 250, easing: circOut }}
-				class="px-4 mb-8 min-w-80 max-w-sm w-full"
+				class="w-full"
 			>
 				<Package {pack} />
 			</div>
 		{/each}
 	{/if}
 </div>
-<SectionTitle class="mt-2 mb-4"><h2>Recently Updated Packages</h2></SectionTitle>
-<div class="flex flex-wrap -mx-4 justify-start">
-	{#if $updatedPackages}
+<SectionTitle class="my-8"><h2>Recently Updated Packages</h2></SectionTitle>
+{#if $updatedPackages}
+	<div class="packages-grid">
 		{#each $updatedPackages.Packages as pack, i (pack.Id)}
 			<div
 				in:fly={{
@@ -81,11 +106,38 @@
 					easing: backOut,
 				}}
 				animate:flip={{ duration: 250, easing: circOut }}
-				class="px-4 mb-8 min-w-80 max-w-sm w-full"
+				class="w-full"
 			>
 				<Package {pack} />
 			</div>
 		{/each}
+	</div>
+	{#if $updatedPackages.Packages.length < $updatedPackages.Total}
+		<div
+			in:fly={{
+				y: flyAmount,
+				delay: $prefersReducedMotion ? 0 : ($updatedPackages.Packages.length + 1) * 50,
+				easing: backOut,
+			}}
+			class="flex justify-center my-8"
+		>
+			{#if loading}
+				<Button disabled outlined let:iconSize>
+					<Icon class="mr-2 animate-spin" icon={spinner} width={iconSize} height={iconSize} />
+					Loading...
+				</Button>
+			{:else}
+				<Button on:click={getMore} outlined let:iconSize>Load more packages</Button>
+			{/if}
+		</div>
 	{/if}
-</div>
-<button on:click={getMore}> get more bruh </button>
+{/if}
+
+<style lang="scss">
+	.packages-grid {
+		display: grid;
+		width: 100%;
+		grid-gap: 2rem;
+		grid-template-columns: repeat(auto-fill, minmax(20rem, auto));
+	}
+</style>

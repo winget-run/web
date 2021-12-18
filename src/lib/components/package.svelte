@@ -34,7 +34,7 @@
 			alt=""
 		/>
 		<div class="flex-1 px-2.5">
-			<h2 class="font-semibold text-title text-lg line-clamp-1 leading-tight">
+			<h2 class="font-semibold text-title text-lg line-clamp-1 leading-tight break-all">
 				<a
 					sveltekit:prefetch
 					on:click={() => searchOpen.set(false)}

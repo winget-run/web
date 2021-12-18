@@ -32,6 +32,7 @@ export default class Wingetdotrun {
 		query?: Record<string, string>,
 		{ headers, ...options }: RequestInit = {}
 	) => {
+		if (query) Object.entries(query).forEach((o) => (o[1] === null ? delete query[o[0]] : 0));
 		const queryParams = query ? `?${new URLSearchParams(query).toString()}` : "";
 
 		return fetch(`${this._url}${endpoint}${queryParams}`, {
