@@ -39,6 +39,7 @@
 					sveltekit:prefetch
 					on:click={() => searchOpen.set(false)}
 					href="/pkg/{publisher}/{name.join('.')}"
+					class="hover:text-primary"
 				>
 					{#if highlights}
 						{@html pack.Latest.Name.replace(
@@ -50,12 +51,13 @@
 					{/if}
 				</a>
 			</h2>
-			<p
+			<a
 				on:click={() => searchOpen.set(false)}
-				class="font-medium italic text-sub text-xs line-clamp-1 leading-tight"
+				href="/pkg/{publisher}"
+				class="font-medium italic text-sub text-xs line-clamp-1 leading-tight hover:text-primary"
 			>
 				{pack.Latest.Publisher}
-			</p>
+			</a>
 		</div>
 		<button
 			on:click={addOrRemove}

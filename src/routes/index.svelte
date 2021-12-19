@@ -86,7 +86,7 @@
 					easing: backOut,
 				}}
 				animate:flip={{ duration: 250, easing: circOut }}
-				class="w-full"
+				class="max-w-md"
 			>
 				<Package {pack} />
 			</div>
@@ -106,7 +106,7 @@
 					easing: backOut,
 				}}
 				animate:flip={{ duration: 250, easing: circOut }}
-				class="w-full"
+				class="max-w-md"
 			>
 				<Package {pack} />
 			</div>
@@ -132,12 +132,3 @@
 		</div>
 	{/if}
 {/if}
-
-<style lang="scss">
-	.packages-grid {
-		display: grid;
-		width: 100%;
-		grid-gap: 2rem;
-		grid-template-columns: repeat(auto-fill, minmax(20rem, auto));
-	}
-</style>

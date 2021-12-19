@@ -18,6 +18,8 @@
 		downloads.set(newDownloads);
 	}
 
+	$: [publisher, ...name] = download.package.Id.split(".");
+
 	let items = [
 		{
 			value: "latest",
@@ -41,10 +43,16 @@
 		/>
 		<div class="flex-1 px-2.5">
 			<h2 class="font-semibold text-title text-lg line-clamp-1 leading-tight">
-				{download.package.Latest.Name}
+				<a sveltekit:prefetch href="/pkg/{publisher}/{name.join('.')}" class="hover:text-primary">
+					{download.package.Latest.Name}
+				</a>
 			</h2>
 			<p class="font-medium italic text-sub text-xs line-clamp-1 leading-tight">
-				{download.package.Latest.Publisher}
+				<a
+					href="/pkg/{publisher}"
+					class="font-medium italic text-sub text-xs line-clamp-1 leading-tight hover:text-primary"
+					>{download.package.Latest.Publisher}</a
+				>
 			</p>
 		</div>
 		<button

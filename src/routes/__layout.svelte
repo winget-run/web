@@ -136,4 +136,11 @@
 			border-radius: 30px;
 		}
 	}
+
+	.packages-grid {
+		display: grid;
+		width: 100%;
+		grid-gap: 2rem;
+		grid-template-columns: repeat(auto-fill, minmax(20rem, auto));
+	}
 </style>

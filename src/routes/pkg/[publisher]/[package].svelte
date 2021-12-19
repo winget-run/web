@@ -46,9 +46,7 @@
 	import type { IStatsResponse } from "$lib/types/stats";
 	import { padDate } from "$lib/utils/helpers";
 	import calendar from "@iconify/icons-uil/calendar-alt";
-	import clipboardNotes from "@iconify/icons-uil/clipboard-notes";
 	import external from "@iconify/icons-uil/external-link-alt";
-	import plus from "@iconify/icons-uil/plus";
 	import Icon from "@iconify/svelte";
 	import type { Load } from "@sveltejs/kit";
 	import { backOut } from "svelte/easing";
@@ -96,97 +94,97 @@
 	/>
 </svelte:head>
 
-<div class="w-full max-w-[1178px] mx-auto">
-	<header in:fly={{ y: 20, duration: 500, easing: backOut }} class="flex my-16">
-		<img
-			class="w-24 h-24"
-			src={pack.Logo ??
-				`https://www.google.com/s2/favicons?sz=96&domain_url=${pack.Latest.Homepage}`}
-			alt=""
-			width={96}
-			height={96}
-		/>
-		<div class="ml-8">
-			<h1 class="font-semibold text-5xl text-title mt-2 leading-none">
-				<span class="mr-2">{pack.Latest.Name}</span>
-				<span class="font-medium italic text-2xl text-sub">{pack.Versions[0]}</span>
-			</h1>
-			<a
-				href="/pkg/{publisher}"
-				class="inline-block font-medium italic text-2xl text-sub mt-2 leading-none"
-				>{pack.Latest.Publisher}</a
-			>
-		</div>
-	</header>
+{#key pack}
+	<div class="w-full max-w-[1178px] mx-auto">
+		<header in:fly={{ y: 20, duration: 500, easing: backOut }} class="flex my-16">
+			<img
+				class="w-24 h-24"
+				src={pack.Logo ??
+					`https://www.google.com/s2/favicons?sz=96&domain_url=${pack.Latest.Homepage}`}
+				alt=""
+				width={96}
+				height={96}
+			/>
+			<div class="ml-8">
+				<h1 class="font-semibold text-5xl text-title mt-2 leading-none">
+					<span class="mr-2">{pack.Latest.Name}</span>
+					<span class="font-medium italic text-2xl text-sub">{pack.Versions[0]}</span>
+				</h1>
+				<a
+					href="/pkg/{publisher}"
+					class="inline-block font-medium italic text-2xl text-sub mt-2 leading-none"
+					>{pack.Latest.Publisher}</a
+				>
+			</div>
+		</header>
 
-	<div
-		in:fly={{ y: 20, duration: 500, delay: 250, easing: backOut }}
-		class="grid grid-cols-10 gap-8"
-	>
-		<div class="col-span-3">
-			{#if pack.Latest.Homepage}
-				<Button href={pack.Latest.Homepage} class="w-full mb-3" outlined let:iconSize>
-					<Icon class="mr-2" icon={external} width={iconSize} height={iconSize} />Visit Website
-				</Button>
-			{/if}
-
-			<div class="bg-white rounded-xl w-full border transition-all shadow-card mb-5">
-				{#if pack.Latest.Tags?.length > 0}
-					<section class="mb-10 px-5 mt-5">
-						<h2 class="font-semibold text-2xl text-title mb-2 leading-tight">Tags</h2>
-						<div class="-mb-2">
-							{#each pack.Latest.Tags as tag}
-								<a
-									href="/search?tags={tag}"
-									rel="nofollow"
-									class="inline-block rounded border border-primary px-2.5 py-2 not-last:mr-2 mb-2 | leading-none whitespace-nowrap text-primary font-medium text-sm transition-colors hover:(text-white bg-primary)"
-								>
-									{tag}
-								</a>
-							{/each}
-						</div>
-					</section>
+		<div
+			in:fly={{ y: 20, duration: 500, delay: 250, easing: backOut }}
+			class="grid grid-cols-10 gap-8"
+		>
+			<div class="col-span-3">
+				{#if pack.Latest.Homepage}
+					<Button href={pack.Latest.Homepage} class="w-full mb-3" outlined let:iconSize>
+						<Icon class="mr-2" icon={external} width={iconSize} height={iconSize} />Visit Website
+					</Button>
 				{/if}
-				<section bind:offsetWidth={graphWidth} class="mt-5">
-					{#if selectedDateIdx !== null}
-						<h2 class="px-5 font-semibold text-2xl text-title leading-tight">
-							{dates[selectedDateIdx].Value} views
-						</h2>
-						<h3 class="px-5 font-medium italic text-sm text-sub">
-							{dateFormatter.format(new Date(dates[selectedDateIdx].Period))}
-						</h3>
-					{:else}
-						<h2 class="px-5 font-semibold text-2xl text-title leading-tight">
-							{dates.reduce((a, c) => a + c.Value, 0)} views
-						</h2>
-						<h3 class="px-5 font-medium italic text-sm text-sub">in the last 14 days</h3>
+
+				<div class="bg-white rounded-xl w-full border transition-all shadow-card mb-5">
+					{#if pack.Latest.Tags?.length > 0}
+						<section class="mb-10 px-5 mt-5">
+							<h2 class="font-semibold text-2xl text-title mb-2 leading-tight">Tags</h2>
+							<div class="-mb-2">
+								{#each pack.Latest.Tags as tag}
+									<a
+										href="/search?tags={tag}"
+										rel="nofollow"
+										class="inline-block rounded border border-primary px-2.5 py-2 not-last:mr-2 mb-2 | leading-none whitespace-nowrap text-primary font-medium text-sm transition-colors hover:(text-white bg-primary)"
+									>
+										{tag}
+									</a>
+								{/each}
+							</div>
+						</section>
 					{/if}
-					{#key dates}
+					<section bind:offsetWidth={graphWidth} class="mt-5">
+						{#if selectedDateIdx !== null}
+							<h2 class="px-5 font-semibold text-2xl text-title leading-tight">
+								{dates[selectedDateIdx].Value} views
+							</h2>
+							<h3 class="px-5 font-medium italic text-sm text-sub">
+								{dateFormatter.format(new Date(dates[selectedDateIdx].Period))}
+							</h3>
+						{:else}
+							<h2 class="px-5 font-semibold text-2xl text-title leading-tight">
+								{dates.reduce((a, c) => a + c.Value, 0)} views
+							</h2>
+							<h3 class="px-5 font-medium italic text-sm text-sub">in the last 14 days</h3>
+						{/if}
+
 						<Graph
-							class="w-full rounded-b-xl"
+							class="w-full rounded-b-xl text-primary"
 							stats={dates}
 							bind:selected={selectedDateIdx}
 							verticalPadding={20}
 							height={120}
 							width={graphWidth}
 						/>
-					{/key}
-				</section>
-			</div>
+					</section>
+				</div>
 
-			<div class="bg-white rounded-xl w-full border transition-all shadow-card">
-				<h2 class="font-semibold text-2xl text-title mb-2 leading-tight p-5 pb-1">
-					Older versions
-				</h2>
-				<Versions {pack} class="px-2.5 mb-5" />
+				<div class="bg-white rounded-xl w-full border transition-all shadow-card">
+					<h2 class="font-semibold text-2xl text-title mb-2 leading-tight p-5 pb-1">
+						Older versions
+					</h2>
+					<Versions {pack} class="px-2.5 mb-5" />
+				</div>
 			</div>
-		</div>
-		<div class="col-span-7">
-			<!-- Code snippet -->
-			<section class="mb-10">
-				<h2 class="font-semibold text-2xl text-title mb-2 leading-tight">How to install</h2>
-				<Codeblock code="winget install -e --id {pack.Id}" class="w-full mb-3" />
-				<!-- <div class="flex items-center">
+			<div class="col-span-7">
+				<!-- Code snippet -->
+				<section class="mb-10">
+					<h2 class="font-semibold text-2xl text-title mb-2 leading-tight">How to install</h2>
+					<Codeblock code="winget install -e --id {pack.Id}" class="w-full mb-3" />
+					<!-- <div class="flex items-center">
 					<Button on:click={() => alert("bruh")} size="lg" outlined={!selected} let:iconSize>
 						<Icon
 							class="mr-3 transform {selected && 'rotate-45'}"
@@ -202,40 +200,41 @@
 						Copy to clipboard
 					</Button>
 				</div> -->
-			</section>
-
-			<!-- Description -->
-			{#if pack.Latest.Description}
-				<section class="mb-10">
-					<h2 class="font-semibold text-2xl text-title mb-2 leading-tight">About</h2>
-					<p class="text-body">{pack.Latest.Description}</p>
 				</section>
-			{/if}
 
-			<section class="mb-10">
-				<h2 class="font-semibold text-2xl text-title mb-2 leading-tight">Other details</h2>
-				<!-- Updated Date -->
-				<p class="text-body flex items-center mb-3">
-					<Icon class="mr-2" icon={calendar} width={16} height={16} />
-					Last updated on {dateFormatter.format(new Date(pack.UpdatedAt))}
-				</p>
-
-				<!-- License -->
-				{#if pack.Latest.LicenseUrl}
-					<a
-						href={pack.Latest.LicenseUrl}
-						rel="nofollow"
-						class="text-body flex items-center mb-3 hover:(underline text-primary)"
-					>
-						<Icon class="mr-2" icon={external} width={16} height={16} />
-						{pack.Latest.License}
-					</a>
-				{:else}
-					<p class="text-body flex mb-3">
-						{pack.Latest.License}
-					</p>
+				<!-- Description -->
+				{#if pack.Latest.Description}
+					<section class="mb-10">
+						<h2 class="font-semibold text-2xl text-title mb-2 leading-tight">About</h2>
+						<p class="text-body">{pack.Latest.Description}</p>
+					</section>
 				{/if}
-			</section>
+
+				<section class="mb-10">
+					<h2 class="font-semibold text-2xl text-title mb-2 leading-tight">Other details</h2>
+					<!-- Updated Date -->
+					<p class="text-body flex items-center mb-3">
+						<Icon class="mr-2" icon={calendar} width={16} height={16} />
+						Last updated on {dateFormatter.format(new Date(pack.UpdatedAt))}
+					</p>
+
+					<!-- License -->
+					{#if pack.Latest.LicenseUrl}
+						<a
+							href={pack.Latest.LicenseUrl}
+							rel="nofollow"
+							class="text-body flex items-center mb-3 hover:(underline text-primary)"
+						>
+							<Icon class="mr-2" icon={external} width={16} height={16} />
+							{pack.Latest.License}
+						</a>
+					{:else}
+						<p class="text-body flex mb-3">
+							{pack.Latest.License}
+						</p>
+					{/if}
+				</section>
+			</div>
 		</div>
 	</div>
-</div>
+{/key}

@@ -7,8 +7,6 @@
 	export let verticalPadding = 0;
 
 	export let stats: IStat[];
-	const color = "#3F9CB4";
-
 	export let selected: number = null;
 
 	$: max = stats.reduce((a, c) => (c.Value > a ? c.Value : a), 0);
@@ -61,14 +59,20 @@
 	<path
 		in:draw={{ duration: 1000, delay: 500 }}
 		fill="none"
-		stroke={color}
+		stroke="currentColor"
 		stroke-width="2"
 		d="M{curvePoints}"
 	/>
 
 	{#if selected !== null}
-		<circle r="12" fill={color} cx={points[selected].x} cy={points[selected].y} class="pulse" />
-		<circle r="6" fill={color} cx={points[selected].x} cy={points[selected].y} />
+		<circle
+			r="12"
+			fill="currentColor"
+			cx={points[selected].x}
+			cy={points[selected].y}
+			class="pulse"
+		/>
+		<circle r="6" fill="currentColor" cx={points[selected].x} cy={points[selected].y} />
 	{/if}
 
 	<defs>
@@ -80,8 +84,8 @@
 			y2={height}
 			gradientUnits="userSpaceOnUse"
 		>
-			<stop stop-color={color} stop-opacity="0.4" />
-			<stop stop-color={color} stop-opacity="0.05" offset="1" />
+			<stop stop-color="currentColor" stop-opacity="0.4" />
+			<stop stop-color="currentColor" stop-opacity="0.05" offset="1" />
 		</linearGradient>
 	</defs>
 </svg>

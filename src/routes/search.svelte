@@ -68,7 +68,7 @@
 </script>
 
 <svelte:head>
-	<title>wingetdotrun | Finding winget packages made simple.</title>
+	<title>Search results | wingetdotrun</title>
 	<meta
 		name="description"
 		content="Searching, discovering and installing winget packages made effortless without any third-party programs"
@@ -103,14 +103,14 @@
 			}}
 			class="text-center flex flex-col items-center justify-center my-14"
 		>
-			<EmptyBox />
+			<EmptyBox class="text-primary" />
 			<h3 class="text-2xl font-semibold text-primary">No packages found</h3>
 			<p class="text-body text-center max-w-96 mt-2.5">
 				Try searching for another term, or narrow down your search using the filters below.
 			</p>
 		</div>
 	{:else}
-		<div class="flex flex-wrap -mx-4 justify-start">
+		<div class="packages-grid">
 			{#each $searchResults.Packages as pack, i (pack.Id)}
 				<div
 					in:fly={{
@@ -121,7 +121,7 @@
 						easing: backOut,
 					}}
 					animate:flip={{ duration: 250, easing: circOut }}
-					class="px-4 mb-8 min-w-80 max-w-sm w-full"
+					class="max-w-md"
 				>
 					<Package {pack} />
 				</div>

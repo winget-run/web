@@ -89,7 +89,7 @@
 			out:fly={{ x: transitionAmount * -1, duration: transitionLength }}
 		>
 			<SectionTitle class="mb-8"><h2>Selected Packages</h2></SectionTitle>
-			<EmptyBox />
+			<EmptyBox class="text-primary" />
 			<h3 class="text-2xl font-semibold text-primary text-center">
 				{emptyText[Math.floor(Math.random() * emptyText.length)]}
 			</h3>
