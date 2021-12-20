@@ -45,12 +45,12 @@
 	import type { IResponseSingle } from "$lib/types/package";
 	import type { IStatsResponse } from "$lib/types/stats";
 	import { padDate } from "$lib/utils/helpers";
-	import calendar from "@iconify/icons-uil/calendar-alt";
-	import external from "@iconify/icons-uil/external-link-alt";
-	import Icon from "@iconify/svelte";
 	import type { Load } from "@sveltejs/kit";
 	import { backOut } from "svelte/easing";
 	import { fly } from "svelte/transition";
+	import IconCalendar from "~icons/uil/calendar-alt";
+	import IconExternalLink from "~icons/uil/external-link-alt";
+	import IconPlus from "~icons/uil/plus";
 
 	export let response: IResponseSingle;
 	export let stats: IStatsResponse;
@@ -123,9 +123,19 @@
 			class="grid grid-cols-10 gap-8"
 		>
 			<div class="col-span-3">
+				<Button on:click={addOrRemove} class="w-full mb-5" outlined={!selected} let:iconSize>
+					<IconPlus
+						class="mr-2 transform {selected && 'rotate-45'}"
+						width={iconSize}
+						height={iconSize}
+					/>
+					{selected ? "Remove this package" : "Add this package"}
+				</Button>
+
 				{#if pack.Latest.Homepage}
-					<Button href={pack.Latest.Homepage} class="w-full mb-3" outlined let:iconSize>
-						<Icon class="mr-2" icon={external} width={iconSize} height={iconSize} />Visit Website
+					<Button href={pack.Latest.Homepage} class="w-full -mt-2 mb-5" outlined let:iconSize>
+						<IconExternalLink class="mr-2" width={iconSize} height={iconSize} />
+						Visit Website
 					</Button>
 				{/if}
 
@@ -136,7 +146,7 @@
 							<div class="-mb-2">
 								{#each pack.Latest.Tags as tag}
 									<a
-										href="/search?tags={tag}"
+										href="/search?tags={encodeURIComponent(tag)}"
 										rel="nofollow"
 										class="inline-block rounded border border-primary px-2.5 py-2 not-last:mr-2 mb-2 | leading-none whitespace-nowrap text-primary font-medium text-sm transition-colors hover:(text-white bg-primary)"
 									>
@@ -173,9 +183,7 @@
 				</div>
 
 				<div class="bg-white rounded-xl w-full border transition-all shadow-card">
-					<h2 class="font-semibold text-2xl text-title mb-2 leading-tight p-5 pb-1">
-						Older versions
-					</h2>
+					<h2 class="font-semibold text-2xl text-title mb-2 leading-tight p-5 pb-1">Versions</h2>
 					<Versions {pack} class="px-2.5 mb-5" />
 				</div>
 			</div>
@@ -214,7 +222,7 @@
 					<h2 class="font-semibold text-2xl text-title mb-2 leading-tight">Other details</h2>
 					<!-- Updated Date -->
 					<p class="text-body flex items-center mb-3">
-						<Icon class="mr-2" icon={calendar} width={16} height={16} />
+						<IconCalendar class="mr-2" width={16} height={16} />
 						Last updated on {dateFormatter.format(new Date(pack.UpdatedAt))}
 					</p>
 
@@ -225,7 +233,7 @@
 							rel="nofollow"
 							class="text-body flex items-center mb-3 hover:(underline text-primary)"
 						>
-							<Icon class="mr-2" icon={external} width={16} height={16} />
+							<IconExternalLink class="mr-2" width={16} height={16} />
 							{pack.Latest.License}
 						</a>
 					{:else}

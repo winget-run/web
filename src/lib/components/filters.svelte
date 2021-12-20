@@ -1,8 +1,7 @@
 <script lang="ts">
+	import IconSortAmountDown from "~icons/uil/sort-amount-down";
+	import IconSortAmountUp from "~icons/uil/sort-amount-up";
 	import Dropdown from "./dropdown.svelte";
-	import sortAmountUp from "@iconify/icons-uil/sort-amount-up";
-	import sortAmountDown from "@iconify/icons-uil/sort-amount-down";
-	import Icon from "@iconify/svelte";
 
 	export let sort: string;
 	export let order: string;
@@ -15,8 +14,8 @@
 	];
 
 	let orders = [
-		{ label: "Ascending", value: "1", icon: sortAmountUp },
-		{ label: "Descending", value: "-1", icon: sortAmountDown },
+		{ label: "Ascending", value: "1", icon: IconSortAmountUp },
+		{ label: "Descending", value: "-1", icon: IconSortAmountDown },
 	];
 
 	$: currentOrderOption = orders.find((x) => x.value === order) ?? orders[0];
@@ -41,7 +40,7 @@
 				on:click={() => (order === "1" ? (order = "-1") : (order = "1"))}
 			>
 				{currentOrderOption.label}
-				<Icon icon={currentOrderOption.icon} width={18} height={18} class="ms-4" />
+				<svelte:component this={currentOrderOption.icon} width={18} height={18} class="ms-4" />
 			</button>
 		</div>
 	{/if}

@@ -1,18 +1,16 @@
 <script lang="ts">
 	import { goto } from "$app/navigation";
-
 	import EmptyBox from "$lib/animations/empty_box.svelte";
 	import { prefersReducedMotion } from "$lib/stores/a11y";
 	import { searchOpen, searchResults } from "$lib/stores/search";
 	import { clickoutside } from "$lib/utils/actions";
 	import { parseTags } from "$lib/utils/helpers";
-	import angleDown from "@iconify/icons-uil/angle-down";
-	import arrowRight from "@iconify/icons-uil/arrow-right";
-	import search from "@iconify/icons-uil/search";
-	import Icon from "@iconify/svelte";
 	import { flip } from "svelte/animate";
 	import { backOut } from "svelte/easing";
 	import { fly } from "svelte/transition";
+	import IconAngleDown from "~icons/uil/angle-down";
+	import IconArrowRight from "~icons/uil/arrow-right";
+	import IconSearch from "~icons/uil/search";
 	import Package from "./package.svelte";
 	import SearchOptions from "./search_options.svelte";
 
@@ -94,8 +92,8 @@
 	use:clickoutside={() => searchOpen.set(false)}
 	class="w-full h-11 max-w-xl flex items-center px-5 bg-white rounded-lg z-40 relative"
 >
-	<Icon icon={search} width={24} height={24} class="text-primary mr-3" />
-	<div class="flex-1 relative">
+	<IconSearch width={24} height={24} class="text-primary mr-3" />
+	<div class="flex-1 relative {!$searchOpen && 'pr-20'}">
 		<div
 			class="w-full h-full absolute left-0 top-0 text-transparent overflow-hidden whitespace-nowrap | font-medium"
 			tabindex={-1}
@@ -119,7 +117,7 @@
 		</form>
 		{#if !$searchOpen}
 			<kbd
-				class="text-xs text-sub bg-white font-semibold leading-none rounded px-1.5 py-1 border border-b-2 border-sub | absolute right-0 top-1/2 transform -translate-y-1/2"
+				class="text-xs text-sub bg-white font-semibold leading-none rounded px-1.5 py-1 border border-b-2 border-sub pointer-events-none | absolute right-0 top-1/2 transform -translate-y-1/2"
 			>
 				CTRL + K
 			</kbd>
@@ -173,9 +171,8 @@
 							class="w-full h-11 px-4 inline-flex items-center justify-center rounded-lg focus:outline-none | bg-white hover:bg-primary-10 transition-colors text-primary font-semibold text-lg shadow-card"
 						>
 							{moreOptionsOpen ? "Less options" : "More options"}
-							<Icon
+							<IconAngleDown
 								class="ms-3 transform {moreOptionsOpen && 'rotate-180'}"
-								icon={angleDown}
 								width={24}
 								height={24}
 							/>
@@ -196,7 +193,7 @@
 							{:else}
 								View all {$searchResults.Total} results
 							{/if}
-							<Icon class="ms-3" icon={arrowRight} width={24} height={24} />
+							<IconArrowRight class="ms-3" width={24} height={24} />
 						</button>
 						{#if moreOptionsOpen}
 							<SearchOptions class="col-span-2" />

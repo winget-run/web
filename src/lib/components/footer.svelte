@@ -10,7 +10,9 @@
 	};
 </script>
 
-<footer class="py-8 bg-grey-10 p-4 rounded-xl flex flex-col items-center text-body mt-10">
+<footer
+	class="py-8 bg-grey-10 p-4 rounded-xl flex flex-col items-center text-body mt-10 dark:(bg-dark-800 text-body-dark)"
+>
 	<ul class="flex mb-8">
 		{#each Object.entries(links) as [text, href]}
 			<li>
@@ -19,5 +21,7 @@
 		{/each}
 	</ul>
 	<Logo />
-	<small class="text-sm text-sub mt-3">© 2017 - {new Date().getFullYear()} Feinwaru Software</small>
+	<small class="text-sm text-sub mt-3 dark:text-sub-dark"
+		>© 2017 - {new Date().getFullYear()} Feinwaru Software</small
+	>
 </footer>

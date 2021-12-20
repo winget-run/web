@@ -2,7 +2,8 @@
 	import { createPopperActions } from "svelte-popperjs";
 
 	export let content: string;
-	export let offset = [0, 0];
+	export let offset = [0, 6];
+	export let wrapperClass = "";
 
 	const [popperRef, popper, getInstance] = createPopperActions();
 	const popperOptions = {
@@ -43,7 +44,7 @@
 
 <span
 	use:popperRef
-	class="relative"
+	class="relative {wrapperClass}"
 	on:mouseenter={() => (show = true)}
 	on:mouseleave={() => (show = false)}
 >
@@ -67,6 +68,7 @@
 	.arrow {
 		height: 8px;
 		width: 8px;
+		pointer-events: none;
 	}
 
 	.arrow::before {

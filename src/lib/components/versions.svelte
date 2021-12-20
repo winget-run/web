@@ -2,13 +2,13 @@
 	import Tooltip from "$lib/components/tooltip.svelte";
 	import { downloads } from "$lib/stores/packages";
 	import type { IPackage } from "$lib/types/package";
-	import clipboardNotes from "@iconify/icons-uil/clipboard-notes";
-	import packageIcon from "@iconify/icons-uil/package";
-	import plus from "@iconify/icons-uil/plus";
-	import pen from "@iconify/icons-uil/pen";
-	import Icon from "@iconify/svelte";
 	import VirtualList from "svelte-tiny-virtual-list";
 	import { get } from "svelte/store";
+	import IconClipboard from "~icons/uil/clipboard-notes";
+	import IconPackage from "~icons/uil/package";
+	import IconPen from "~icons/uil/pen";
+	import IconPlus from "~icons/uil/plus";
+	import Clipboard from "./clipboard.svelte";
 
 	export let pack: IPackage;
 	$: selected = $downloads.find((x) => x.package.Id === pack.Id);
@@ -28,7 +28,7 @@
 <div class="list {$$props.class}">
 	<VirtualList
 		width="100%"
-		height={Math.min(32 * 6, pack.Versions.length * 32)}
+		height={Math.min(32 * 6, Math.max(2, pack.Versions.length) * 32)}
 		itemCount={pack.Versions.length}
 		itemSize={32}
 	>
@@ -42,28 +42,28 @@
 		>
 			<p class="truncate text-sm">{pack.Versions[index]}</p>
 			<div class="flex items-center">
-				<Tooltip content="Package manifest">
-					<button class="px-1 hover:text-primary">
-						<Icon icon={packageIcon} width={20} height={20} />
+				<!-- TODO: Package manifest -->
+				<!-- <Tooltip wrapperClass="flex items-center justify-center" content="Package manifest">
+					<button class="px-1 h-full hover:text-primary focus:outline-none">
+						<IconPackage width={20} height={20} />
 					</button>
-				</Tooltip>
+				</Tooltip> -->
 
-				<Tooltip content="Copy to clipboard">
-					<button class="px-1 hover:text-primary">
-						<Icon icon={clipboardNotes} width={20} height={20} />
-					</button>
-				</Tooltip>
+				<Clipboard download={{ package: pack, version: pack.Versions[index] }} />
 
 				<Tooltip
-					content={selected
-						? "Change version in selected packages"
-						: "Add version to selected packages"}
+					wrapperClass="flex items-center justify-center"
+					content={selected ? "Change version" : "Add this version"}
 				>
 					<button
-						class="px-1 hover:text-primary"
+						class="px-1 hover:text-primary focus:outline-none"
 						on:click={() => addToSelected(pack.Versions[index])}
 					>
-						<Icon icon={selected ? pen : plus} width={20} height={20} />
+						{#if selected}
+							<IconPen width={20} height={20} />
+						{:else}
+							<IconPlus width={20} height={20} />
+						{/if}
 					</button>
 				</Tooltip>
 			</div>

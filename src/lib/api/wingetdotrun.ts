@@ -1,4 +1,4 @@
-import type { IResponse, IResponseSingle } from "$lib/types/package";
+import type { IListRespoonse, IResponse, IResponseSingle } from "$lib/types/package";
 import type { IStatsResponse } from "$lib/types/stats";
 
 interface IOptions extends Record<string, string> {
@@ -22,8 +22,16 @@ interface IStatsOptions extends Record<string, string> {
 	after: string;
 }
 
+interface IConstructorOptions {
+	version: number;
+}
+
 export default class Wingetdotrun {
-	constructor() {}
+	constructor(
+		private _options: IConstructorOptions = {
+			version: 2,
+		}
+	) {}
 
 	private _url = import.meta.env.VITE_API_URL as string;
 
@@ -35,7 +43,7 @@ export default class Wingetdotrun {
 		if (query) Object.entries(query).forEach((o) => (o[1] === null ? delete query[o[0]] : 0));
 		const queryParams = query ? `?${new URLSearchParams(query).toString()}` : "";
 
-		return fetch(`${this._url}${endpoint}${queryParams}`, {
+		return fetch(`${this._url}/v${this._options.version}${endpoint}${queryParams}`, {
 			headers: {
 				Accept: "application/json",
 				"Content-Type": "application/json",
@@ -64,5 +72,9 @@ export default class Wingetdotrun {
 
 	stats = (options: IStatsOptions): Promise<IStatsResponse> => {
 		return this._fetch(`/stats`, options);
+	};
+
+	list = (): Promise<IListRespoonse> => {
+		return this._fetch(`/list`);
 	};
 }

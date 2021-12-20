@@ -4,6 +4,6 @@
   <Description>Search for packages on winget.run</Description>
   <Tags>winget packages</Tags>
   <Image height="16" width="16" type="image/vnd.microsoft.icon">https://winget.run/favicon.ico</Image>
-  <Url type="text/html" template="https://winget.run/search?q={searchTerms}&utm_source=opensearch" />
+  <Url type="text/html" template="https://winget.run/search?query={searchTerms}&utm_source=opensearch" />
   <Query role="example" searchTerms="discord" />
 </OpenSearchDescription>

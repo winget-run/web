@@ -81,3 +81,10 @@ export interface IResponse {
 export interface IResponseSingle {
 	Package: IPackage;
 }
+
+export interface IListRespoonse {
+	list: {
+		Id: string;
+		updatedAt: string;
+	}[];
+}

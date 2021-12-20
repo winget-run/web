@@ -1,6 +1,5 @@
 <script lang="ts">
-	import Icon from "@iconify/svelte";
-	import plus from "@iconify/icons-uil/plus";
+	import IconPlus from "~icons/uil/plus";
 	import { downloads } from "$lib/stores/packages";
 
 	import type { IPackage } from "$lib/types/package";
@@ -23,9 +22,9 @@
 </script>
 
 <article
-	class="bg-white rounded-xl h-full w-full border p-5 transition-all {selected
+	class="bg-white dark:bg-dark-800 rounded-xl h-full w-full border p-5 transition-all {selected
 		? 'shadow-card-selected border-primary'
-		: 'shadow-card'}"
+		: 'shadow-card dark:border-dark-700'}"
 >
 	<div class="flex items-center">
 		<img
@@ -34,7 +33,9 @@
 			alt=""
 		/>
 		<div class="flex-1 px-2.5">
-			<h2 class="font-semibold text-title text-lg line-clamp-1 leading-tight break-all">
+			<h2
+				class="font-semibold text-title dark:text-white text-lg line-clamp-1 leading-tight break-all"
+			>
 				<a
 					sveltekit:prefetch
 					on:click={() => searchOpen.set(false)}
@@ -44,7 +45,7 @@
 					{#if highlights}
 						{@html pack.Latest.Name.replace(
 							new RegExp(`(${highlights?.name ?? highlights?.query})`, "gi"),
-							"<span class='bg-highlighter rounded'>$1</span>"
+							"<span class='bg-highlighter dark:bg-highlighter-dark rounded'>$1</span>"
 						)}
 					{:else}
 						{pack.Latest.Name}
@@ -54,7 +55,7 @@
 			<a
 				on:click={() => searchOpen.set(false)}
 				href="/pkg/{publisher}"
-				class="font-medium italic text-sub text-xs line-clamp-1 leading-tight hover:text-primary"
+				class="font-medium italic text-sub dark:text-sub-dark text-xs line-clamp-1 leading-tight hover:text-primary"
 			>
 				{pack.Latest.Publisher}
 			</a>
@@ -65,15 +66,15 @@
 				? 'bg-primary text-white rotate-45'
 				: 'bg-primary-10 text-primary'}"
 		>
-			<Icon icon={plus} width={24} height={24} />
+			<IconPlus width={24} height={24} />
 		</button>
 	</div>
 	{#if pack.Latest.Description}
-		<p class="line-clamp-3 text-body text-sm mt-5">
+		<p class="line-clamp-3 text-body dark:text-body-dark text-sm mt-5">
 			{#if highlights}
 				{@html pack.Latest.Description.replace(
 					new RegExp(`(${highlights?.description ?? highlights?.query})`, "gi"),
-					"<span class='bg-highlighter rounded'>$1</span>"
+					"<span class='bg-highlighter dark:bg-highlighter-dark rounded'>$1</span>"
 				)}
 			{:else}
 				{pack.Latest.Description}

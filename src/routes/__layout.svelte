@@ -1,16 +1,15 @@
 <script lang="ts">
+	import "virtual:windi.css";
 	import Footer from "$lib/components/footer.svelte";
-
-	import Github from "$lib/components/svg/github.svelte";
-	import Kofi from "$lib/components/svg/kofi.svelte";
 	import Search from "$lib/components/search.svelte";
 	import Sidebar from "$lib/components/sidebar.svelte";
+	import Github from "$lib/components/svg/github.svelte";
+	import Kofi from "$lib/components/svg/kofi.svelte";
+	import Logo from "$lib/components/svg/logo.svelte";
 	import { downloads } from "$lib/stores/packages";
 	import { searchOpen } from "$lib/stores/search";
 	import { onMount } from "svelte";
 	import { fade } from "svelte/transition";
-	import "virtual:windi.css";
-	import Logo from "$lib/components/svg/logo.svelte";
 
 	let mounted = false;
 
@@ -62,7 +61,7 @@
 
 <svelte:body on:keydown={handleKeyDown} />
 
-<div class="flex flex-col h-screen overflow-hidden p-4">
+<div class="flex flex-col h-screen overflow-hidden p-4 bg-white dark:bg-dark-900">
 	{#if $searchOpen}
 		<div
 			transition:fade={{ duration: 250 }}
@@ -117,6 +116,23 @@
 
 	body {
 		overflow: hidden;
+	}
+
+	input[type="text"]::-ms-clear {
+		display: none;
+		width: 0;
+		height: 0;
+	}
+	input[type="text"]::-ms-reveal {
+		display: none;
+		width: 0;
+		height: 0;
+	}
+	input[type="search"]::-webkit-search-decoration,
+	input[type="search"]::-webkit-search-cancel-button,
+	input[type="search"]::-webkit-search-results-button,
+	input[type="search"]::-webkit-search-results-decoration {
+		display: none;
 	}
 
 	main {

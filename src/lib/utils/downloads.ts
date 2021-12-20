@@ -1,8 +1,9 @@
+import type { IDownload } from "$lib/stores/packages";
 import { downloads } from "$lib/stores/packages";
 import { get } from "svelte/store";
 
-export const mapDownloadsToCommands = () => {
-	const d = get(downloads);
+export const mapDownloadsToCommands = (customDownloads?: IDownload[]) => {
+	const d = customDownloads ?? get(downloads);
 
 	return d
 		.map((x) =>

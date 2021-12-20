@@ -1,7 +1,6 @@
 <script lang="ts">
-	import clipboardNotes from "@iconify/icons-uil/clipboard-notes";
+	import IconClipboard from "~icons/uil/clipboard-notes";
 
-	import Icon from "@iconify/svelte";
 	import { onDestroy } from "svelte";
 	import Tooltip from "./tooltip.svelte";
 
@@ -30,7 +29,7 @@
 	<span class="truncate flex-1">{code}</span>
 	<Tooltip content={tooltipText} offset={[0, 4]}>
 		<button on:click={copyToClipboard} class="focus:outline-none hover:text-primary">
-			<Icon icon={clipboardNotes} width={22} height={22} />
+			<IconClipboard width={22} height={22} />
 		</button>
 	</Tooltip>
 </code>

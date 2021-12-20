@@ -1,6 +1,7 @@
 import { defineConfig } from "windicss/helpers";
 
 export default defineConfig({
+	darkMode: "class",
 	theme: {
 		extend: {
 			borderColor: {
@@ -13,11 +14,26 @@ export default defineConfig({
 					10: "#ECF6F8",
 				},
 				title: "#404040",
-				sub: "#888888",
-				body: "#555555",
-				highlighter: "#FFFFA2",
+				sub: {
+					DEFAULT: "#888888",
+					dark: "#929AC9",
+				},
+				body: {
+					DEFAULT: "#555555",
+					dark: "#BEC7D5",
+				},
+				highlighter: {
+					DEFAULT: "#FFFFA2",
+					dark: "#494C35",
+				},
 				grey: {
 					10: "#F5F5F5",
+				},
+				dark: {
+					900: "#25293A",
+					800: "#292D3E",
+					700: "#3C4159",
+					600: "#4B516E",
 				},
 			},
 			fontFamily: {

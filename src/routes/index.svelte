@@ -7,8 +7,7 @@
 	import { api } from "$lib/stores/api";
 	import { updatedPackages } from "$lib/stores/packages";
 	import type { IResponse } from "$lib/types/package";
-	import spinner from "@iconify/icons-uil/spinner";
-	import Icon from "@iconify/svelte";
+	import IconSpinner from "~icons/uil/spinner";
 	import type { Load } from "@sveltejs/kit";
 	import { flip } from "svelte/animate";
 	import { backOut, circOut } from "svelte/easing";
@@ -71,6 +70,21 @@
 		name="twitter:description"
 		content="Searching, discovering and installing winget packages made effortless without any third-party programs"
 	/>
+	<script type="application/ld+json">
+		{
+			"@context": "https://schema.org",
+			"@type": "WebSite",
+			"url": "https://winget.run/",
+			"potentialAction": {
+				"@type": "SearchAction",
+				"target": {
+					"@type": "EntryPoint",
+					"urlTemplate": "https://winget.run/search?query={search_term_string}&utm_source=schemaSearch"
+				},
+				"query-input": "required name=search_term_string"
+			}
+		}
+	</script>
 </svelte:head>
 
 <SectionTitle class="mt-2 mb-8"><h2>Featured Packages</h2></SectionTitle>
@@ -123,7 +137,7 @@
 		>
 			{#if loading}
 				<Button disabled outlined let:iconSize>
-					<Icon class="mr-2 animate-spin" icon={spinner} width={iconSize} height={iconSize} />
+					<IconSpinner class="mr-2 animate-spin" width={iconSize} height={iconSize} />
 					Loading...
 				</Button>
 			{:else}

@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { downloads, IDownload } from "$lib/stores/packages";
-	import plus from "@iconify/icons-uil/plus";
-	import Icon from "@iconify/svelte";
 	import { get } from "svelte/store";
+	import IconPlus from "~icons/uil/plus";
 	import Dropdown from "./dropdown.svelte";
 
 	export let download: IDownload;
@@ -33,7 +32,7 @@
 </script>
 
 <article
-	class="bg-white rounded-xl h-auto w-full border p-5 transition shadow-card-selected border-primary"
+	class="bg-white dark:bg-dark-800 rounded-xl h-auto w-full border p-5 transition shadow-card-selected border-primary"
 >
 	<div class="flex items-center">
 		<img
@@ -42,15 +41,15 @@
 			alt=""
 		/>
 		<div class="flex-1 px-2.5">
-			<h2 class="font-semibold text-title text-lg line-clamp-1 leading-tight">
+			<h2 class="font-semibold text-title dark:text-white text-lg line-clamp-1 leading-tight">
 				<a sveltekit:prefetch href="/pkg/{publisher}/{name.join('.')}" class="hover:text-primary">
 					{download.package.Latest.Name}
 				</a>
 			</h2>
-			<p class="font-medium italic text-sub text-xs line-clamp-1 leading-tight">
+			<p class="font-medium italic text-sub dark:text-sub-dark text-xs line-clamp-1 leading-tight">
 				<a
 					href="/pkg/{publisher}"
-					class="font-medium italic text-sub text-xs line-clamp-1 leading-tight hover:text-primary"
+					class="font-medium italic text-sub dark:text-sub-dark text-xs line-clamp-1 leading-tight hover:text-primary"
 					>{download.package.Latest.Publisher}</a
 				>
 			</p>
@@ -59,7 +58,7 @@
 			on:click={remove}
 			class="rounded-full w-8 h-8 flex items-center justify-center focus:outline-none transform transition bg-primary text-white rotate-45"
 		>
-			<Icon icon={plus} width={24} height={24} />
+			<IconPlus width={24} height={24} />
 		</button>
 	</div>
 	<Dropdown

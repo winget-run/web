@@ -9,11 +9,10 @@
 	import { api } from "$lib/stores/api";
 	import { searchResults } from "$lib/stores/packages";
 	import type { IResponse } from "$lib/types/package";
-	import spinner from "@iconify/icons-uil/spinner";
-	import Icon from "@iconify/svelte";
 	import { flip } from "svelte/animate";
 	import { backOut, circOut } from "svelte/easing";
 	import { fly } from "svelte/transition";
+	import IconSpinner from "~icons/uil/spinner";
 
 	let currentPage = 0;
 	let limit = 24;
@@ -140,7 +139,7 @@
 		>
 			{#if loading}
 				<Button on:click={getMore} outlined let:iconSize>
-					<Icon class="mr-2 animate-spin" icon={spinner} width={iconSize} height={iconSize} />
+					<IconSpinner class="mr-2 animate-spin" width={iconSize} height={iconSize} />
 					Loading...
 				</Button>
 			{:else}

@@ -6,8 +6,7 @@
 	import { prefersReducedMotion } from "$lib/stores/a11y";
 	import { downloads } from "$lib/stores/packages";
 	import { mapDownloadsToCommands } from "$lib/utils/downloads";
-	import clipboardNotes from "@iconify/icons-uil/clipboard-notes";
-	import Icon from "@iconify/svelte";
+	import IconClipboard from "~icons/uil/clipboard-notes";
 	import { flip } from "svelte/animate";
 	import { backOut, quadOut } from "svelte/easing";
 	import { crossfade, fly } from "svelte/transition";
@@ -76,7 +75,7 @@
 					size="lg"
 					let:iconSize
 				>
-					<Icon class="mr-3" icon={clipboardNotes} width={iconSize} height={iconSize} />
+					<IconClipboard class="mr-3" width={iconSize} height={iconSize} />
 					Copy to clipboard
 				</Button>
 				<Button class="w-full" size="lg" outlined>More options</Button>
