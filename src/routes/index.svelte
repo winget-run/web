@@ -12,6 +12,8 @@
 	import { flip } from "svelte/animate";
 	import { backOut, circOut } from "svelte/easing";
 	import { fly } from "svelte/transition";
+	import konamicode from "$lib/actions/use_konamicode";
+	import { goto } from "$app/navigation";
 
 	let limit = 24;
 	export const load: Load = async ({ fetch }) => {
@@ -86,6 +88,8 @@
 		}
 	</script>
 </svelte:head>
+
+<svelte:body use:konamicode={() => goto("/search?query=touch+grass")} />
 
 <SectionTitle class="mt-2 mb-8"><h2>Featured Packages</h2></SectionTitle>
 <div class="packages-grid">

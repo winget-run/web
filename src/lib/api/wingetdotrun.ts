@@ -1,4 +1,4 @@
-import type { IListRespoonse, IResponse, IResponseSingle } from "$lib/types/package";
+import type { IListResponse, IResponse, IResponseSingle } from "$lib/types/package";
 import type { IStatsResponse } from "$lib/types/stats";
 
 interface IOptions extends Record<string, string> {
@@ -74,7 +74,7 @@ export default class Wingetdotrun {
 		return this._fetch(`/stats`, options);
 	};
 
-	list = (): Promise<IListRespoonse> => {
+	list = (): Promise<IListResponse> => {
 		return this._fetch(`/list`);
 	};
 }

@@ -1,9 +1,9 @@
 import Wingetdotrun from "$lib/api/wingetdotrun";
-import type { IListRespoonse } from "$lib/types/package";
+import type { IListResponse } from "$lib/types/package";
 import type { RequestHandler } from "@sveltejs/kit";
 
 export const get: RequestHandler = async () => {
-	const sitemapXML = (data: IListRespoonse["list"]) => {
+	const sitemapXML = (data: IListResponse["list"]) => {
 		const packages = data.map((e) => {
 			const [org, ...pkg] = e.Id.split(".");
 			return `

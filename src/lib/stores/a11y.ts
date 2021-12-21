@@ -12,6 +12,8 @@ const getInitialMotionPreference = () => {
 };
 
 export const prefersReducedMotion = readable(getInitialMotionPreference(), (set) => {
+	if (!browser) return;
+
 	function setReducedMotion(event: MediaQueryListEvent) {
 		set(event.matches);
 	}

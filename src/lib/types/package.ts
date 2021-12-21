@@ -82,7 +82,7 @@ export interface IResponseSingle {
 	Package: IPackage;
 }
 
-export interface IListRespoonse {
+export interface IListResponse {
 	list: {
 		Id: string;
 		updatedAt: string;

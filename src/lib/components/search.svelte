@@ -40,7 +40,7 @@
 		: "";
 
 	$: {
-		if (value?.length > 2) {
+		if (value?.length >= 2) {
 			debounce(() => performSearch(value));
 		} else {
 			searchResults.set(null);
