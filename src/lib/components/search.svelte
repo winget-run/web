@@ -2,6 +2,7 @@
 	import { goto } from "$app/navigation";
 	import EmptyBox from "$lib/animations/empty_box.svelte";
 	import { prefersReducedMotion } from "$lib/stores/a11y";
+	import { api } from "$lib/stores/api";
 	import { searchOpen, searchResults } from "$lib/stores/search";
 	import { clickoutside } from "$lib/utils/actions";
 	import { parseTags } from "$lib/utils/helpers";
@@ -59,21 +60,17 @@
 		content.scrollLeft = e.currentTarget.scrollLeft;
 	}
 
-	function performSearch(query: string) {
+	async function performSearch(query: string) {
 		const { order, ...tags } = parseTags(query);
 
-		const params = new URLSearchParams({
-			ensureContains: "true",
-			partialMatch: "true",
-			take: "3",
-			...tags,
-		});
-
-		fetch(`https://api.winget.run/v2/packages?${params.toString()}`).then(async (e) => {
-			if (e.ok) {
-				searchResults.set(await e.json());
-			}
-		});
+		await $api
+			.packages({
+				ensureContains: "true",
+				partialMatch: "true",
+				take: "3",
+				...tags,
+			})
+			.then(searchResults.set);
 	}
 
 	function viewAllResults() {

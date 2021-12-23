@@ -13,6 +13,8 @@ interface IPackagesOptions extends IOptions {
 	name?: string;
 	publisher?: string;
 	description?: string;
+	ensureContains?: string;
+	partialMatch?: string;
 }
 
 interface IStatsOptions extends Record<string, string> {

@@ -9,6 +9,7 @@ If you wish to use our API, please take a look at [our docs](https://docs.winget
 - [Winget.run Svelte App](#wingetrun-svelte-app)
   - [Contents](#contents)
   - [Installation](#installation)
+  - [Environment Variables](#environment-variables)
   - [Development](#development)
   - [Deployment](#deployment)
   - [Contributing](#contributing)
@@ -19,6 +20,15 @@ If you wish to use our API, please take a look at [our docs](https://docs.winget
 ## Installation
 
 A Docker image is built for the project in our CI/CD pipeline on the develop, release/\* and master branches. These can be found [here](https://github.com/winget-run/web/packages/237282). A detailed example of building and running the project without docker can be found in the [development](#Development) section.
+
+## Environment Variables
+
+The website requires a few environment variables be set. This can be done through the command line or by adding a `.env` file as specified in [Vite's documentation](https://vitejs.dev/guide/env-and-mode.html#env-files). 
+
+You will need the following:
+```bash
+VITE_API_URL="xxx" # e.g. https://api.winget.run
+```
 
 ## Development
 
