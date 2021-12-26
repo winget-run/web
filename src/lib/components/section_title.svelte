@@ -1,9 +1,10 @@
+<script lang="ts">
+	export let icon = null;
+</script>
+
 <div
-	class="flex items-center w-full | text-2xl font-semibold uppercase text-primary {$$props.class}"
+	class="flex items-center | text-2xl font-bold text-primary-60 dark:text-primary uppercase {$$props.class}"
 >
-	<span class="flex-1 h-px bg-current" />
-	<span class="px-4">
-		<slot />
-	</span>
-	<span class="flex-1 h-px bg-current" />
+	<svelte:component this={icon} width="1.5rem" height="1.5rem" class="mr-2.5" />
+	<slot />
 </div>

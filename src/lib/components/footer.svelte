@@ -11,7 +11,7 @@
 </script>
 
 <footer
-	class="py-8 bg-grey-10 p-4 rounded-xl flex flex-col items-center text-body mt-10 dark:(bg-dark-800 text-body-dark)"
+	class="py-8 bg-primary-20 p-4 rounded-[1.25rem] flex flex-col items-center text-body mt-10 dark:(bg-dark-800 text-body-dark)"
 >
 	<ul class="flex mb-8">
 		{#each Object.entries(links) as [text, href]}

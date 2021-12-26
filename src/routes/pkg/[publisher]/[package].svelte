@@ -40,8 +40,10 @@
 	import Button from "$lib/components/Button.svelte";
 	import Codeblock from "$lib/components/codeblock.svelte";
 	import Graph from "$lib/components/graph.svelte";
+	import Tooltip from "$lib/components/tooltip.svelte";
 	import Versions from "$lib/components/versions.svelte";
 	import { downloads } from "$lib/stores/packages";
+	import { theme } from "$lib/stores/preferences";
 	import type { IResponseSingle } from "$lib/types/package";
 	import type { IStatsResponse } from "$lib/types/stats";
 	import { padDate } from "$lib/utils/helpers";
@@ -51,12 +53,17 @@
 	import IconCalendar from "~icons/uil/calendar-alt";
 	import IconExternalLink from "~icons/uil/external-link-alt";
 	import IconPlus from "~icons/uil/plus";
+	import IconStar from "~icons/uil/star";
 
 	export let response: IResponseSingle;
 	export let stats: IStatsResponse;
 	export let publisher: string;
 
 	$: selected = $downloads.find((x) => x.package.Id === pack.Id);
+	$: gradient =
+		$theme === "light"
+			? "linear-gradient(180deg, rgba(242, 247, 249, 0.65) 0%, #F2F7F9 100%)"
+			: "linear-gradient(180deg, rgba(37, 41, 58, 0.65) 0%, #25293A 100%)";
 
 	function addOrRemove() {
 		if (selected) {
@@ -95,8 +102,15 @@
 </svelte:head>
 
 {#key pack}
-	<div class="w-full max-w-[1178px] mx-auto">
-		<header in:fly={{ y: 20, duration: 500, easing: backOut }} class="flex my-16">
+	<header
+		in:fly={{ y: 20, duration: 500, easing: backOut }}
+		class="
+		max-w-7xl mx-auto rounded-[1.25rem] pb-8 mb-8 bg-cover bg-center bg-no-repeat
+		{pack.Banner ? 'pt-32' : 'pt-16'}
+		"
+		style="background-image: {gradient}, url({pack.Banner});"
+	>
+		<div class="w-full max-w-[1178px] mx-auto flex">
 			<img
 				class="w-24 h-24"
 				src={pack.Logo ??
@@ -106,18 +120,35 @@
 				height={96}
 			/>
 			<div class="ml-8">
-				<h1 class="font-semibold text-5xl text-title mt-2 leading-none">
-					<span class="mr-2">{pack.Latest.Name}</span>
-					<span class="font-medium italic text-2xl text-sub">{pack.Versions[0]}</span>
+				<h1 class="font-semibold text-5xl text-title dark:text-white mt-2 leading-none">
+					{pack.Latest.Name}
+					{#if pack.Featured}
+						<Tooltip wrapperClass="inline-block align-top" content="Featured package">
+							<svg
+								width="24"
+								height="24"
+								viewBox="0 0 24 24"
+								fill="none"
+								xmlns="http://www.w3.org/2000/svg"
+							>
+								<path
+									d="M22.0005 9.6699C21.9373 9.48699 21.8224 9.32633 21.6698 9.2074C21.5171 9.08848 21.3333 9.0164 21.1405 8.9999L15.4505 8.1699L12.9005 2.9999C12.8186 2.83083 12.6907 2.68824 12.5316 2.58847C12.3724 2.48871 12.1883 2.43579 12.0005 2.43579C11.8126 2.43579 11.6286 2.48871 11.4694 2.58847C11.3102 2.68824 11.1824 2.83083 11.1005 2.9999L8.55047 8.1599L2.86047 8.9999C2.67539 9.02621 2.50139 9.10386 2.35822 9.22406C2.21504 9.34425 2.10843 9.50218 2.05047 9.6799C1.99741 9.85358 1.99265 10.0384 2.03669 10.2146C2.08074 10.3908 2.17192 10.5516 2.30047 10.6799L6.43047 14.6799L5.43047 20.3599C5.39477 20.5474 5.41346 20.7412 5.48434 20.9184C5.55522 21.0955 5.67532 21.2488 5.83047 21.3599C5.98168 21.468 6.16004 21.5318 6.34551 21.5442C6.53099 21.5566 6.71624 21.517 6.88047 21.4299L12.0005 18.7599L17.1005 21.4399C17.2408 21.5191 17.3993 21.5604 17.5605 21.5599C17.7723 21.5607 17.9789 21.4941 18.1505 21.3699C18.3056 21.2588 18.4257 21.1055 18.4966 20.9284C18.5675 20.7512 18.5862 20.5574 18.5505 20.3699L17.5505 14.6899L21.6805 10.6899C21.8248 10.5676 21.9316 10.4068 21.9882 10.2262C22.0448 10.0457 22.0491 9.85278 22.0005 9.6699Z"
+									fill="#ECB22E"
+								/>
+							</svg>
+						</Tooltip>
+					{/if}
 				</h1>
 				<a
 					href="/pkg/{publisher}"
-					class="inline-block font-medium italic text-2xl text-sub mt-2 leading-none"
-					>{pack.Latest.Publisher}</a
+					class="inline-block font-medium italic text-2xl text-sub dark:text-sub-dark mt-2 leading-none"
 				>
+					{pack.Latest.Publisher}
+				</a>
 			</div>
-		</header>
-
+		</div>
+	</header>
+	<div class="w-full max-w-[1178px] mx-auto">
 		<div
 			in:fly={{ y: 20, duration: 500, delay: 250, easing: backOut }}
 			class="grid grid-cols-10 gap-8"
@@ -139,10 +170,12 @@
 					</Button>
 				{/if}
 
-				<div class="bg-white rounded-xl w-full border transition-all shadow-card mb-5">
+				<div class="bg-white dark:bg-dark-700 rounded-xl w-full transition-all shadow-card mb-5">
 					{#if pack.Latest.Tags?.length > 0}
-						<section class="mb-10 px-5 mt-5">
-							<h2 class="font-semibold text-2xl text-title mb-2 leading-tight">Tags</h2>
+						<section class="mb-10 pt-5 px-5">
+							<h2 class="font-semibold text-xl text-title dark:text-white mb-2 leading-tight">
+								Tags
+							</h2>
 							<div class="-mb-2">
 								{#each pack.Latest.Tags as tag}
 									<a
@@ -156,19 +189,21 @@
 							</div>
 						</section>
 					{/if}
-					<section bind:offsetWidth={graphWidth} class="mt-5">
+					<section bind:offsetWidth={graphWidth} class="pt-5">
 						{#if selectedDateIdx !== null}
-							<h2 class="px-5 font-semibold text-2xl text-title leading-tight">
+							<h2 class="px-5 font-semibold text-xl text-title dark:text-white leading-tight">
 								{dates[selectedDateIdx].Value} views
 							</h2>
-							<h3 class="px-5 font-medium italic text-sm text-sub">
+							<h3 class="px-5 font-medium italic text-sm text-sub dark:text-sub-dark">
 								{dateFormatter.format(new Date(dates[selectedDateIdx].Period))}
 							</h3>
 						{:else}
-							<h2 class="px-5 font-semibold text-2xl text-title leading-tight">
+							<h2 class="px-5 font-semibold text-xl text-title dark:text-white leading-tight">
 								{dates.reduce((a, c) => a + c.Value, 0)} views
 							</h2>
-							<h3 class="px-5 font-medium italic text-sm text-sub">in the last 14 days</h3>
+							<h3 class="px-5 font-medium italic text-sm text-sub dark:text-sub-dark">
+								in the last 14 days
+							</h3>
 						{/if}
 
 						<Graph
@@ -182,15 +217,19 @@
 					</section>
 				</div>
 
-				<div class="bg-white rounded-xl w-full border transition-all shadow-card">
-					<h2 class="font-semibold text-2xl text-title mb-2 leading-tight p-5 pb-1">Versions</h2>
+				<div class="bg-white dark:bg-dark-700 rounded-xl w-full transition-all shadow-card">
+					<h2 class="font-semibold text-xl text-title dark:text-white mb-2 leading-tight p-5 pb-1">
+						Versions
+					</h2>
 					<Versions {pack} class="px-2.5 mb-5" />
 				</div>
 			</div>
 			<div class="col-span-7">
 				<!-- Code snippet -->
 				<section class="mb-10">
-					<h2 class="font-semibold text-2xl text-title mb-2 leading-tight">How to install</h2>
+					<h2 class="font-semibold text-2xl text-title dark:text-white mb-2 leading-tight">
+						How to install
+					</h2>
 					<Codeblock code="winget install -e --id {pack.Id}" class="w-full mb-3" />
 					<!-- <div class="flex items-center">
 					<Button on:click={() => alert("bruh")} size="lg" outlined={!selected} let:iconSize>

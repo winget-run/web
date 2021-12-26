@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { createPopperActions } from "svelte-popperjs";
+	import { fade } from "svelte/transition";
 
 	export let content: string;
 	export let offset = [0, 6];
@@ -52,6 +53,7 @@
 </span>
 {#if show}
 	<span
+		transition:fade={{ duration: 100 }}
 		class="tooltip absolute px-2 py-1 rounded bg-title text-white text-sm font-medium whitespace-nowrap z-20 font-sans"
 		use:popper={popperOptions}
 	>

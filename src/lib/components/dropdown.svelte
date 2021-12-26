@@ -1,18 +1,17 @@
 <script lang="ts">
-	import { prefersReducedMotion } from "$lib/stores/a11y";
-
 	import { clickoutside } from "$lib/utils/actions";
-	import IconCheck from "~icons/uil/check";
-	import IconSort from "~icons/uil/sort";
 	import { createEventDispatcher } from "svelte";
 	import { createPopperActions } from "svelte-popperjs";
 	import VirtualList from "svelte-tiny-virtual-list";
-	import { backOut, cubicOut } from "svelte/easing";
-	import { fade, fly } from "svelte/transition";
+	import { cubicOut } from "svelte/easing";
+	import { fade } from "svelte/transition";
+	import IconCheck from "~icons/uil/check";
+	import IconSort from "~icons/uil/sort";
 
 	const dispatch = createEventDispatcher();
 
 	export let offset = [0, 0];
+	export let grey = false;
 
 	const [popperRef, popper, getInstance] = createPopperActions();
 	const popperOptions = {
@@ -44,11 +43,16 @@
 	}[];
 </script>
 
-<div class="relative text-title" use:clickoutside={() => (expanded = false)}>
+<div
+	class="relative {grey ? 'text-title' : 'text-primary-60'}"
+	use:clickoutside={() => (expanded = false)}
+>
 	<button
 		use:popperRef
 		on:click={() => (expanded = !expanded)}
-		class="bg-grey-10 dark:(bg-dark-700 text-white) h-10 px-4 rounded-lg leading-none text-left text-sm font-semibold inline-flex items-center justify-between focus:outline-none {$$props.class}"
+		class="{grey
+			? 'bg-grey-10'
+			: 'bg-primary-20'} dark:(bg-dark-700 text-white) h-10 px-4 rounded-lg leading-none text-left text-sm font-semibold inline-flex items-center justify-between focus:outline-none {$$props.class}"
 		aria-haspopup="listbox"
 		id="button"
 	>

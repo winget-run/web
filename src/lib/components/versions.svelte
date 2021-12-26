@@ -37,7 +37,7 @@
 			slot="item"
 			let:index
 			let:style
-			class="flex items-center justify-between px-2.5 pr-1.5 py-1 text-body hover:bg-grey-10 rounded"
+			class="flex items-center justify-between px-2.5 pr-1.5 py-1 text-body dark:text-body-dark hover:bg-grey-10 dark:hover:bg-dark-600 rounded"
 			{style}
 		>
 			<p class="truncate text-sm">{pack.Versions[index]}</p>

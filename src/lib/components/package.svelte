@@ -1,5 +1,6 @@
 <script lang="ts">
 	import IconPlus from "~icons/uil/plus";
+	import IconPackage from "~icons/uil/package";
 	import { downloads } from "$lib/stores/packages";
 
 	import type { IPackage } from "$lib/types/package";
@@ -24,14 +25,20 @@
 <article
 	class="bg-white dark:bg-dark-800 rounded-xl h-full w-full border p-5 transition-all {selected
 		? 'shadow-card-selected border-primary'
-		: 'shadow-card dark:border-dark-700'}"
+		: 'shadow-card border-transparent'}"
 >
 	<div class="flex items-center">
-		<img
-			class="w-8 h-8"
-			src="https://www.google.com/s2/favicons?sz=32&domain_url={pack.Latest.Homepage}"
-			alt=""
-		/>
+		{#if pack.Latest.Homepage}
+			<img
+				class="w-8 h-8"
+				src={pack.Latest.Homepage
+					? `https://www.google.com/s2/favicons?sz=32&domain_url=${pack.Latest.Homepage}`
+					: "/favicon.ico"}
+				alt=""
+			/>
+		{:else}
+			<IconPackage class="text-primary" width="2rem" height="2rem" />
+		{/if}
 		<div class="flex-1 px-2.5">
 			<h2
 				class="font-semibold text-title dark:text-white text-lg line-clamp-1 leading-tight break-all"
@@ -62,9 +69,10 @@
 		</div>
 		<button
 			on:click={addOrRemove}
-			class="rounded-full w-8 h-8 flex items-center justify-center focus:outline-none transform transition {selected
-				? 'bg-primary text-white rotate-45'
-				: 'bg-primary-10 text-primary'}"
+			class="
+			rounded-full w-8 h-8 flex items-center justify-center focus:outline-none transform transition bg-primary
+			{selected ? 'text-white rotate-45' : 'bg-opacity-10 text-primary'}
+			"
 		>
 			<IconPlus width={24} height={24} />
 		</button>

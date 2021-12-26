@@ -8,8 +8,14 @@
 	import Logo from "$lib/components/svg/logo.svelte";
 	import { downloads } from "$lib/stores/packages";
 	import { searchOpen } from "$lib/stores/search";
-	import { onMount } from "svelte";
+	import { sidebarOpen } from "$lib/stores/sidebar";
+	import { afterUpdate, onMount } from "svelte";
+	import DarkMode from "svelte-dark-mode";
 	import { fade } from "svelte/transition";
+	import IconSun from "~icons/uil/sun";
+	import IconMoon from "~icons/uil/moon";
+	import Tooltip from "$lib/components/tooltip.svelte";
+	import { theme } from "$lib/stores/preferences";
 
 	let mounted = false;
 
@@ -27,6 +33,10 @@
 		}
 
 		mounted = true;
+	});
+
+	afterUpdate(() => {
+		document.body.className = $theme;
 	});
 
 	const handleKeyDown = (e: KeyboardEvent) => {
@@ -61,8 +71,10 @@
 
 <svelte:body on:keydown={handleKeyDown} />
 
-<div class="flex flex-col h-screen overflow-hidden p-4 bg-white dark:bg-dark-900">
-	{#if $searchOpen}
+<DarkMode on:change={(e) => theme.set(e.detail)} />
+
+<div class="flex flex-col h-screen overflow-hidden p-4 pb-0 bg-primary-10 dark:bg-dark-900">
+	{#if $searchOpen || $sidebarOpen}
 		<div
 			transition:fade={{ duration: 250 }}
 			class="fixed h-full w-full top-0 left-0 bg-black bg-opacity-40 backdrop-filter backdrop-blur-[2px] z-20 pointer-events-none"
@@ -70,41 +82,59 @@
 	{/if}
 
 	<nav class="pb-4">
-		<div class="flex w-full items-center justify-between h-full w-full bg-primary rounded-xl p-4">
-			<h1 class="font-bold text-white text-3xl pl-4">
+		<div
+			class="flex w-full items-center justify-between h-full w-full rounded-[1.25rem] py-4 px-5 | bg-primary-20 dark:(bg-dark-700)"
+		>
+			<h1 class="font-bold text-3xl pl-4 | text-primary-60 dark:(text-primary)">
 				<a aria-label="Home" href="/"> <Logo /> </a>
 			</h1>
 			<Search />
 			<div class="flex items-center">
-				<a
-					href="https://github.com/winget-run/wingetdotrun"
-					class="w-11 h-11 mr-3 inline-flex items-center justify-center rounded-lg focus:outline-none | bg-white bg-opacity-10 hover:(bg-primary-dark bg-opacity-100) transition-colors text-white font-semibold text-lg"
+				<Tooltip
+					wrapperClass="mr-3"
+					content={$theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
 				>
-					<Github />
-				</a>
-				<a
-					href="https://ko-fi.com/wingetdotrun"
-					class="w-11 h-11 mr-3 inline-flex items-center justify-center rounded-lg focus:outline-none | bg-white bg-opacity-10 hover:(bg-primary-dark bg-opacity-100) transition-colors text-white font-semibold text-lg"
-				>
-					<Kofi />
-				</a>
+					<button
+						on:click={() => theme.update((x) => (x === "dark" ? "light" : "dark"))}
+						href="https://github.com/winget-run/wingetdotrun"
+						class="w-11 h-11 inline-flex items-center justify-center rounded-lg focus:outline-none transition-colors font-semibold text-lg | bg-primary-30 hover:(bg-primary-dark) text-primary-60 | dark:(bg-dark-600 text-white)"
+					>
+						<svelte:component this={$theme === "dark" ? IconMoon : IconSun} />
+					</button>
+				</Tooltip>
+				<Tooltip wrapperClass="mr-3" content="View on GitHub">
+					<a
+						href="https://github.com/winget-run/wingetdotrun"
+						class="w-11 h-11 inline-flex items-center justify-center rounded-lg focus:outline-none transition-colors font-semibold text-lg | bg-primary-30 hover:(bg-primary-dark) text-primary-60 | dark:(bg-dark-600 text-white)"
+					>
+						<Github />
+					</a>
+				</Tooltip>
+				<Tooltip wrapperClass="mr-3" content="Buy us a coffee">
+					<a
+						href="https://ko-fi.com/wingetdotrun"
+						class="w-11 h-11 inline-flex items-center justify-center rounded-lg focus:outline-none transition-colors font-semibold text-lg | bg-primary-30 hover:(bg-primary-dark) text-primary-60 | dark:(bg-dark-600 text-white)"
+					>
+						<Kofi />
+					</a>
+				</Tooltip>
 				<a
 					href="ms-appinstaller:?source=https://aka.ms/getwinget"
-					class="h-11 inline-flex px-4 items-center justify-center rounded-lg focus:outline-none | bg-white hover:bg-grey-10 transition-colors text-primary hover:text-primary-dark font-semibold text-lg"
+					class="h-11 inline-flex px-4 items-center justify-center rounded-lg focus:outline-none transition-colors font-semibold text-lg | bg-primary hover:bg-grey-10 text-white hover:text-primary-dark"
 				>
 					Install winget
 				</a>
 			</div>
 		</div>
 	</nav>
-	<div class="flex-1 flex overflow-hidden">
-		<main class="w-full flex flex-col justify-between px-4 overflow-auto">
+	<div class="flex-1 flex overflow-hidden relative">
+		<Sidebar />
+		<main class="w-full flex flex-col justify-between px-4 overflow-auto pb-4">
 			<div class="">
 				<slot />
 			</div>
 			<Footer />
 		</main>
-		<Sidebar />
 	</div>
 </div>
 

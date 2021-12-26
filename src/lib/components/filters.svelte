@@ -36,7 +36,7 @@
 			<label class="text-sm text-sub font-semibold mb-1" for="order"> Order by </label>
 			<button
 				id="order"
-				class="bg-grey-10 h-10 px-4 rounded-lg leading-none text-left text-sm font-semibold inline-flex items-center justify-between focus:outline-none"
+				class="bg-primary-20 text-primary-60 h-10 px-4 rounded-lg leading-none text-left text-sm font-semibold inline-flex items-center justify-between focus:outline-none"
 				on:click={() => (order === "1" ? (order = "-1") : (order = "1"))}
 			>
 				{currentOrderOption.label}

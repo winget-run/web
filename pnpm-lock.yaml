@@ -15,6 +15,7 @@ specifiers:
   sass: ^1.45.0
   svelte: ^3.44.3
   svelte-check: ^2.2.11
+  svelte-dark-mode: ^2.0.0
   svelte-popperjs: ^1.2.7
   svelte-preprocess: ^4.10.1
   svelte-tiny-virtual-list: ^1.1.7
@@ -31,7 +32,7 @@ devDependencies:
   '@iconify-json/uil': 1.0.2
   '@popperjs/core': 2.11.0
   '@sveltejs/adapter-node': 1.0.0-next.56
-  '@sveltejs/kit': 1.0.0-next.202_sass@1.45.0+svelte@3.44.3
+  '@sveltejs/kit': 1.0.0-next.203_sass@1.45.0+svelte@3.44.3
   '@typescript-eslint/eslint-plugin': 4.33.0_3289a875d95a672b97ebf589745c66ef
   '@typescript-eslint/parser': 4.33.0_eslint@7.32.0+typescript@4.5.4
   eslint: 7.32.0
@@ -42,6 +43,7 @@ devDependencies:
   sass: 1.45.0
   svelte: 3.44.3
   svelte-check: 2.2.11_sass@1.45.0+svelte@3.44.3
+  svelte-dark-mode: 2.0.0
   svelte-popperjs: 1.2.7_@popperjs+core@2.11.0
   svelte-preprocess: 4.10.1_5deb3a6a08089c7d920e20e8bbc59957
   tslib: 2.3.1
@@ -173,8 +175,8 @@ packages:
       tiny-glob: 0.2.9
     dev: true
 
-  /@sveltejs/kit/1.0.0-next.202_sass@1.45.0+svelte@3.44.3:
-    resolution: {integrity: sha512-rXmJ0FplkWvD1CaeCfejRYhOJYrlmeUm5Fkw7gIKDdWPQev5rqOhd9B9ZvRpq35oMqCAwaOfK+e5S6k+83feEQ==}
+  /@sveltejs/kit/1.0.0-next.203_sass@1.45.0+svelte@3.44.3:
+    resolution: {integrity: sha512-+bhfmkzquWMSCCFIJoh36U9D6IKC0p/NrIr4CBHMAdRpqzL9lMP0AYQm1fUDH20F/6b2tWvGxmEg+gAmHikRfA==}
     engines: {node: '>=14.13'}
     hasBin: true
     peerDependencies:
@@ -1708,6 +1710,10 @@ packages:
       - sass
       - stylus
       - sugarss
+    dev: true
+
+  /svelte-dark-mode/2.0.0:
+    resolution: {integrity: sha512-XqrCEMrpU13vl4K3EbY6jUj6nYnjGvJ2dxfluIn8QL/e30ms1xdQEpAxL8DjYt5vSKJL7V7lDMLCpuIXSfo0sA==}
     dev: true
 
   /svelte-hmr/0.14.7_svelte@3.44.3:

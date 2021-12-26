@@ -87,7 +87,7 @@
 
 <div
 	use:clickoutside={() => searchOpen.set(false)}
-	class="w-full h-11 max-w-xl flex items-center px-5 bg-white rounded-lg z-40 relative"
+	class="w-full h-11 max-w-xl flex items-center px-5 rounded-lg z-30 relative bg-white dark:(bg-dark-900)"
 >
 	<IconSearch width={24} height={24} class="text-primary mr-3" />
 	<div class="flex-1 relative {!$searchOpen && 'pr-20'}">
@@ -101,7 +101,7 @@
 		<form on:submit|preventDefault={viewAllResults}>
 			<input
 				bind:this={input}
-				class="w-full h-full text-title focus:outline-none relative bg-transparent | font-medium"
+				class="w-full h-full text-title placeholder-sub dark:(text-white placeholder-sub-dark) focus:outline-none relative bg-transparent | font-medium"
 				bind:value
 				on:focus={() => searchOpen.set(true)}
 				on:blur={() => !value && searchOpen.set(false)}
@@ -114,7 +114,7 @@
 		</form>
 		{#if !$searchOpen}
 			<kbd
-				class="text-xs text-sub bg-white font-semibold leading-none rounded px-1.5 py-1 border border-b-2 border-sub pointer-events-none | absolute right-0 top-1/2 transform -translate-y-1/2"
+				class="text-xs text-sub dark:text-sub-dark font-semibold leading-none rounded px-1.5 py-1 border border-b-2 border-current pointer-events-none | absolute right-0 top-1/2 transform -translate-y-1/2"
 			>
 				CTRL + K
 			</kbd>

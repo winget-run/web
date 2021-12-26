@@ -63,6 +63,7 @@
 	</div>
 	<Dropdown
 		class="mt-5 w-full"
+		grey
 		{items}
 		selected={items.findIndex((x) => x.value === download.version)}
 		on:change={({ detail }) => changeVersion(detail)}

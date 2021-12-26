@@ -86,7 +86,7 @@
 		<div>
 			{#each Object.entries(options).filter((x) => x[0] !== "sort" && x[0] !== "order" && x[1]) as option}
 				<div
-					class="bg-grey-10 h-10 px-4 rounded-lg leading-none inline-flex items-center text-title mr-2 last:mr-0"
+					class="bg-primary-20 h-10 px-4 rounded-lg leading-none inline-flex items-center text-primary-60 mr-2 last:mr-0"
 				>
 					<b class="mr-1">{option[0]}:</b>{option[1]}
 				</div>

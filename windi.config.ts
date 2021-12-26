@@ -9,9 +9,13 @@ export default defineConfig({
 			},
 			colors: {
 				primary: {
-					DEFAULT: "#3F9CB4",
-					dark: "#267185",
-					10: "#ECF6F8",
+					DEFAULT: "#3F9CB4", // Also 50
+					60: "#144B59",
+					50: "#3F9CB4",
+					40: "#A1D6E3",
+					30: "#D4E8ED",
+					20: "#E4F0F3",
+					10: "#F2F7F9",
 				},
 				title: "#404040",
 				sub: {
@@ -32,9 +36,10 @@ export default defineConfig({
 				dark: {
 					900: "#25293A",
 					800: "#292D3E",
-					700: "#3C4159",
-					600: "#4B516E",
+					700: "#31364A",
+					600: "#3B4158",
 				},
+				gold: "#ECB22E",
 			},
 			fontFamily: {
 				sans: ["Poppins", "sans-serif"],
