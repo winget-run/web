@@ -15,7 +15,6 @@ specifiers:
   sass: ^1.45.0
   svelte: ^3.44.3
   svelte-check: ^2.2.11
-  svelte-dark-mode: ^2.0.0
   svelte-popperjs: ^1.2.7
   svelte-preprocess: ^4.10.1
   svelte-tiny-virtual-list: ^1.1.7
@@ -43,7 +42,6 @@ devDependencies:
   sass: 1.45.0
   svelte: 3.44.3
   svelte-check: 2.2.11_sass@1.45.0+svelte@3.44.3
-  svelte-dark-mode: 2.0.0
   svelte-popperjs: 1.2.7_@popperjs+core@2.11.0
   svelte-preprocess: 4.10.1_5deb3a6a08089c7d920e20e8bbc59957
   tslib: 2.3.1
@@ -1710,10 +1708,6 @@ packages:
       - sass
       - stylus
       - sugarss
-    dev: true
-
-  /svelte-dark-mode/2.0.0:
-    resolution: {integrity: sha512-XqrCEMrpU13vl4K3EbY6jUj6nYnjGvJ2dxfluIn8QL/e30ms1xdQEpAxL8DjYt5vSKJL7V7lDMLCpuIXSfo0sA==}
     dev: true
 
   /svelte-hmr/0.14.7_svelte@3.44.3:

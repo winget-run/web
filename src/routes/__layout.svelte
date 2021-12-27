@@ -9,13 +9,13 @@
 	import { downloads } from "$lib/stores/packages";
 	import { searchOpen } from "$lib/stores/search";
 	import { sidebarOpen } from "$lib/stores/sidebar";
-	import { afterUpdate, onMount } from "svelte";
-	import DarkMode from "svelte-dark-mode";
+	import { onMount } from "svelte";
 	import { fade } from "svelte/transition";
 	import IconSun from "~icons/uil/sun";
 	import IconMoon from "~icons/uil/moon";
 	import Tooltip from "$lib/components/tooltip.svelte";
-	import { theme } from "$lib/stores/preferences";
+	import darkmode from "$lib/actions/use_darkmode";
+	import { theme } from "$lib/stores/a11y";
 
 	let mounted = false;
 
@@ -33,10 +33,6 @@
 		}
 
 		mounted = true;
-	});
-
-	afterUpdate(() => {
-		document.body.className = $theme;
 	});
 
 	const handleKeyDown = (e: KeyboardEvent) => {
@@ -69,9 +65,7 @@
 	<meta name="twitter:title" content="winget.run" />
 </svelte:head>
 
-<svelte:body on:keydown={handleKeyDown} />
-
-<DarkMode on:change={(e) => theme.set(e.detail)} />
+<svelte:body use:darkmode on:keydown={handleKeyDown} />
 
 <div class="flex flex-col h-screen overflow-hidden p-4 pb-0 bg-primary-10 dark:bg-dark-900">
 	{#if $searchOpen || $sidebarOpen}
@@ -95,7 +89,7 @@
 					content={$theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
 				>
 					<button
-						on:click={() => theme.update((x) => (x === "dark" ? "light" : "dark"))}
+						on:click={() => theme.toggle()}
 						href="https://github.com/winget-run/wingetdotrun"
 						class="w-11 h-11 inline-flex items-center justify-center rounded-lg focus:outline-none transition-colors font-semibold text-lg | bg-primary-30 hover:(bg-primary-dark) text-primary-60 | dark:(bg-dark-600 text-white)"
 					>

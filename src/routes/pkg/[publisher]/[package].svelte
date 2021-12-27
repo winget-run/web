@@ -43,7 +43,7 @@
 	import Tooltip from "$lib/components/tooltip.svelte";
 	import Versions from "$lib/components/versions.svelte";
 	import { downloads } from "$lib/stores/packages";
-	import { theme } from "$lib/stores/preferences";
+	import { theme } from "$lib/stores/a11y";
 	import type { IResponseSingle } from "$lib/types/package";
 	import type { IStatsResponse } from "$lib/types/stats";
 	import { padDate } from "$lib/utils/helpers";
