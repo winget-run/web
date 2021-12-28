@@ -1,21 +1,37 @@
+<script context="module" lang="ts">
+	import { getLocaleFromNavigator, init, register, waitLocale } from "svelte-intl-precompile";
+
+	// @ts-ignore
+	register("en", () => import("$locales/en"));
+	// @ts-ignore
+	register("ko", () => import("$locales/ko"));
+	// @ts-ignore
+	register("pt", () => import("$locales/pt"));
+
+	export const load: Load = async ({ session }) => {
+		init({
+			fallbackLocale: "en",
+			initialLocale: session.storedLocale || session.acceptedLanguage || getLocaleFromNavigator(),
+		});
+		await waitLocale();
+		return {};
+	};
+</script>
+
 <script lang="ts">
 	import "virtual:windi.css";
+	import darkmode from "$lib/actions/use_darkmode";
 	import Footer from "$lib/components/footer.svelte";
-	import Search from "$lib/components/search.svelte";
+	import Nav from "$lib/components/nav.svelte";
 	import Sidebar from "$lib/components/sidebar.svelte";
-	import Github from "$lib/components/svg/github.svelte";
-	import Kofi from "$lib/components/svg/kofi.svelte";
-	import Logo from "$lib/components/svg/logo.svelte";
 	import { downloads } from "$lib/stores/packages";
 	import { searchOpen } from "$lib/stores/search";
 	import { sidebarOpen } from "$lib/stores/sidebar";
+	import type { Load } from "@sveltejs/kit";
 	import { onMount } from "svelte";
 	import { fade } from "svelte/transition";
-	import IconSun from "~icons/uil/sun";
-	import IconMoon from "~icons/uil/moon";
-	import Tooltip from "$lib/components/tooltip.svelte";
-	import darkmode from "$lib/actions/use_darkmode";
-	import { theme } from "$lib/stores/a11y";
+	import { LOCALES } from "$lib/utils/constants";
+	import { page } from "$app/stores";
 
 	let mounted = false;
 
@@ -63,6 +79,9 @@
 	<meta name="twitter:card" content="summary_large_image" />
 	<meta name="twitter:site" content="@wingetdotrun" />
 	<meta name="twitter:title" content="winget.run" />
+	{#each Object.keys(LOCALES).filter((x) => x !== "en") as hreflang}
+		<link rel="alternate" href="https://{$page.host}{$page.path}?lang={hreflang}" {hreflang} />
+	{/each}
 </svelte:head>
 
 <svelte:body use:darkmode on:keydown={handleKeyDown} />
@@ -75,52 +94,7 @@
 		/>
 	{/if}
 
-	<nav class="pb-4">
-		<div
-			class="flex w-full items-center justify-between h-full w-full rounded-[1.25rem] py-4 px-5 | bg-primary-20 dark:(bg-dark-700)"
-		>
-			<h1 class="font-bold text-3xl pl-4 | text-primary-60 dark:(text-primary)">
-				<a aria-label="Home" href="/"> <Logo /> </a>
-			</h1>
-			<Search />
-			<div class="flex items-center">
-				<Tooltip
-					wrapperClass="mr-3"
-					content={$theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
-				>
-					<button
-						on:click={() => theme.toggle()}
-						href="https://github.com/winget-run/wingetdotrun"
-						class="w-11 h-11 inline-flex items-center justify-center rounded-lg focus:outline-none transition-colors font-semibold text-lg | bg-primary-30 hover:(bg-primary-dark) text-primary-60 | dark:(bg-dark-600 text-white)"
-					>
-						<svelte:component this={$theme === "dark" ? IconMoon : IconSun} />
-					</button>
-				</Tooltip>
-				<Tooltip wrapperClass="mr-3" content="View on GitHub">
-					<a
-						href="https://github.com/winget-run/wingetdotrun"
-						class="w-11 h-11 inline-flex items-center justify-center rounded-lg focus:outline-none transition-colors font-semibold text-lg | bg-primary-30 hover:(bg-primary-dark) text-primary-60 | dark:(bg-dark-600 text-white)"
-					>
-						<Github />
-					</a>
-				</Tooltip>
-				<Tooltip wrapperClass="mr-3" content="Buy us a coffee">
-					<a
-						href="https://ko-fi.com/wingetdotrun"
-						class="w-11 h-11 inline-flex items-center justify-center rounded-lg focus:outline-none transition-colors font-semibold text-lg | bg-primary-30 hover:(bg-primary-dark) text-primary-60 | dark:(bg-dark-600 text-white)"
-					>
-						<Kofi />
-					</a>
-				</Tooltip>
-				<a
-					href="ms-appinstaller:?source=https://aka.ms/getwinget"
-					class="h-11 inline-flex px-4 items-center justify-center rounded-lg focus:outline-none transition-colors font-semibold text-lg | bg-primary hover:bg-grey-10 text-white hover:text-primary-dark"
-				>
-					Install winget
-				</a>
-			</div>
-		</div>
-	</nav>
+	<Nav />
 	<div class="flex-1 flex overflow-hidden relative">
 		<Sidebar />
 		<main class="w-full flex flex-col justify-between px-4 overflow-auto pb-4">

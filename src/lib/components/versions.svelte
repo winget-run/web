@@ -2,10 +2,9 @@
 	import Tooltip from "$lib/components/tooltip.svelte";
 	import { downloads } from "$lib/stores/packages";
 	import type { IPackage } from "$lib/types/package";
+	import { t } from "svelte-intl-precompile";
 	import VirtualList from "svelte-tiny-virtual-list";
 	import { get } from "svelte/store";
-	import IconClipboard from "~icons/uil/clipboard-notes";
-	import IconPackage from "~icons/uil/package";
 	import IconPen from "~icons/uil/pen";
 	import IconPlus from "~icons/uil/plus";
 	import Clipboard from "./clipboard.svelte";
@@ -53,7 +52,7 @@
 
 				<Tooltip
 					wrapperClass="flex items-center justify-center"
-					content={selected ? "Change version" : "Add this version"}
+					content={selected ? $t("ctas.change_to_this_version") : $t("ctas.add_this_version")}
 				>
 					<button
 						class="px-1 hover:text-primary focus:outline-none"

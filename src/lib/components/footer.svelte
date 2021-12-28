@@ -1,12 +1,13 @@
 <script lang="ts">
+	import { t } from "svelte-intl-precompile";
 	import Logo from "./svg/logo.svelte";
 
-	let links = {
-		"About winget": "https://docs.microsoft.com/en-us/windows/package-manager/",
-		"API Documentation": "https://docs.winget.run/docs/introduction",
+	$: links = {
+		[$t("nav.about_winget")]: "https://docs.microsoft.com/en-us/windows/package-manager/",
+		[$t("nav.api_documentation")]: "https://docs.winget.run/docs/introduction",
 		GitHub: "https://github.com/winget-run/wingetdotrun",
 		Twitter: "https://twitter.com/feinwaru",
-		"Support Us": "https://ko-fi.com/wingetdotrun",
+		[$t("nav.buy_us_a_coffee")]: "https://ko-fi.com/wingetdotrun",
 	};
 </script>
 
@@ -21,7 +22,7 @@
 		{/each}
 	</ul>
 	<Logo />
-	<small class="text-sm text-sub mt-3 dark:text-sub-dark"
-		>© 2017 - {new Date().getFullYear()} Feinwaru Software</small
-	>
+	<small class="text-sm text-sub mt-3 dark:text-sub-dark">
+		© 2017 - {new Date().getFullYear()} Feinwaru Software
+	</small>
 </footer>

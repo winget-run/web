@@ -1,0 +1,82 @@
+{
+	"ctas": {
+		"about": "에 대한",
+		"add_this_package": "이 패키지 추가",
+		"add_this_version": "이 버전 추가",
+		"change_to_this_version": "이 버전으로 변경",
+		"copied_to_clipboard": "클립보드에 복사했습니다!",
+		"copy_to_clipboard": "클립 보드에 복사",
+		"less_options": "더 적은 옵션",
+		"load_more_packages": "더 많은 패키지 로드",
+		"load_more_results": "더 많은 결과 로드",
+		"loading": "로드 중...",
+		"more_options": "추가 옵션",
+		"remove_this_package": "이 패키지 제거",
+		"visit_website": "웹사이트 방문"
+	},
+	"home": {
+		"desc": "타사 프로그램 없이 손쉽게 winget 패키지 검색, 검색 및 설치",
+		"featured_packages": "주요 패키지",
+		"recently_updated_packages": "최근 업데이트된 패키지",
+		"title": "윙겟도트런 | winget 패키지 찾기가 간단해졌습니다."
+	},
+	"nav": {
+		"about_winget": "윙겟에 대해",
+		"api_documentation": "API 문서",
+		"buy_us_a_coffee": "우리에게 커피를 사주세요!",
+		"dark_mode": "다크 모드로 전환",
+		"install_winget": "윈겟 설치",
+		"light_mode": "라이트 모드로 전환",
+		"search_x_packages": "{count} 패키지 검색",
+		"view_on_github": "GitHub에서 보기"
+	},
+	"package": {
+		"desc": "winget으로 {name} 및 기타 패키지 다운로드 및 설치",
+		"featured_package": "추천 패키지",
+		"how_to_install": "설치하는 방법",
+		"in_last_x_days": "지난 {count}일 동안",
+		"last_updated_on": "{updated, date, medium}에 마지막으로 업데이트됨",
+		"latest_version": "최신 버전",
+		"license": "라이선스 정보",
+		"other_details": "기타 세부 사항",
+		"tags": "태그",
+		"title": "winget으로 {name} 다운로드 및 설치",
+		"twitter_title": "winget.run의 {name}",
+		"versions": "버전",
+		"x_views": "{count, plural, =1 {# 보기} other {조회수 #회}}"
+	},
+	"search": {
+		"advanced": {
+			"comma_separated": "쉼표로 구분",
+			"description": "설명에서 키워드만 검색합니다.",
+			"name": "패키지 이름만 검색합니다.",
+			"publisher": "게시자별로 패키지를 검색합니다.",
+			"tags": "특정 태그가 있는 패키지 검색",
+			"title": "고급 검색 옵션"
+		},
+		"filters": {
+			"ascending": "오름차순",
+			"descending": "내림차순",
+			"name": "이름",
+			"order_by": "주문",
+			"publisher": "발행자",
+			"relevance": "관련성",
+			"sort_by": "정렬 기준",
+			"updated": "업데이트"
+		},
+		"no_packages_desc": "다른 용어를 검색하거나 아래 필터를 사용하여 검색 범위를 좁히십시오.",
+		"no_packages_found": "패키지를 찾을 수 없습니다.",
+		"view_results": "{count, plural, =1 {결과 보기} other {#개의 결과 모두 보기}}",
+		"x_results": "{count, plural, =1 {결과 #개} other {#개의 결과}}"
+	},
+	"sidebar": {
+		"add_some_packages": "보이는 곳에서 <b>+</b> 버튼을 클릭하여 패키지를 추가하십시오.",
+		"empty_captions": {
+			"1": "상당히 텅텅 비어있는 모습...",
+			"2": "여기 아무것도 없습니다!",
+			"3": "비어있다!",
+			"4": "먼지..."
+		},
+		"x_downloads": "{count, plural, other {# 다운로드}}"
+	}
+}

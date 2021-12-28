@@ -16,6 +16,7 @@
 	import { goto } from "$app/navigation";
 	import IconStar from "~icons/uil/star";
 	import IconClock from "~icons/uil/clock";
+	import { t } from "svelte-intl-precompile";
 
 	let limit = 24;
 	export const load: Load = async ({ fetch }) => {
@@ -65,15 +66,9 @@
 </script>
 
 <svelte:head>
-	<title>wingetdotrun | Finding winget packages made simple.</title>
-	<meta
-		name="description"
-		content="Searching, discovering and installing winget packages made effortless without any third-party programs"
-	/>
-	<meta
-		name="twitter:description"
-		content="Searching, discovering and installing winget packages made effortless without any third-party programs"
-	/>
+	<title>{$t("home.title")}</title>
+	<meta name="description" content={$t("home.desc")} />
+	<meta name="twitter:description" content={$t("home.desc")} />
 	<script type="application/ld+json">
 		{
 			"@context": "https://schema.org",
@@ -94,7 +89,9 @@
 <svelte:body use:konamicode={() => goto("/search?query=touch+grass")} />
 
 {#if featured}
-	<SectionTitle icon={IconStar} class="my-6"><h2>Featured Packages</h2></SectionTitle>
+	<SectionTitle icon={IconStar} class="my-6">
+		<h2>{$t("home.featured_packages")}</h2>
+	</SectionTitle>
 	<div class="packages-grid mb-14">
 		{#each featured.Packages as pack, i (pack.Id)}
 			<div
@@ -113,7 +110,9 @@
 		{/each}
 	</div>
 {/if}
-<SectionTitle icon={IconClock} class="my-6"><h2>Recently Updated Packages</h2></SectionTitle>
+<SectionTitle icon={IconClock} class="my-6">
+	<h2>{$t("home.recently_updated_packages")}</h2>
+</SectionTitle>
 {#if $updatedPackages}
 	<div class="packages-grid">
 		{#each $updatedPackages.Packages as pack, i (pack.Id)}
@@ -144,10 +143,12 @@
 			{#if loading}
 				<Button disabled outlined let:iconSize>
 					<IconSpinner class="mr-2 animate-spin" width={iconSize} height={iconSize} />
-					Loading...
+					{$t("ctas.loading")}
 				</Button>
 			{:else}
-				<Button on:click={getMore} outlined let:iconSize>Load more packages</Button>
+				<Button on:click={getMore} outlined let:iconSize>
+					{$t("ctas.load_more_packages")}
+				</Button>
 			{/if}
 		</div>
 	{/if}

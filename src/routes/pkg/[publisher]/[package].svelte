@@ -54,6 +54,7 @@
 	import IconExternalLink from "~icons/uil/external-link-alt";
 	import IconPlus from "~icons/uil/plus";
 	import IconStar from "~icons/uil/star";
+	import { date, t } from "svelte-intl-precompile";
 
 	export let response: IResponseSingle;
 	export let stats: IStatsResponse;
@@ -73,10 +74,6 @@
 		}
 	}
 
-	const dateFormatter = new Intl.DateTimeFormat("en-US", {
-		dateStyle: "medium",
-	});
-
 	let graphWidth: number;
 
 	$: dates = padDate(stats.Stats.Data, 1000 * 60 * 60 * 24, 14);
@@ -87,17 +84,18 @@
 </script>
 
 <svelte:head>
-	<title>Download and install {pack.Latest.Name} with winget</title>
+	<title>{$t("package.title", { values: { name: pack.Latest.Name } })}</title>
 	<meta
 		name="description"
-		content={pack.Latest.Description ||
-			`Download and install ${pack.Latest.Name} and other packages with winget`}
+		content={pack.Latest.Description || $t("package.desc", { values: { name: pack.Latest.Name } })}
 	/>
-	<meta name="twitter:title" content={`${pack.Latest.Name} on winget.run`} />
+	<meta
+		name="twitter:title"
+		content={$t("package.twitter_title", { values: { name: pack.Latest.Name } })}
+	/>
 	<meta
 		name="twitter:description"
-		content={pack.Latest.Description ||
-			`Download and install ${pack.Latest.Name} and other packages with winget`}
+		content={pack.Latest.Description || $t("package.desc", { values: { name: pack.Latest.Name } })}
 	/>
 </svelte:head>
 
@@ -123,7 +121,7 @@
 				<h1 class="font-semibold text-5xl text-title dark:text-white mt-2 leading-none">
 					{pack.Latest.Name}
 					{#if pack.Featured}
-						<Tooltip wrapperClass="inline-block align-top" content="Featured package">
+						<Tooltip wrapperClass="inline-block align-top" content={$t("package.featured_package")}>
 							<svg
 								width="24"
 								height="24"
@@ -160,21 +158,23 @@
 						width={iconSize}
 						height={iconSize}
 					/>
-					{selected ? "Remove this package" : "Add this package"}
+					{selected ? $t("ctas.remove_this_package") : $t("ctas.add_this_package")}
 				</Button>
 
 				{#if pack.Latest.Homepage}
 					<Button href={pack.Latest.Homepage} class="w-full -mt-2 mb-5" outlined let:iconSize>
 						<IconExternalLink class="mr-2" width={iconSize} height={iconSize} />
-						Visit Website
+						{$t("ctas.visit_website")}
 					</Button>
 				{/if}
 
-				<div class="bg-white dark:bg-dark-700 rounded-xl w-full transition-all shadow-card mb-5">
+				<div
+					class="bg-white dark:bg-dark-700 rounded-xl w-full transition-all shadow-card flex flex-col mb-5"
+				>
 					{#if pack.Latest.Tags?.length > 0}
 						<section class="mb-10 pt-5 px-5">
 							<h2 class="font-semibold text-xl text-title dark:text-white mb-2 leading-tight">
-								Tags
+								{$t("package.tags")}
 							</h2>
 							<div class="-mb-2">
 								{#each pack.Latest.Tags as tag}
@@ -192,17 +192,19 @@
 					<section bind:offsetWidth={graphWidth} class="pt-5">
 						{#if selectedDateIdx !== null}
 							<h2 class="px-5 font-semibold text-xl text-title dark:text-white leading-tight">
-								{dates[selectedDateIdx].Value} views
+								{$t("package.x_views", { values: { count: dates[selectedDateIdx].Value } })}
 							</h2>
 							<h3 class="px-5 font-medium italic text-sm text-sub dark:text-sub-dark">
-								{dateFormatter.format(new Date(dates[selectedDateIdx].Period))}
+								{$date(new Date(dates[selectedDateIdx].Period), { dateStyle: "medium" })}
 							</h3>
 						{:else}
 							<h2 class="px-5 font-semibold text-xl text-title dark:text-white leading-tight">
-								{dates.reduce((a, c) => a + c.Value, 0)} views
+								{$t("package.x_views", {
+									values: { count: dates.reduce((a, c) => a + c.Value, 0) },
+								})}
 							</h2>
 							<h3 class="px-5 font-medium italic text-sm text-sub dark:text-sub-dark">
-								in the last 14 days
+								{$t("package.in_last_x_days", { values: { count: 14 } })}
 							</h3>
 						{/if}
 
@@ -219,16 +221,16 @@
 
 				<div class="bg-white dark:bg-dark-700 rounded-xl w-full transition-all shadow-card">
 					<h2 class="font-semibold text-xl text-title dark:text-white mb-2 leading-tight p-5 pb-1">
-						Versions
+						{$t("package.versions")}
 					</h2>
-					<Versions {pack} class="px-2.5 mb-5" />
+					<Versions {pack} class="px-2.5 pb-5" />
 				</div>
 			</div>
 			<div class="col-span-7">
 				<!-- Code snippet -->
 				<section class="mb-10">
 					<h2 class="font-semibold text-2xl text-title dark:text-white mb-2 leading-tight">
-						How to install
+						{$t("package.how_to_install")}
 					</h2>
 					<Codeblock code="winget install -e --id {pack.Id}" class="w-full mb-3" />
 					<!-- <div class="flex items-center">
@@ -252,17 +254,21 @@
 				<!-- Description -->
 				{#if pack.Latest.Description}
 					<section class="mb-10">
-						<h2 class="font-semibold text-2xl text-title mb-2 leading-tight">About</h2>
-						<p class="text-body">{pack.Latest.Description}</p>
+						<h2 class="font-semibold text-2xl text-title dark:text-white mb-2 leading-tight">
+							{$t("ctas.about")}
+						</h2>
+						<p class="text-body dark:text-body-dark">{pack.Latest.Description}</p>
 					</section>
 				{/if}
 
 				<section class="mb-10">
-					<h2 class="font-semibold text-2xl text-title mb-2 leading-tight">Other details</h2>
+					<h2 class="font-semibold text-2xl text-title dark:text-white mb-2 leading-tight">
+						{$t("package.other_details")}
+					</h2>
 					<!-- Updated Date -->
-					<p class="text-body flex items-center mb-3">
+					<p class="text-body dark:text-body-dark flex items-center mb-3">
 						<IconCalendar class="mr-2" width={16} height={16} />
-						Last updated on {dateFormatter.format(new Date(pack.UpdatedAt))}
+						{$t("package.last_updated_on", { values: { date: new Date(pack.UpdatedAt) } })}
 					</p>
 
 					<!-- License -->
@@ -270,13 +276,13 @@
 						<a
 							href={pack.Latest.LicenseUrl}
 							rel="nofollow"
-							class="text-body flex items-center mb-3 hover:(underline text-primary)"
+							class="text-body dark:text-body-dark flex items-center mb-3 hover:(underline text-primary)"
 						>
 							<IconExternalLink class="mr-2" width={16} height={16} />
-							{pack.Latest.License}
+							{pack.Latest.License || $t("package.license")}
 						</a>
-					{:else}
-						<p class="text-body flex mb-3">
+					{:else if pack.Latest.License}
+						<p class="text-body dark:text-body-dark flex mb-3">
 							{pack.Latest.License}
 						</p>
 					{/if}

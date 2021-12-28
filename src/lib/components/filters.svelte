@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { t } from "svelte-intl-precompile";
+
 	import IconSortAmountDown from "~icons/uil/sort-amount-down";
 	import IconSortAmountUp from "~icons/uil/sort-amount-up";
 	import Dropdown from "./dropdown.svelte";
@@ -6,16 +8,16 @@
 	export let sort: string;
 	export let order: string;
 
-	let sorts = [
-		{ label: "Relevance", value: null },
-		{ label: "Name", value: "Latest.Name" },
-		{ label: "Publisher", value: "Latest.Publisher" },
-		{ label: "Updated", value: "UpdatedAt" },
+	$: sorts = [
+		{ label: $t("search.filters.relevance"), value: null },
+		{ label: $t("search.filters.name"), value: "Latest.Name" },
+		{ label: $t("search.filters.publisher"), value: "Latest.Publisher" },
+		{ label: $t("search.filters.updated"), value: "UpdatedAt" },
 	];
 
-	let orders = [
-		{ label: "Ascending", value: "1", icon: IconSortAmountUp },
-		{ label: "Descending", value: "-1", icon: IconSortAmountDown },
+	$: orders = [
+		{ label: $t("search.filters.ascending"), value: "1", icon: IconSortAmountUp },
+		{ label: $t("search.filters.descending"), value: "-1", icon: IconSortAmountDown },
 	];
 
 	$: currentOrderOption = orders.find((x) => x.value === order) ?? orders[0];
@@ -23,7 +25,9 @@
 
 <div class="flex flex-1 justify-end">
 	<div class="flex flex-col max-w-40 w-full">
-		<label class="text-sm text-sub font-semibold mb-1" for="button">Sort by</label>
+		<label class="text-sm text-sub font-semibold mb-1" for="button">
+			{$t("search.filters.sort_by")}
+		</label>
 		<Dropdown
 			items={sorts}
 			selected={sorts.findIndex((x) => x.value === sort)}
@@ -33,7 +37,9 @@
 	</div>
 	{#if sort}
 		<div class="flex flex-col max-w-40 w-full ml-3">
-			<label class="text-sm text-sub font-semibold mb-1" for="order"> Order by </label>
+			<label class="text-sm text-sub font-semibold mb-1" for="order">
+				{$t("search.filters.order_by")}
+			</label>
 			<button
 				id="order"
 				class="bg-primary-20 text-primary-60 h-10 px-4 rounded-lg leading-none text-left text-sm font-semibold inline-flex items-center justify-between focus:outline-none"

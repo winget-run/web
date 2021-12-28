@@ -6,6 +6,7 @@
 	import type { IPackage } from "$lib/types/package";
 	import type { ISearchFilters } from "$lib/types/search";
 	import { searchOpen } from "$lib/stores/search";
+	import clsx from "clsx";
 
 	export let pack: IPackage;
 	export let highlights: ISearchFilters = null;
@@ -23,9 +24,10 @@
 </script>
 
 <article
-	class="bg-white dark:bg-dark-800 rounded-xl h-full w-full border p-5 transition-all {selected
-		? 'shadow-card-selected border-primary'
-		: 'shadow-card border-transparent'}"
+	class={clsx(
+		"bg-white dark:bg-dark-800 rounded-xl h-full w-full border p-5 transition-all",
+		selected ? "shadow-card-selected border-primary" : "shadow-card border-transparent"
+	)}
 >
 	<div class="flex items-center">
 		{#if pack.Latest.Homepage}
@@ -69,10 +71,10 @@
 		</div>
 		<button
 			on:click={addOrRemove}
-			class="
-			rounded-full w-8 h-8 flex items-center justify-center focus:outline-none transform transition bg-primary
-			{selected ? 'text-white rotate-45' : 'bg-opacity-10 text-primary'}
-			"
+			class={clsx(
+				"rounded-full w-8 h-8 flex items-center justify-center focus:outline-none transform transition bg-primary",
+				selected ? "text-white rotate-45" : "bg-opacity-10 text-primary"
+			)}
 		>
 			<IconPlus width={24} height={24} />
 		</button>

@@ -54,7 +54,7 @@
 {#if show}
 	<span
 		transition:fade={{ duration: 100 }}
-		class="tooltip absolute px-2 py-1 rounded bg-title text-white text-sm font-medium whitespace-nowrap z-20 font-sans"
+		class="tooltip absolute px-2 py-1 rounded bg-dark-800 text-white text-sm font-medium whitespace-nowrap z-20 font-sans"
 		use:popper={popperOptions}
 	>
 		<div class="arrow" data-popper-arrow />
@@ -74,7 +74,7 @@
 	}
 
 	.arrow::before {
-		@apply bg-title;
+		@apply bg-dark-800;
 		content: "";
 		position: absolute;
 		width: 8px;

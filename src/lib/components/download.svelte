@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { downloads, IDownload } from "$lib/stores/packages";
+	import { t } from "svelte-intl-precompile";
 	import { get } from "svelte/store";
 	import IconPlus from "~icons/uil/plus";
 	import Dropdown from "./dropdown.svelte";
@@ -22,7 +23,7 @@
 	let items = [
 		{
 			value: "latest",
-			label: "Latest Version",
+			label: $t("package.latest_version"),
 		},
 		...download.package.Versions.map((x) => ({
 			value: x,

@@ -6,6 +6,7 @@
 	import { searchOpen, searchResults } from "$lib/stores/search";
 	import { clickoutside } from "$lib/utils/actions";
 	import { parseTags } from "$lib/utils/helpers";
+	import { t } from "svelte-intl-precompile";
 	import { flip } from "svelte/animate";
 	import { backOut } from "svelte/easing";
 	import { fly } from "svelte/transition";
@@ -107,7 +108,7 @@
 				on:blur={() => !value && searchOpen.set(false)}
 				on:scroll={handleInputScroll}
 				type="search"
-				placeholder="Search 2700+ packages"
+				placeholder={$t("nav.search_x_packages", { values: { count: 2700 } })}
 				spellcheck="false"
 				autocomplete="false"
 			/>
@@ -150,9 +151,9 @@
 						class="bg-white rounded-xl h-full w-full border p-5 shadow-card mb-2 text-center flex flex-col items-center"
 					>
 						<EmptyBox class="text-primary" />
-						<h3 class="text-2xl font-semibold text-primary">No packages found</h3>
+						<h3 class="text-2xl font-semibold text-primary">{$t("search.no_packages_found")}</h3>
 						<p class="text-body text-center max-w-96 mt-2.5">
-							Try searching for another term, or narrow down your search using the filters below.
+							{$t("search.no_packages_desc")}
 						</p>
 					</div>
 					<SearchOptions delay={50} />
@@ -167,7 +168,7 @@
 							}}
 							class="w-full h-11 px-4 inline-flex items-center justify-center rounded-lg focus:outline-none | bg-white hover:bg-primary-10 transition-colors text-primary font-semibold text-lg shadow-card"
 						>
-							{moreOptionsOpen ? "Less options" : "More options"}
+							{moreOptionsOpen ? $t("ctas.less_options") : $t("ctas.more_options")}
 							<IconAngleDown
 								class="ms-3 transform {moreOptionsOpen && 'rotate-180'}"
 								width={24}
@@ -185,11 +186,7 @@
 							}}
 							class="w-full h-11 px-4 inline-flex items-center justify-center rounded-lg focus:outline-none | bg-primary hover:bg-primary-dark transition-colors text-white font-semibold text-lg shadow-card"
 						>
-							{#if $searchResults.Total === 1}
-								View result
-							{:else}
-								View all {$searchResults.Total} results
-							{/if}
+							{$t("search.view_results", { values: { count: $searchResults.Total } })}
 							<IconArrowRight class="ms-3" width={24} height={24} />
 						</button>
 						{#if moreOptionsOpen}

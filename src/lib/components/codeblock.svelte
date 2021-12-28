@@ -3,18 +3,19 @@
 
 	import { onDestroy } from "svelte";
 	import Tooltip from "./tooltip.svelte";
+	import { t } from "svelte-intl-precompile";
 
 	export let code: string;
 	export let multiline = false;
 
-	let tooltipText = "Copy to clipboard";
+	$: tooltipText = $t("ctas.copy_to_clipboard");
 	let timeout: NodeJS.Timeout;
 
 	async function copyToClipboard() {
 		await navigator.clipboard.writeText(code);
 		const oldText = tooltipText;
 
-		tooltipText = "Copied to clipboard!";
+		tooltipText = $t("ctas.copied_to_clipboard");
 
 		timeout = setTimeout(() => {
 			tooltipText = oldText;

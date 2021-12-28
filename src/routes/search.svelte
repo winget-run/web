@@ -9,6 +9,7 @@
 	import { api } from "$lib/stores/api";
 	import { searchResults } from "$lib/stores/packages";
 	import type { IResponse } from "$lib/types/package";
+	import { t } from "svelte-intl-precompile";
 	import { flip } from "svelte/animate";
 	import { backOut, circOut } from "svelte/easing";
 	import { fly } from "svelte/transition";
@@ -79,7 +80,7 @@
 </svelte:head>
 
 <SectionTitle class="mt-2 mb-4">
-	<h2>Search Results ({$searchResults?.Total ?? 0})</h2>
+	<h2>{$t("search.x_results", { values: { count: $searchResults?.Total ?? 0 } })}</h2>
 </SectionTitle>
 {#if $searchResults}
 	<div class="flex justify-between items-end mb-8">
@@ -103,9 +104,9 @@
 			class="text-center flex flex-col items-center justify-center my-14"
 		>
 			<EmptyBox class="text-primary" />
-			<h3 class="text-2xl font-semibold text-primary">No packages found</h3>
+			<h3 class="text-2xl font-semibold text-primary">{$t("search.no_packages_found")}</h3>
 			<p class="text-body text-center max-w-96 mt-2.5">
-				Try searching for another term, or narrow down your search using the filters below.
+				{$t("search.no_packages_desc")}
 			</p>
 		</div>
 	{:else}
@@ -140,10 +141,10 @@
 			{#if loading}
 				<Button on:click={getMore} outlined let:iconSize>
 					<IconSpinner class="mr-2 animate-spin" width={iconSize} height={iconSize} />
-					Loading...
+					{$t("ctas.loading")}
 				</Button>
 			{:else}
-				<Button on:click={getMore} outlined let:iconSize>Load more results</Button>
+				<Button on:click={getMore} outlined>{$t("ctas.load_more_results")}</Button>
 			{/if}
 		</div>
 	{/if}

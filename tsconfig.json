@@ -24,7 +24,9 @@
 		"checkJs": true,
 		"paths": {
 			"$lib": ["src/lib"],
-			"$lib/*": ["src/lib/*"]
+			"$lib/*": ["src/lib/*"],
+			"$locales": ["locales"],
+			"$locales/*": ["locales/*"]
 		}
 	},
 	"include": [

@@ -1,20 +1,21 @@
 <script lang="ts">
-	import Tooltip from "./tooltip.svelte";
-	import IconClipboard from "~icons/uil/clipboard-notes";
-	import { mapDownloadsToCommands } from "$lib/utils/downloads";
 	import type { IDownload } from "$lib/stores/packages";
+	import { mapDownloadsToCommands } from "$lib/utils/downloads";
 	import { onDestroy } from "svelte";
+	import { t } from "svelte-intl-precompile";
+	import IconClipboard from "~icons/uil/clipboard-notes";
+	import Tooltip from "./tooltip.svelte";
 
 	export let download: IDownload;
 
-	let tooltipText = "Copy to clipboard";
+	$: tooltipText = $t("ctas.copy_to_clipboard");
 	let timeout: NodeJS.Timeout;
 
 	async function copyToClipboard() {
 		await navigator.clipboard.writeText(mapDownloadsToCommands([download]));
 		const oldText = tooltipText;
 
-		tooltipText = "Copied to clipboard!";
+		tooltipText = $t("ctas.copied_to_clipboard");
 
 		timeout = setTimeout(() => {
 			tooltipText = oldText;

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { clickoutside } from "$lib/utils/actions";
+	import clsx from "clsx";
 	import { createEventDispatcher } from "svelte";
 	import { createPopperActions } from "svelte-popperjs";
 	import VirtualList from "svelte-tiny-virtual-list";
@@ -43,16 +44,15 @@
 	}[];
 </script>
 
-<div
-	class="relative {grey ? 'text-title' : 'text-primary-60'}"
-	use:clickoutside={() => (expanded = false)}
->
+<div class="relative text-primary-60" use:clickoutside={() => (expanded = false)}>
 	<button
 		use:popperRef
 		on:click={() => (expanded = !expanded)}
-		class="{grey
-			? 'bg-grey-10'
-			: 'bg-primary-20'} dark:(bg-dark-700 text-white) h-10 px-4 rounded-lg leading-none text-left text-sm font-semibold inline-flex items-center justify-between focus:outline-none {$$props.class}"
+		class={clsx(
+			"dark:(bg-dark-700 text-white) h-10 px-4 rounded-lg leading-none text-left text-sm font-semibold inline-flex items-center justify-between focus:outline-none",
+			grey ? "bg-primary-10" : "bg-primary-20",
+			$$props.class
+		)}
 		aria-haspopup="listbox"
 		id="button"
 	>
@@ -69,7 +69,7 @@
 			use:popper={popperOptions}
 			role="listbox"
 			aria-labelledby="button"
-			class="absolute max-h-sm overflow-auto z-40 bg-white dark:(bg-dark-800 text-body-dark) rounded-lg w-full shadow-lg py-2 dropdown-list"
+			class="absolute max-h-sm overflow-auto z-40 bg-primary-10 dark:(bg-dark-800 text-body-dark) rounded-lg w-full shadow-lg p-2 dropdown-list"
 		>
 			<VirtualList
 				width="100%"
@@ -91,8 +91,12 @@
 						expanded = false;
 						dispatch("change", items[index].value);
 					}}
-					class="px-4 py-2 cursor-default hover:bg-grey-10 dark:hover:bg-dark-700 inline-flex items-center justify-between w-full text-sm
-					{index === selected && 'bg-primary-10 text-primary font-semibold'}"
+					class={clsx(
+						"py-1.5 px-2 rounded cursor-default inline-flex items-center justify-between w-full text-sm",
+						index === selected
+							? "bg-primary-30 text-primary-60 dark:(bg-primary text-white) font-semibold"
+							: "hover:bg-primary-20 dark:hover:bg-dark-700"
+					)}
 				>
 					<span class="flex-1 truncate">
 						{items[index].label}

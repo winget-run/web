@@ -1,27 +1,28 @@
 <script lang="ts">
 	import EmptyBox from "$lib/animations/empty_box.svelte";
-	import Button from "$lib/components/Button.svelte";
 	import Download from "$lib/components/download.svelte";
-	import SectionTitle from "$lib/components/section_title.svelte";
 	import { prefersReducedMotion } from "$lib/stores/a11y";
 	import { downloads } from "$lib/stores/packages";
+	import { sidebarOpen } from "$lib/stores/sidebar";
 	import { mapDownloadsToCommands } from "$lib/utils/downloads";
-	import IconClipboard from "~icons/uil/clipboard-notes";
-	import IconDownload from "~icons/uil/download-alt";
-	import IconPackage from "~icons/uil/package";
-
+	import clsx from "clsx";
+	import { t } from "svelte-intl-precompile";
 	import { flip } from "svelte/animate";
 	import { backOut, quadOut } from "svelte/easing";
-	import { crossfade, fade, fly, slide } from "svelte/transition";
-	import { sidebarOpen } from "$lib/stores/sidebar";
-	import { searchOpen } from "$lib/stores/search";
+	import { crossfade, fade, fly } from "svelte/transition";
+	import IconDownload from "~icons/uil/download-alt";
+	import IconPackage from "~icons/uil/package";
 	import Codeblock from "./codeblock.svelte";
 
 	const transitionLength = 250;
 	$: transitionAmount = $prefersReducedMotion ? 0 : 20;
 
-	const emptyText = ["Looking pretty empty...", "Nothing here!", "It's empty!", "Dust..."];
-
+	$: emptyText = [
+		$t("sidebar.empty_captions.1"),
+		$t("sidebar.empty_captions.2"),
+		$t("sidebar.empty_captions.3"),
+		$t("sidebar.empty_captions.4"),
+	];
 	$: clipboardText = mapDownloadsToCommands($downloads);
 
 	const [send, recieve] = crossfade({
@@ -57,10 +58,10 @@
 	>
 		<!-- Sidebar -->
 		<aside
-			class="
-			h-full mr-5 p-5 rounded-[1.25rem] bg-primary-20 dark:bg-dark-700 h-full flex flex-col items-center transition-all duration-[250ms]
-			{$sidebarOpen ? 'w-96' : 'w-[5.25rem]'}
-		"
+			class={clsx(
+				"h-full mr-5 p-5 rounded-[1.25rem] bg-primary-20 dark:bg-dark-700 h-full flex flex-col items-center transition-all duration-[250ms]",
+				$sidebarOpen ? "w-96" : "w-[5.25rem]"
+			)}
 		>
 			<div class="flex flex-col w-full text-primary-60 dark:text-primary">
 				<div class="flex items-center overflow-hidden">
@@ -73,7 +74,7 @@
 							out:fly={{ x: 0 }}
 							class="ml-2.5 pt-0.5 uppercase text-2xl font-bold whitespace-nowrap overflow-clip"
 						>
-							{$downloads.length} Downloads
+							{$t("sidebar.x_downloads", { values: { count: $downloads.length } })}
 						</p>
 					{/if}
 				</div>
@@ -114,8 +115,8 @@
 							<h3 class="text-2xl font-semibold text-center">
 								{emptyText[Math.floor(Math.random() * emptyText.length)]}
 							</h3>
-							<p class="text-body text-center max-w-72 mt-2.5">
-								Add some packages by clicking on the <b>+</b> button anywhere you see it
+							<p class="text-body dark:text-body-dark text-center max-w-72 mt-2.5">
+								{@html $t("sidebar.add_some_packages")}
 							</p>
 						</div>
 					{/if}
@@ -132,7 +133,7 @@
 									delay: $prefersReducedMotion ? 250 : 0,
 								}}
 							>
-								<div class="p-1.5 rounded-lg bg-white w-auto">
+								<div class="p-1.5 rounded-lg bg-white dark:bg-dark-800 w-auto">
 									{#if download.package.Latest.Homepage}
 										<img
 											class="w-8 h-8"
@@ -170,64 +171,6 @@
 	</div>
 </div>
 
-<!-- <aside class="mr-4 mb-4 w-lg bg-primary-10 py-4 rounded-xl">
-	{#if $downloads?.length > 0}
-		<div
-			class="flex flex-col items-center h-full"
-			in:fly={{ x: transitionAmount, delay: transitionLength, duration: transitionLength }}
-			out:fly={{ x: transitionAmount, duration: transitionLength }}
-		>
-			<SectionTitle class="mb-2 px-4">
-				<h2>Selected Packages ({$downloads.length})</h2>
-			</SectionTitle>
-
-			<div class="overflow-y-scroll overflow-x-hidden flex-1 h-full w-full relative scrollbar">
-				{#each $downloads as download (download.package.Id)}
-					<div
-						class="mb-4 px-4"
-						in:recieve={{ key: download.package.Id }}
-						out:send={{ key: download.package.Id }}
-						animate:flip={{
-							duration: $prefersReducedMotion ? 0 : 250,
-							easing: quadOut,
-							delay: $prefersReducedMotion ? 250 : 0,
-						}}
-					>
-						<Download {download} />
-					</div>
-				{/each}
-			</div>
-
-			<div class="mt-2 w-full px-4 relative">
-				<Button
-					on:click={async () => await navigator.clipboard.writeText(mapDownloadsToCommands())}
-					class="w-full mb-2"
-					size="lg"
-					let:iconSize
-				>
-					<IconClipboard class="mr-3" width={iconSize} height={iconSize} />
-					Copy to clipboard
-				</Button>
-				<Button class="w-full" size="lg" outlined>More options</Button>
-			</div>
-		</div>
-	{:else}
-		<div
-			class="flex flex-col items-center h-full px-4"
-			in:fly={{ x: transitionAmount * -1, delay: transitionLength, duration: transitionLength }}
-			out:fly={{ x: transitionAmount * -1, duration: transitionLength }}
-		>
-			<SectionTitle class="mb-8"><h2>Selected Packages</h2></SectionTitle>
-			<EmptyBox class="text-primary" />
-			<h3 class="text-2xl font-semibold text-primary text-center">
-				{emptyText[Math.floor(Math.random() * emptyText.length)]}
-			</h3>
-			<p class="text-body text-center max-w-72 mt-2.5">
-				Add some packages by clicking on the <b>+</b> button anywhere you see it
-			</p>
-		</div>
-	{/if}
-</aside> -->
 <style lang="scss">
 	.scrollbar {
 		&::-webkit-scrollbar {
