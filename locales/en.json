@@ -45,7 +45,7 @@
 		"title": "Download and install {name} with winget",
 		"twitter_title": "{name} on winget.run",
 		"versions": "Versions",
-		"x_views": "{count, plural, =1 {# view} other {# views}}"
+		"x_views": "{count, plural, one {# view} other {# views}}"
 	},
 	"search": {
 		"advanced": {
@@ -68,8 +68,8 @@
 		},
 		"no_packages_desc": "Try searching for another term, or narrow down your search using the filters.",
 		"no_packages_found": "No packages found",
-		"view_results": "View {count, plural, =1 {result} other {all # results}}",
-		"x_results": "{count, plural, =1 {# result} other {# results}}"
+		"view_results": "View {count, plural, one {result} other {all # results}}",
+		"x_results": "{count, plural, one {# result} other {# results}}"
 	},
 	"sidebar": {
 		"add_some_packages": "Add some packages by clicking on the <b>+</b> button anywhere you see it",
@@ -79,6 +79,6 @@
 			"3": "It's empty!",
 			"4": "Dust..."
 		},
-		"x_downloads": "{count, plural, =1 {# download} other {# downloads}}"
+		"x_downloads": "{count, plural, one {# download} other {# downloads}}"
 	}
 }

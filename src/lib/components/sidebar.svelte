@@ -109,7 +109,6 @@
 								delay: transitionLength,
 								duration: transitionLength,
 							}}
-							out:fade={{ duration: transitionLength / 2 }}
 						>
 							<EmptyBox />
 							<h3 class="text-2xl font-semibold text-center">

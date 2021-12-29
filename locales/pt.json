@@ -25,7 +25,7 @@
 		"api_documentation": "Documentação da API",
 		"buy_us_a_coffee": "Compra-nos um café!",
 		"dark_mode": "Trocar para modo escuro",
-		"help_us_translate": "Ajuda-nos a traduzir!",
+		"help_us_translate": "Ajuda-nos a traduzir",
 		"install_winget": "Instalar winget",
 		"language_picker": "Escolher linguagem",
 		"light_mode": "Trocar para modo claro",
@@ -45,7 +45,7 @@
 		"title": "Fazer download e instalar {name} com winget",
 		"twitter_title": "{name} em winget.run",
 		"versions": "Versões",
-		"x_views": "{count, plural, =1 {# visualização} other {# visualizações}}"
+		"x_views": "{count, plural, =0 {# visualizações} =1 {# visualização} other {# visualizações}}"
 	},
 	"search": {
 		"advanced": {
@@ -68,8 +68,8 @@
 		},
 		"no_packages_desc": "Tenta procurar por outro termo, ou especifica mais a tua procura com os filtros",
 		"no_packages_found": "Nenhuma app encontrada",
-		"view_results": "Vê {count, plural, =1 {result} other {todos os # resultados}}",
-		"x_results": "{count, plural, =1 {resultado} other {# resultados}}"
+		"view_results": "Vê {count, plural, =0 {resultados} =1 {resultado} other {todos os # resultados}}",
+		"x_results": "{count, plural, =0 {# resultados} =1 {resultado} other {# resultados}}"
 	},
 	"sidebar": {
 		"add_some_packages": "Adiciona algumas Apps clicando no butão <b>+</b> onde o vires",
@@ -79,6 +79,6 @@
 			"3": "Não tem nada aqui!",
 			"4": "Nunca mais ninguem as viu"
 		},
-		"x_downloads": "{count, plural, =1 {# download} other {# downloads}}"
+		"x_downloads": "{count, plural, =0 {# downloads} =1 {# download} other {# downloads}}"
 	}
 }

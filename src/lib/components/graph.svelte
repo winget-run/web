@@ -16,9 +16,11 @@
 	$: points = stats.map((e, i) => ({
 		x: interval * i,
 		y:
-			height -
-			(((e.Value - min) * 100) / (max - min)) * ((height - verticalPadding * 2) / 100) -
-			verticalPadding,
+			e.Value === 0
+				? height
+				: height -
+				  (((e.Value - min) * 100) / (max - min)) * ((height - verticalPadding * 2) / 100) -
+				  verticalPadding,
 	}));
 
 	$: curvePoints = points

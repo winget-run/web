@@ -43,9 +43,9 @@
 							locale.set(code);
 							cookies.set("locale", code);
 						}}
-						class="py-1.5 px-2 rounded w-full inline-flex items-center justify-between font-medium focus-ring
+						class="py-1.5 px-2 rounded w-full inline-flex items-center justify-between font-medium cursor-auto focus:outline-none
 			{isActive(code)
-							? 'bg-primary-30 text-primary-60 dark:(bg-primary text-white) cursor-auto'
+							? 'bg-primary-30 text-primary-60 dark:(bg-primary text-white)'
 							: 'hover:bg-primary-20 dark:hover:bg-dark-700'}"
 						role="menuitem"
 						tabindex={isActive(code) ? -1 : 0}
