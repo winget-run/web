@@ -4,6 +4,8 @@
 	// @ts-ignore
 	register("en", () => import("$locales/en"));
 	// @ts-ignore
+	register("es", () => import("$locales/es"));
+	// @ts-ignore
 	register("ko", () => import("$locales/ko"));
 	// @ts-ignore
 	register("pt", () => import("$locales/pt"));

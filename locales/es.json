@@ -1,0 +1,84 @@
+{
+	"ctas": {
+		"about": "Acerca de",
+		"add_this_package": "Agregar esta aplicación",
+		"add_this_version": "Agregar esta versión",
+		"change_to_this_version": "Cambiar a esta versión",
+		"copied_to_clipboard": "¡Copiado al portapapeles!",
+		"copy_to_clipboard": "Copiar al portapapeles",
+		"less_options": "Menos opciones",
+		"load_more_packages": "Cargar más paquetes",
+		"load_more_results": "Cargar más resultados",
+		"loading": "Cargando...",
+		"more_options": "Mas opciones",
+		"remove_this_package": "Quitar esta aplicación",
+		"visit_website": "Visita la página web"
+	},
+	"home": {
+		"desc": "Busque, descubra e instale aplicaciones Winget sin esfuerzo y sin programas de terceros",
+		"featured_packages": "Aplicaciones destacadas",
+		"recently_updated_packages": "Aplicaciones actualizadas recientemente",
+		"title": "wingetdotrun | Descubra las aplicaciones Winget fácilmente."
+	},
+	"nav": {
+		"about_winget": "Sobre winget",
+		"api_documentation": "Documentación de la API",
+		"buy_us_a_coffee": "¡Cómpranos un café!",
+		"dark_mode": "Cambiar al modo oscuro",
+		"help_us_translate": "Ayúdanos a traducir",
+		"install_winget": "Instalar winget",
+		"language_picker": "Elige lengua",
+		"light_mode": "Cambiar al modo de luz",
+		"search_x_packages": "Buscar {count}+ aplicaciones",
+		"view_on_github": "Compruébalo en GitHub"
+	},
+	"package": {
+		"desc": "Descargue, instale {name} y otros paquetes con winget",
+		"featured_package": "Aplicaciones destacadas",
+		"how_to_install": "Como instalar",
+		"in_last_x_days": "en los últimos {count} días",
+		"last_updated_on": "Última actualización en {updated, date, medium}",
+		"latest_version": "Última versión",
+		"license": "Información de licencia",
+		"other_details": "Otros detalles",
+		"tags": "Etiquetas",
+		"title": "Descarga e instala {name} con winget",
+		"twitter_title": "{name} en winget.run",
+		"versions": "versiones",
+		"x_views": "{count, plural, =0 {# vistas} =1 {# vista} other {# vistas}}"
+	},
+	"search": {
+		"advanced": {
+			"comma_separated": "Separado por comas",
+			"description": "Busque solo palabras clave en la descripción",
+			"name": "Buscar solo por nombre de aplicaciones",
+			"publisher": "Explorar aplicaciones por editor",
+			"tags": "Buscar aplicaciones con etiquetas específicas",
+			"title": "Opciones de búsqueda avanzada"
+		},
+		"filters": {
+			"ascending": "Creciente",
+			"descending": "Descendente",
+			"name": "Nombre",
+			"order_by": "Ordenar por",
+			"publisher": "Editor",
+			"relevance": "Relevancia",
+			"sort_by": "Ordenar por",
+			"updated": "Actualizado"
+		},
+		"no_packages_desc": "Intente buscar otro término o especifique más su búsqueda con los filtros",
+		"no_packages_found": "No se encontraron aplicaciones",
+		"view_results": "Ver {count, plural, =0 {resultados} =1 {resultado} other {todos los # resultados}}",
+		"x_results": "{count, plural, =0 {# resultados} =1 {resultado} other {# resultados}}"
+	},
+	"sidebar": {
+		"add_some_packages": "Agregue algunas aplicaciones haciendo clic en el botón <b> + </b> donde lo ve",
+		"empty_captions": {
+			"1": "¿A dónde fueron?",
+			"2": "Huyó :(",
+			"3": "¡No tiene nada aqui!",
+			"4": "Nadie los volvió a ver"
+		},
+		"x_downloads": "{count, plural, =0 {# descargas} =1 {# descarga} other {# descargas}}"
+	}
+}
