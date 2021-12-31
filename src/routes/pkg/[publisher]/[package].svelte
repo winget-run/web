@@ -55,6 +55,7 @@
 	import IconPlus from "~icons/uil/plus";
 	import IconStar from "~icons/uil/star";
 	import { date, t } from "svelte-intl-precompile";
+	import PackageIcon from "$lib/components/package_icon.svelte";
 
 	export let response: IResponseSingle;
 	export let stats: IStatsResponse;
@@ -109,14 +110,7 @@
 		style="background-image: {gradient}, url({pack.Banner});"
 	>
 		<div class="w-full max-w-[1178px] mx-auto flex">
-			<img
-				class="w-24 h-24"
-				src={pack.Logo ??
-					`https://www.google.com/s2/favicons?sz=96&domain_url=${pack.Latest.Homepage}`}
-				alt=""
-				width={96}
-				height={96}
-			/>
+			<PackageIcon logo={pack.Logo} homepage={pack.Latest.Homepage} size={96} />
 			<div class="ml-8">
 				<h1 class="font-semibold text-5xl text-title dark:text-white mt-2 leading-none">
 					{pack.Latest.Name}

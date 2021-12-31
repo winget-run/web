@@ -1,12 +1,12 @@
 <script lang="ts">
-	import IconPlus from "~icons/uil/plus";
-	import IconPackage from "~icons/uil/package";
+	import { prefersReducedMotion } from "$lib/stores/a11y";
 	import { downloads } from "$lib/stores/packages";
-
+	import { searchOpen } from "$lib/stores/search";
 	import type { IPackage } from "$lib/types/package";
 	import type { ISearchFilters } from "$lib/types/search";
-	import { searchOpen } from "$lib/stores/search";
 	import clsx from "clsx";
+	import IconPlus from "~icons/uil/plus";
+	import PackageIcon from "./package_icon.svelte";
 
 	export let pack: IPackage;
 	export let highlights: ISearchFilters = null;
@@ -25,22 +25,13 @@
 
 <article
 	class={clsx(
-		"bg-white dark:bg-dark-800 rounded-xl h-full w-full border p-5 transition-all",
+		"bg-white dark:bg-dark-800 rounded-xl h-full w-full border p-5",
+		$prefersReducedMotion ? "transition-opacity" : "transition-all",
 		selected ? "shadow-card-selected border-primary" : "shadow-card border-transparent"
 	)}
 >
 	<div class="flex items-center">
-		{#if pack.Latest.Homepage}
-			<img
-				class="w-8 h-8"
-				src={pack.Latest.Homepage
-					? `https://www.google.com/s2/favicons?sz=32&domain_url=${pack.Latest.Homepage}`
-					: "/favicon.ico"}
-				alt=""
-			/>
-		{:else}
-			<IconPackage class="text-primary" width="2rem" height="2rem" />
-		{/if}
+		<PackageIcon logo={pack.Logo} homepage={pack.Latest.Homepage} size={32} />
 		<div class="flex-1 px-2.5">
 			<h2
 				class="font-semibold text-title dark:text-white text-lg line-clamp-1 leading-tight break-all"

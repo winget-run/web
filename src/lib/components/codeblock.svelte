@@ -28,14 +28,11 @@
 </script>
 
 <code
-	class="relative bg-primary-20 dark:bg-dark-700 rounded-lg p-5 leading-none flex items-center {$$props.class}"
+	class="relative bg-primary-20 dark:bg-dark-700 rounded-lg p-5 leading-none flex items-center dark:text-body-dark {$$props.class}"
 >
-	<span class="content flex-1 dark:text-primary" class:multiline>{code}</span>
+	<span class="content flex-1" class:multiline>{code}</span>
 	<Tooltip content={tooltipText} offset={[0, 4]}>
-		<button
-			on:click={copyToClipboard}
-			class="focus:outline-none hover:text-primary dark:text-primary"
-		>
+		<button on:click={copyToClipboard} class="text-current focus:outline-none hover:text-primary">
 			<IconClipboard width={22} height={22} />
 		</button>
 	</Tooltip>

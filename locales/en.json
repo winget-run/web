@@ -1,84 +1,91 @@
 {
-	"ctas": {
-		"about": "About",
-		"add_this_package": "Add this package",
-		"add_this_version": "Add this version",
-		"change_to_this_version": "Change to this version",
-		"copied_to_clipboard": "Copied to clipboard!",
-		"copy_to_clipboard": "Copy to clipboard",
-		"less_options": "Less options",
-		"load_more_packages": "Load more packages",
-		"load_more_results": "Load more results",
-		"loading": "Loading...",
-		"more_options": "More options",
-		"remove_this_package": "Remove this package",
-		"visit_website": "Visit Website"
-	},
-	"home": {
-		"desc": "Searching, discovering and installing winget packages made effortless without any third-party programs",
-		"featured_packages": "Featured Packages",
-		"recently_updated_packages": "Recently Updated Packages",
-		"title": "wingetdotrun | Finding winget packages made simple."
-	},
-	"nav": {
-		"about_winget": "About winget",
-		"api_documentation": "API Documentation",
-		"buy_us_a_coffee": "Buy us a coffee!",
-		"dark_mode": "Switch to dark mode",
-		"help_us_translate": "Help us translate",
-		"install_winget": "Install winget",
-		"language_picker": "Language Picker",
-		"light_mode": "Switch to light mode",
-		"search_x_packages": "Search {count}+ packages",
-		"view_on_github": "View on GitHub"
-	},
-	"package": {
-		"desc": "Download and install {name} and other packages with winget",
-		"featured_package": "Featured package",
-		"how_to_install": "How to install",
-		"in_last_x_days": "in the last {count} days",
-		"last_updated_on": "Last updated on {updated, date, medium}",
-		"latest_version": "Latest Version",
-		"license": "License Info",
-		"other_details": "Other details",
-		"tags": "Tags",
-		"title": "Download and install {name} with winget",
-		"twitter_title": "{name} on winget.run",
-		"versions": "Versions",
-		"x_views": "{count, plural, one {# view} other {# views}}"
-	},
-	"search": {
-		"advanced": {
-			"comma_separated": "comma separated",
-			"description": "Searches only for keywords in the description.",
-			"name": "Searches only the package names.",
-			"publisher": "Searches for packages by a publisher.",
-			"tags": "Searches for packages with a specific tags",
-			"title": "Advanced search options"
-		},
-		"filters": {
-			"ascending": "Ascending",
-			"descending": "Descending",
-			"name": "Name",
-			"order_by": "Order By",
-			"publisher": "Publisher",
-			"relevance": "Relevance",
-			"sort_by": "Sort by",
-			"updated": "Updated"
-		},
-		"no_packages_desc": "Try searching for another term, or narrow down your search using the filters.",
-		"no_packages_found": "No packages found",
-		"view_results": "View {count, plural, one {result} other {all # results}}",
-		"x_results": "{count, plural, one {# result} other {# results}}"
-	},
-	"sidebar": {
-		"add_some_packages": "Add some packages by clicking on the <b>+</b> button anywhere you see it",
-		"empty_captions": {
-			"1": "Looking pretty empty...",
-			"2": "Nothing here!",
-			"3": "It's empty!",
-			"4": "Dust..."
-		},
-		"x_downloads": "{count, plural, one {# download} other {# downloads}}"
-	}
+  "ctas": {
+    "about": "About",
+    "add_this_package": "Add this package",
+    "add_this_version": "Add this version",
+    "change_to_this_version": "Change to this version",
+    "copied_to_clipboard": "Copied to clipboard!",
+    "copy_to_clipboard": "Copy to clipboard",
+    "less_options": "Less options",
+    "load_more_packages": "Load more packages",
+    "load_more_results": "Load more results",
+    "loading": "Loading...",
+    "more_options": "More options",
+    "remove_this_package": "Remove this package",
+    "visit_website": "Visit Website"
+  },
+  "errors": {
+    "404_message": "oh dear, that page doesn’t exist",
+    "message": "that wasn't supposed to happen!",
+    "return_home": "Return to home",
+    "try_packages": "or try some of these packages..."
+  },
+  "home": {
+    "desc": "Searching, discovering and installing winget packages made effortless without any third-party programs",
+    "featured_packages": "Featured Packages",
+    "recently_updated_packages": "Recently Updated Packages",
+    "title": "wingetdotrun | Finding winget packages made simple."
+  },
+  "nav": {
+    "about_winget": "About winget",
+    "api_documentation": "API Documentation",
+    "buy_us_a_coffee": "Buy us a coffee!",
+    "dark_mode": "Switch to dark mode",
+    "help_us_translate": "Help us translate",
+    "install_winget": "Install winget",
+    "language_picker": "Language Picker",
+    "light_mode": "Switch to light mode",
+    "search_x_packages": "Search {count}+ packages",
+    "view_on_github": "View on GitHub"
+  },
+  "package": {
+    "desc": "Download and install {name} and other packages with winget",
+    "featured_package": "Featured package",
+    "how_to_install": "How to install",
+    "in_last_x_days": "in the last {count} days",
+    "last_updated_on": "Last updated on {updated, date, medium}",
+    "latest_version": "Latest Version",
+    "license": "License Info",
+    "other_details": "Other details",
+    "tags": "Tags",
+    "title": "Download and install {name} with winget",
+    "twitter_title": "{name} on winget.run",
+    "versions": "Versions",
+    "x_views": "{count, plural, one {# view} other {# views}}"
+  },
+  "search": {
+    "advanced": {
+      "comma_separated": "comma separated",
+      "description": "Searches only for keywords in the description.",
+      "name": "Searches only the package names.",
+      "publisher": "Searches for packages by a publisher.",
+      "tags": "Searches for packages with a specific tags",
+      "title": "Advanced search options"
+    },
+    "filters": {
+      "ascending": "Ascending",
+      "descending": "Descending",
+      "name": "Name",
+      "order_by": "Order By",
+      "publisher": "Publisher",
+      "relevance": "Relevance",
+      "sort_by": "Sort by",
+      "updated": "Updated"
+    },
+    "no_packages_desc": "Try searching for another term, or narrow down your search using the filters.",
+    "no_packages_found": "No packages found",
+    "search_results": "Search Results",
+    "view_results": "View {count, plural, one {result} other {all # results}}",
+    "x_results": "{count, plural, one {# result} other {# results}}"
+  },
+  "sidebar": {
+    "add_some_packages": "Add some packages by clicking on the <b>+</b> button anywhere you see it",
+    "empty_captions": {
+      "1": "Looking pretty empty...",
+      "2": "Nothing here!",
+      "3": "It's empty!",
+      "4": "Dust..."
+    },
+    "x_downloads": "{count, plural, one {# download} other {# downloads}}"
+  }
 }

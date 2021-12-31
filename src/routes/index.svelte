@@ -97,9 +97,7 @@
 			<div
 				in:fly={{
 					y: flyAmount,
-					delay: $prefersReducedMotion
-						? 0
-						: (i % limit) * 50 + ($updatedPackages.Packages.length <= limit ? 0 : 250),
+					delay: $prefersReducedMotion ? 0 : i * 50,
 					easing: backOut,
 				}}
 				animate:flip={{ duration: 250, easing: circOut }}

@@ -13,6 +13,7 @@
 	import IconDownload from "~icons/uil/download-alt";
 	import IconPackage from "~icons/uil/package";
 	import Codeblock from "./codeblock.svelte";
+	import PackageIcon from "./package_icon.svelte";
 
 	const transitionLength = 250;
 	$: transitionAmount = $prefersReducedMotion ? 0 : 20;
@@ -25,7 +26,7 @@
 	];
 	$: clipboardText = mapDownloadsToCommands($downloads);
 
-	const [send, recieve] = crossfade({
+	$: [send, recieve] = crossfade({
 		fallback(node) {
 			const style = getComputedStyle(node);
 			const transform = style.transform === "none" ? "" : style.transform;
@@ -59,7 +60,8 @@
 		<!-- Sidebar -->
 		<aside
 			class={clsx(
-				"h-full mr-5 p-5 rounded-[1.25rem] bg-primary-20 dark:bg-dark-700 h-full flex flex-col items-center transition-all duration-[250ms]",
+				"h-full mr-5 p-5 rounded-[1.25rem] bg-primary-20 dark:bg-dark-700 h-full flex flex-col items-center",
+				$prefersReducedMotion ? "" : "transition-all duration-[250ms]",
 				$sidebarOpen ? "w-96" : "w-[5.25rem]"
 			)}
 		>
@@ -70,7 +72,7 @@
 					</div>
 					{#if $sidebarOpen}
 						<p
-							in:fly={{ x: -10, delay: 150 }}
+							in:fly={{ x: $prefersReducedMotion ? 0 : -10, delay: 150 }}
 							out:fly={{ x: 0 }}
 							class="ml-2.5 pt-0.5 uppercase text-2xl font-bold whitespace-nowrap overflow-clip"
 						>
@@ -133,17 +135,11 @@
 								}}
 							>
 								<div class="p-1.5 rounded-lg bg-white dark:bg-dark-800 w-auto">
-									{#if download.package.Latest.Homepage}
-										<img
-											class="w-8 h-8"
-											src={download.package.Latest.Homepage
-												? `https://www.google.com/s2/favicons?sz=32&domain_url=${download.package.Latest.Homepage}`
-												: "/favicon.ico"}
-											alt=""
-										/>
-									{:else}
-										<IconPackage class="text-primary" width="2rem" height="2rem" />
-									{/if}
+									<PackageIcon
+										logo={download.package.Logo}
+										homepage={download.package.Latest.Homepage}
+										size={32}
+									/>
 								</div>
 							</div>
 						{/each}
@@ -155,11 +151,14 @@
 		{#if $sidebarOpen && $downloads.length > 0}
 			<div
 				in:fly={{
-					x: transitionAmount * -1,
+					x: $prefersReducedMotion ? 0 : transitionAmount * -1,
 					delay: transitionLength / 2,
 					duration: transitionLength,
 				}}
-				out:fly={{ x: transitionAmount * -1, duration: transitionLength }}
+				out:fly={{
+					x: $prefersReducedMotion ? 0 : transitionAmount * -1,
+					duration: transitionLength,
+				}}
 				class="flex-1"
 			>
 				<div class="max-w-full w-3xl h-full bg-primary-10 dark:bg-dark-800 p-5 rounded-[1.25rem]">
@@ -177,14 +176,14 @@
 			height: 6px;
 		}
 		&::-webkit-scrollbar-thumb {
-			background: #d4d4d4;
+			@apply bg-primary-40 dark:bg-dark-800;
 			border-radius: 30px;
 		}
 		&::-webkit-scrollbar-thumb:hover {
-			background: #888888;
+			@apply bg-primary-50 dark:bg-dark-700;
 		}
 		&::-webkit-scrollbar-track {
-			background: #ecf6f8;
+			@apply bg-primary-20 dark:bg-dark-900;
 			border-radius: 30px;
 		}
 	}

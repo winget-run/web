@@ -68,15 +68,8 @@
 </script>
 
 <svelte:head>
-	<title>Search results | wingetdotrun</title>
-	<meta
-		name="description"
-		content="Searching, discovering and installing winget packages made effortless without any third-party programs"
-	/>
-	<meta
-		name="twitter:description"
-		content="Searching, discovering and installing winget packages made effortless without any third-party programs"
-	/>
+	<title>{$t("search.search_results")} | wingetdotrun</title>
+	<meta name="robots" content="noindex" />
 </svelte:head>
 
 <SectionTitle class="mt-2 mb-4">

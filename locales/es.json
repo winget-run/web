@@ -44,7 +44,7 @@
 		"tags": "Etiquetas",
 		"title": "Descarga e instala {name} con winget",
 		"twitter_title": "{name} en winget.run",
-		"versions": "versiones",
+		"versions": "Versiones",
 		"x_views": "{count, plural, =0 {# vistas} =1 {# vista} other {# vistas}}"
 	},
 	"search": {

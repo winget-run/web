@@ -1,9 +1,13 @@
 <script lang="ts">
+	import { prefersReducedMotion } from "$lib/stores/a11y";
+
 	import { downloads, IDownload } from "$lib/stores/packages";
+	import clsx from "clsx";
 	import { t } from "svelte-intl-precompile";
 	import { get } from "svelte/store";
 	import IconPlus from "~icons/uil/plus";
 	import Dropdown from "./dropdown.svelte";
+	import PackageIcon from "./package_icon.svelte";
 
 	export let download: IDownload;
 
@@ -33,13 +37,16 @@
 </script>
 
 <article
-	class="bg-white dark:bg-dark-800 rounded-xl h-auto w-full border p-5 transition shadow-card-selected border-primary"
+	class={clsx(
+		"bg-white dark:bg-dark-800 rounded-xl h-auto w-full border p-5 shadow-card-selected border-primary",
+		$prefersReducedMotion ? "transition-none" : "transition-all"
+	)}
 >
 	<div class="flex items-center">
-		<img
-			class="w-8 h-8"
-			src="https://www.google.com/s2/favicons?sz=32&domain_url={download.package.Latest.Homepage}"
-			alt=""
+		<PackageIcon
+			logo={download.package.Logo}
+			homepage={download.package.Latest.Homepage}
+			size={32}
 		/>
 		<div class="flex-1 px-2.5">
 			<h2 class="font-semibold text-title dark:text-white text-lg line-clamp-1 leading-tight">

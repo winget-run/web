@@ -184,7 +184,7 @@
 								delay: $prefersReducedMotion ? 0 : $searchResults.Packages.length * 50 + 100,
 								easing: backOut,
 							}}
-							class="w-full h-11 px-4 inline-flex items-center justify-center rounded-lg focus:outline-none | bg-primary hover:bg-primary-dark transition-colors text-white font-semibold text-lg shadow-card"
+							class="w-full h-11 px-4 inline-flex items-center justify-center rounded-lg focus:outline-none | bg-primary hover:bg-primary-60 transition-colors text-white font-semibold text-lg shadow-card"
 						>
 							{$t("search.view_results", { values: { count: $searchResults.Total } })}
 							<IconArrowRight class="ms-3" width={24} height={24} />

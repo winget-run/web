@@ -8,6 +8,7 @@
 	import { t } from "svelte-intl-precompile";
 	import IconMoon from "~icons/uil/moon";
 	import IconSun from "~icons/uil/sun";
+	import Button from "./Button.svelte";
 	import LanguagePicker from "./language_picker.svelte";
 </script>
 
@@ -26,8 +27,7 @@
 			>
 				<button
 					on:click={() => theme.toggle()}
-					href="https://github.com/winget-run/wingetdotrun"
-					class="w-11 h-11 inline-flex items-center justify-center rounded-lg focus:outline-none transition-colors font-semibold text-lg | bg-primary-30 hover:(bg-primary-dark) text-primary-60 | dark:(bg-dark-600 text-white)"
+					class="w-11 h-11 inline-flex items-center justify-center rounded-lg focus:outline-none transition-colors font-semibold text-lg | bg-primary-30 hover:bg-primary-40 text-primary-60 | dark:(bg-dark-600 text-white) dark:hover:bg-dark-800"
 				>
 					<svelte:component this={$theme === "dark" ? IconMoon : IconSun} />
 				</button>
@@ -36,25 +36,22 @@
 			<Tooltip wrapperClass="mr-3" content={$t("nav.view_on_github")}>
 				<a
 					href="https://github.com/winget-run/wingetdotrun"
-					class="w-11 h-11 inline-flex items-center justify-center rounded-lg focus:outline-none transition-colors font-semibold text-lg | bg-primary-30 hover:(bg-primary-dark) text-primary-60 | dark:(bg-dark-600 text-white)"
+					class="w-11 h-11 inline-flex items-center justify-center rounded-lg focus:outline-none transition-colors font-semibold text-lg | bg-primary-30 hover:bg-primary-40 text-primary-60 | dark:(bg-dark-600 text-white) dark:hover:bg-dark-800"
 				>
-					<Github />
+					<Github height={20} width={20} />
 				</a>
 			</Tooltip>
 			<Tooltip wrapperClass="mr-3" content={$t("nav.buy_us_a_coffee")}>
 				<a
 					href="https://ko-fi.com/wingetdotrun"
-					class="w-11 h-11 inline-flex items-center justify-center rounded-lg focus:outline-none transition-colors font-semibold text-lg | bg-primary-30 hover:(bg-primary-dark) text-primary-60 | dark:(bg-dark-600 text-white)"
+					class="w-11 h-11 inline-flex items-center justify-center rounded-lg focus:outline-none transition-colors font-semibold text-lg | bg-primary-30 hover:bg-primary-40 text-primary-60 | dark:(bg-dark-600 text-white) dark:hover:bg-dark-800"
 				>
 					<Kofi />
 				</a>
 			</Tooltip>
-			<a
-				href="ms-appinstaller:?source=https://aka.ms/getwinget"
-				class="h-11 inline-flex px-4 items-center justify-center rounded-lg focus:outline-none transition-colors font-semibold text-lg | bg-primary hover:bg-grey-10 text-white hover:text-primary-dark"
-			>
+			<Button href="ms-appinstaller:?source=https://aka.ms/getwinget" class="h-11">
 				{$t("nav.install_winget")}
-			</a>
+			</Button>
 		</div>
 	</div>
 </nav>
