@@ -1,5 +1,19 @@
 <script context="module" lang="ts">
+	import { page } from "$app/stores";
+	import darkmode from "$lib/actions/use_darkmode";
+	import Footer from "$lib/components/footer.svelte";
+	import Nav from "$lib/components/nav.svelte";
+	import Sidebar from "$lib/components/sidebar.svelte";
+	import { downloads } from "$lib/stores/packages";
+	import { searchOpen } from "$lib/stores/search";
+	import { sidebarOpen } from "$lib/stores/sidebar";
+	import { LOCALES } from "$lib/utils/constants";
+	import type { Load } from "@sveltejs/kit";
+	import { IShortcut, shortcut } from "svaria";
+	import { onMount } from "svelte";
 	import { getLocaleFromNavigator, init, register, waitLocale } from "svelte-intl-precompile";
+	import { fade } from "svelte/transition";
+	import "virtual:windi.css";
 
 	// @ts-ignore
 	register("en", () => import("$locales/en"));
@@ -21,20 +35,6 @@
 </script>
 
 <script lang="ts">
-	import "virtual:windi.css";
-	import darkmode from "$lib/actions/use_darkmode";
-	import Footer from "$lib/components/footer.svelte";
-	import Nav from "$lib/components/nav.svelte";
-	import Sidebar from "$lib/components/sidebar.svelte";
-	import { downloads } from "$lib/stores/packages";
-	import { searchOpen } from "$lib/stores/search";
-	import { sidebarOpen } from "$lib/stores/sidebar";
-	import type { Load } from "@sveltejs/kit";
-	import { onMount } from "svelte";
-	import { fade } from "svelte/transition";
-	import { LOCALES } from "$lib/utils/constants";
-	import { page } from "$app/stores";
-
 	let mounted = false;
 
 	$: {
@@ -53,16 +53,13 @@
 		mounted = true;
 	});
 
-	const handleKeyDown = (e: KeyboardEvent) => {
-		if (e.ctrlKey && e.key === "k") {
-			e.preventDefault();
-			searchOpen.set(true);
-		}
-
-		if ($searchOpen && e.key === "Escape") {
-			searchOpen.set(false);
-		}
-	};
+	const globalShortcuts: IShortcut[] = [
+		{
+			key: "k",
+			ctrlKey: true,
+			callback: () => searchOpen.set(true),
+		},
+	];
 </script>
 
 <svelte:head>
@@ -86,7 +83,7 @@
 	{/each}
 </svelte:head>
 
-<svelte:body use:darkmode on:keydown={handleKeyDown} />
+<svelte:body use:darkmode use:shortcut={globalShortcuts} />
 
 <div class="flex flex-col h-screen overflow-hidden p-4 pb-0 bg-primary-10 dark:bg-dark-900">
 	{#if $searchOpen || $sidebarOpen}

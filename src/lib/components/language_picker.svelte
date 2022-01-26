@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { clickoutside } from "$lib/utils/actions";
 	import { LOCALES } from "$lib/utils/constants";
 	import cookies from "js-cookie";
+	import { clickoutside } from "svaria";
 	import { locale, t } from "svelte-intl-precompile";
 	import { backOut } from "svelte/easing";
 	import { fade, slide } from "svelte/transition";
@@ -16,11 +16,8 @@
 
 <span class="relative mr-3">
 	<button
+		{...$$restProps}
 		id="nav-languages"
-		role="menuitem"
-		aria-haspopup
-		aria-expanded={expanded}
-		tabindex="0"
 		class="w-11 h-11 inline-flex items-center justify-center rounded-lg focus:outline-none transition-colors font-semibold text-lg | bg-primary-30 hover:bg-primary-40 text-primary-60 | dark:(bg-dark-600 text-white) dark:hover:bg-dark-800"
 		on:click={() => (expanded = !expanded)}
 	>

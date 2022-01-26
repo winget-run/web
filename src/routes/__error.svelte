@@ -28,7 +28,7 @@
 	import Wingetdotrun from "$lib/api/wingetdotrun";
 	import type { IPackage, IResponse } from "$lib/types/package";
 	import { fly } from "svelte/transition";
-	import { prefersReducedMotion } from "$lib/stores/a11y";
+	import { prefersReducedMotion } from "svaria";
 	import { backOut } from "svelte/easing";
 	import Package from "$lib/components/package.svelte";
 	import Codeblock from "$lib/components/codeblock.svelte";

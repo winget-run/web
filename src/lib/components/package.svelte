@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { prefersReducedMotion } from "$lib/stores/a11y";
+	import { prefersReducedMotion } from "svaria";
 	import { downloads } from "$lib/stores/packages";
 	import { searchOpen } from "$lib/stores/search";
 	import type { IPackage } from "$lib/types/package";

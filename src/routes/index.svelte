@@ -1,22 +1,21 @@
 <script lang="ts" context="module">
+	import { goto } from "$app/navigation";
 	import Wingetdotrun from "$lib/api/wingetdotrun";
 	import Button from "$lib/components/Button.svelte";
 	import Package from "$lib/components/package.svelte";
 	import SectionTitle from "$lib/components/section_title.svelte";
-	import { prefersReducedMotion } from "$lib/stores/a11y";
 	import { api } from "$lib/stores/api";
 	import { updatedPackages } from "$lib/stores/packages";
 	import type { IResponse } from "$lib/types/package";
-	import IconSpinner from "~icons/uil/spinner";
 	import type { Load } from "@sveltejs/kit";
+	import { keycombo, prefersReducedMotion } from "svaria";
+	import { t } from "svelte-intl-precompile";
 	import { flip } from "svelte/animate";
 	import { backOut, circOut } from "svelte/easing";
 	import { fly } from "svelte/transition";
-	import konamicode from "$lib/actions/use_konamicode";
-	import { goto } from "$app/navigation";
-	import IconStar from "~icons/uil/star";
 	import IconClock from "~icons/uil/clock";
-	import { t } from "svelte-intl-precompile";
+	import IconSpinner from "~icons/uil/spinner";
+	import IconStar from "~icons/uil/star";
 
 	let limit = 24;
 	export const load: Load = async ({ fetch }) => {
@@ -63,6 +62,19 @@
 				updatedPackages.update((x) => ({ ...x, Packages: [...x.Packages, ...e.Packages] }));
 			});
 	}
+
+	const konamiCode = [
+		"ArrowUp",
+		"ArrowUp",
+		"ArrowDown",
+		"ArrowDown",
+		"ArrowLeft",
+		"ArrowRight",
+		"ArrowLeft",
+		"ArrowRight",
+		"b",
+		"a",
+	];
 </script>
 
 <svelte:head>
@@ -86,7 +98,8 @@
 	</script>
 </svelte:head>
 
-<svelte:body use:konamicode={() => goto("/search?query=touch+grass")} />
+<svelte:body
+	use:keycombo={{ sequence: konamiCode, callback: () => goto("/search?query=touch+grass") }} />
 
 {#if featured}
 	<SectionTitle icon={IconStar} class="my-6">

@@ -5,7 +5,7 @@
 	import Filters from "$lib/components/filters.svelte";
 	import Package from "$lib/components/package.svelte";
 	import SectionTitle from "$lib/components/section_title.svelte";
-	import { prefersReducedMotion } from "$lib/stores/a11y";
+	import { prefersReducedMotion } from "svaria";
 	import { api } from "$lib/stores/api";
 	import { searchResults } from "$lib/stores/packages";
 	import type { IResponse } from "$lib/types/package";

@@ -19,7 +19,7 @@
 </script>
 
 {#if href}
-	<a on:click class={finalClasses} {href}><slot {iconSize} /></a>
+	<a {...$$restProps} on:click class={finalClasses} {href}><slot {iconSize} /></a>
 {:else}
-	<button on:click class={finalClasses}><slot {iconSize} /></button>
+	<button {...$$restProps} on:click class={finalClasses}><slot {iconSize} /></button>
 {/if}

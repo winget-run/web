@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { clickoutside } from "$lib/utils/actions";
 	import clsx from "clsx";
+	import { clickoutside } from "svaria";
 	import { createEventDispatcher } from "svelte";
 	import { createPopperActions } from "svelte-popperjs";
 	import VirtualList from "svelte-tiny-virtual-list";

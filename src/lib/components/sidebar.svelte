@@ -1,7 +1,7 @@
 <script lang="ts">
 	import EmptyBox from "$lib/animations/empty_box.svelte";
 	import Download from "$lib/components/download.svelte";
-	import { prefersReducedMotion } from "$lib/stores/a11y";
+	import { prefersReducedMotion } from "svaria";
 	import { downloads } from "$lib/stores/packages";
 	import { sidebarOpen } from "$lib/stores/sidebar";
 	import { mapDownloadsToCommands } from "$lib/utils/downloads";

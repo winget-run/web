@@ -1,8 +1,7 @@
 <script lang="ts">
-	import { prefersReducedMotion } from "$lib/stores/a11y";
-
 	import { downloads, IDownload } from "$lib/stores/packages";
 	import clsx from "clsx";
+	import { prefersReducedMotion } from "svaria";
 	import { t } from "svelte-intl-precompile";
 	import { get } from "svelte/store";
 	import IconPlus from "~icons/uil/plus";

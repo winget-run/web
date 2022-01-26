@@ -19,8 +19,8 @@
 	"devDependencies": {
 		"@iconify-json/uil": "^1.0.2",
 		"@popperjs/core": "^2.11.0",
-		"@sveltejs/adapter-node": "^1.0.0-next.56",
-		"@sveltejs/kit": "next",
+		"@sveltejs/adapter-node": "1.0.0-next.56",
+		"@sveltejs/kit": "1.0.0-next.204",
 		"@types/cookie": "^0.4.1",
 		"@types/js-cookie": "^3.0.1",
 		"@typescript-eslint/eslint-plugin": "^4.33.0",
@@ -32,6 +32,7 @@
 		"prettier": "^2.5.1",
 		"prettier-plugin-svelte": "^2.5.1",
 		"sass": "^1.45.0",
+		"svaria": "^0.0.10",
 		"svelte": "^3.44.3",
 		"svelte-check": "^2.2.11",
 		"svelte-popperjs": "^1.2.7",

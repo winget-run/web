@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { prefersReducedMotion } from "$lib/stores/a11y";
+	import { prefersReducedMotion } from "svaria";
 	import { t } from "svelte-intl-precompile";
 	import { backOut } from "svelte/easing";
 	import { fly } from "svelte/transition";

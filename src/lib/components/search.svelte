@@ -1,11 +1,10 @@
 <script lang="ts">
 	import { goto } from "$app/navigation";
 	import EmptyBox from "$lib/animations/empty_box.svelte";
-	import { prefersReducedMotion } from "$lib/stores/a11y";
 	import { api } from "$lib/stores/api";
 	import { searchOpen, searchResults } from "$lib/stores/search";
-	import { clickoutside } from "$lib/utils/actions";
 	import { parseTags } from "$lib/utils/helpers";
+	import { clickoutside, contextual, prefersReducedMotion } from "svaria";
 	import { t } from "svelte-intl-precompile";
 	import { flip } from "svelte/animate";
 	import { backOut } from "svelte/easing";
@@ -88,6 +87,18 @@
 
 <div
 	use:clickoutside={() => searchOpen.set(false)}
+	use:contextual={{
+		id: "search",
+		shortcuts: [
+			{
+				key: "Escape",
+				callback: () => {
+					searchOpen.set(false);
+					input.blur();
+				},
+			},
+		],
+	}}
 	class="w-full h-11 max-w-xl flex items-center px-5 rounded-lg z-30 relative bg-white dark:(bg-dark-900)"
 >
 	<IconSearch width={24} height={24} class="text-primary mr-3" />
