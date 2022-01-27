@@ -5,8 +5,7 @@
 	import Nav from "$lib/components/nav.svelte";
 	import Sidebar from "$lib/components/sidebar.svelte";
 	import { downloads } from "$lib/stores/packages";
-	import { searchOpen } from "$lib/stores/search";
-	import { sidebarOpen } from "$lib/stores/sidebar";
+	import { searchOpen, sidebarOpen } from "$lib/stores/ui";
 	import { LOCALES } from "$lib/utils/constants";
 	import type { Load } from "@sveltejs/kit";
 	import { IShortcut, shortcut } from "svaria";
@@ -89,7 +88,7 @@
 	{#if $searchOpen || $sidebarOpen}
 		<div
 			transition:fade={{ duration: 250 }}
-			class="fixed h-full w-full top-0 left-0 bg-black bg-opacity-40 backdrop-filter backdrop-blur-[2px] z-20 pointer-events-none"
+			class="fixed h-full w-full top-0 left-0 bg-black bg-opacity-40 backdrop-filter backdrop-blur-[2px] z-20"
 		/>
 	{/if}
 

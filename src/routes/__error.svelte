@@ -1,6 +1,15 @@
 <script lang="ts" context="module">
+	import Wingetdotrun from "$lib/api/wingetdotrun";
+	import Button from "$lib/components/Button.svelte";
+	import Codeblock from "$lib/components/codeblock.svelte";
+	import Package from "$lib/components/package.svelte";
+	import type { IPackage } from "$lib/types/package";
 	import type { ErrorLoad } from "@sveltejs/kit";
+	import { prefersReducedMotion } from "svaria";
 	import { t } from "svelte-intl-precompile";
+	import { backOut } from "svelte/easing";
+	import { fly } from "svelte/transition";
+	import IconHome from "~icons/uil/home";
 
 	export const load: ErrorLoad = async ({ status, error }) => {
 		const api = new Wingetdotrun();
@@ -23,16 +32,6 @@
 </script>
 
 <script lang="ts">
-	import Button from "$lib/components/Button.svelte";
-	import IconHome from "~icons/uil/home";
-	import Wingetdotrun from "$lib/api/wingetdotrun";
-	import type { IPackage, IResponse } from "$lib/types/package";
-	import { fly } from "svelte/transition";
-	import { prefersReducedMotion } from "svaria";
-	import { backOut } from "svelte/easing";
-	import Package from "$lib/components/package.svelte";
-	import Codeblock from "$lib/components/codeblock.svelte";
-
 	export let error: Error;
 	export let status: number;
 	export let featured: IPackage[];

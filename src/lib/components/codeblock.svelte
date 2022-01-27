@@ -4,6 +4,7 @@
 	import { onDestroy } from "svelte";
 	import Tooltip from "./tooltip.svelte";
 	import { t } from "svelte-intl-precompile";
+	import clsx from "clsx";
 
 	export let code: string;
 	export let multiline = false;
@@ -28,9 +29,17 @@
 </script>
 
 <code
-	class="relative bg-primary-20 dark:bg-dark-700 rounded-lg p-5 leading-none flex items-center dark:text-body-dark {$$props.class}"
+	class={clsx(
+		"relative bg-primary-20 dark:bg-dark-700 rounded-lg p-5 leading-none flex text-primary-60 dark:text-body-dark",
+		multiline ? "items-end" : "items-center",
+		$$props.class
+	)}
 >
-	<span class="content flex-1" class:multiline>{code}</span>
+	<span
+		class={clsx("content flex-1", multiline ? "h-48 line-clamp-7 overflow-elipsis" : "truncate")}
+	>
+		{code}
+	</span>
 	<Tooltip content={tooltipText} offset={[0, 4]}>
 		<button on:click={copyToClipboard} class="text-current focus:outline-none hover:text-primary">
 			<IconClipboard width={22} height={22} />
@@ -42,11 +51,5 @@
 	.content::before {
 		content: ">";
 		margin-right: 0.5rem;
-	}
-
-	.content {
-		&.multiline {
-			max-lines: 7;
-		}
 	}
 </style>

@@ -12,7 +12,7 @@
 	let timeout: NodeJS.Timeout;
 
 	async function copyToClipboard() {
-		await navigator.clipboard.writeText(mapDownloadsToCommands([download]));
+		await navigator.clipboard.writeText(mapDownloadsToCommands([download], null));
 		const oldText = tooltipText;
 
 		tooltipText = $t("ctas.copied_to_clipboard");

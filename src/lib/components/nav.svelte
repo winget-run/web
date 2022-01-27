@@ -65,7 +65,8 @@
 				<Button
 					{...props}
 					size="md"
-					href="ms-appinstaller:?source=https://aka.ms/getwinget"
+					href="https://github.com/microsoft/winget-cli/releases/latest"
+					rel="nofollow"
 					class="h-11"
 				>
 					{$t("nav.install_winget")}

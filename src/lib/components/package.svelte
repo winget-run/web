@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { prefersReducedMotion } from "svaria";
 	import { downloads } from "$lib/stores/packages";
-	import { searchOpen } from "$lib/stores/search";
+	import { searchOpen } from "$lib/stores/ui";
 	import type { IPackage } from "$lib/types/package";
 	import type { ISearchFilters } from "$lib/types/search";
 	import clsx from "clsx";

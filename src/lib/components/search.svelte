@@ -2,8 +2,10 @@
 	import { goto } from "$app/navigation";
 	import EmptyBox from "$lib/animations/empty_box.svelte";
 	import { api } from "$lib/stores/api";
-	import { searchOpen, searchResults } from "$lib/stores/search";
+	import { searchResults } from "$lib/stores/search";
+	import { mostRecentlyOpened, searchOpen } from "$lib/stores/ui";
 	import { parseTags } from "$lib/utils/helpers";
+	import clsx from "clsx";
 	import { clickoutside, contextual, prefersReducedMotion } from "svaria";
 	import { t } from "svelte-intl-precompile";
 	import { flip } from "svelte/animate";
@@ -99,7 +101,12 @@
 			},
 		],
 	}}
-	class="w-full h-11 max-w-xl flex items-center px-5 rounded-lg z-30 relative bg-white dark:(bg-dark-900)"
+	class={clsx(
+		"w-full h-11 max-w-xl flex items-center px-5 rounded-lg relative bg-white dark:(bg-dark-900)",
+		{
+			"z-30": $mostRecentlyOpened === "search",
+		}
+	)}
 >
 	<IconSearch width={24} height={24} class="text-primary mr-3" />
 	<div class="flex-1 relative {!$searchOpen && 'pr-20'}">

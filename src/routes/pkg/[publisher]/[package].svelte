@@ -39,23 +39,24 @@
 	import Wingetdotrun from "$lib/api/wingetdotrun";
 	import Button from "$lib/components/Button.svelte";
 	import Codeblock from "$lib/components/codeblock.svelte";
+	import TextInput from "$lib/components/forms/text_input.svelte";
 	import Graph from "$lib/components/graph.svelte";
+	import PackageIcon from "$lib/components/package_icon.svelte";
 	import Tooltip from "$lib/components/tooltip.svelte";
 	import Versions from "$lib/components/versions.svelte";
-	import { downloads } from "$lib/stores/packages";
 	import { theme } from "$lib/stores/a11y";
+	import { devMode } from "$lib/stores/misc";
+	import { downloads } from "$lib/stores/packages";
 	import type { IResponseSingle } from "$lib/types/package";
 	import type { IStatsResponse } from "$lib/types/stats";
 	import { padDate } from "$lib/utils/helpers";
 	import type { Load } from "@sveltejs/kit";
+	import { date, t } from "svelte-intl-precompile";
 	import { backOut } from "svelte/easing";
 	import { fly } from "svelte/transition";
 	import IconCalendar from "~icons/uil/calendar-alt";
 	import IconExternalLink from "~icons/uil/external-link-alt";
 	import IconPlus from "~icons/uil/plus";
-	import IconStar from "~icons/uil/star";
-	import { date, t } from "svelte-intl-precompile";
-	import PackageIcon from "$lib/components/package_icon.svelte";
 
 	export let response: IResponseSingle;
 	export let stats: IStatsResponse;
@@ -100,7 +101,7 @@
 	/>
 </svelte:head>
 
-{#key pack}
+{#key !$devMode ? pack : null}
 	<header
 		in:fly={{ y: 20, duration: 500, easing: backOut }}
 		class="
@@ -156,7 +157,13 @@
 				</Button>
 
 				{#if pack.Latest.Homepage}
-					<Button href={pack.Latest.Homepage} class="w-full -mt-2 mb-5" outlined let:iconSize>
+					<Button
+						href={pack.Latest.Homepage}
+						rel="nofollow"
+						class="w-full -mt-2 mb-5"
+						outlined
+						let:iconSize
+					>
 						<IconExternalLink class="mr-2" width={iconSize} height={iconSize} />
 						{$t("ctas.visit_website")}
 					</Button>
@@ -281,6 +288,30 @@
 						</p>
 					{/if}
 				</section>
+
+				{#if $devMode}
+					<section class="mb-10">
+						<h2 class="font-semibold text-2xl text-title dark:text-white mb-2 leading-tight">
+							Developer Settings
+						</h2>
+
+						<div class="flex flex-col items-start">
+							<label>
+								Featured?
+								<input type="checkbox" name="featured" bind:checked={pack.Featured} />
+							</label>
+
+							<TextInput wrapperClass="my-2 w-full" label="Logo" bind:value={pack.Logo} />
+							<TextInput
+								wrapperClass="my-2 w-full"
+								label="Banner"
+								bind:value={response.Package.Banner}
+							/>
+
+							<Button class="my-2" size="sm">Save changes</Button>
+						</div>
+					</section>
+				{/if}
 			</div>
 		</div>
 	</div>
